@@ -1,0 +1,25 @@
+{
+    "name": "com.gexetr.gamecorelib",
+    "version": "0.0.0",
+    "displayName": "Game Core Lib",
+    "unity": "2020.3",
+    "description": "Common usable Mangers and Utilities for Unity.",
+    "documentationUrl": "https://github.com/VSobolenko/com.gexetr.gamecorelib",
+    "changelogUrl": "https://github.com/VSobolenko/com.gexetr.gamecorelib",
+    "licensesUrl": "https://github.com/VSobolenko/com.gexetr.gamecorelib",
+    "dependencies": {},
+    "keywords": [
+        "magaers",
+        "objectpool",
+        "fsm"
+    ],
+    "author": 
+	{
+		"name": "Game Core Lib by Gexetr",
+		"url": "https://github.com/VSobolenko/"
+	},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/VSobolenko/com.gexetr.gamecorelib.git"
+    }
+}
