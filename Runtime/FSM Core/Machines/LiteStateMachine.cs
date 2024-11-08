@@ -44,16 +44,11 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
     {
         PreviousState = ActiveState;
         ActiveState = state;
-        OnStateChange?.Invoke(ActiveState);    }
-
-    private TState GetState<TState>() where TState : class, IState
-    {
-        return _states[typeof(TState)] as TState;
+        OnStateChange?.Invoke(ActiveState);
     }
 
-    private void Activate<TIn>(IActivatedState<TIn> state, TIn data)
-    {
-        state.ActiveState(this, data);
-    }
+    private TState GetState<TState>() where TState : class, IState => _states[typeof(TState)] as TState;
+
+    private void Activate<TIn>(IActivatedState<TIn> state, TIn data) => state.ActivateState(this, data);
 }
 }

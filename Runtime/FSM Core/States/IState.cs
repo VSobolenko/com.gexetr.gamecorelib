@@ -7,8 +7,13 @@ public interface IState : IDisposable
     void UpdateState();
 }
 
-internal interface IActivatedState<in TIn> : IState
+public interface IActivatedState<in TIn> : IState
 {
-    void ActiveState(IStateMachine machine, TIn data);
+    internal void ActivateState(IStateMachine machine, TIn data); // and protected
+}
+
+public interface IEndState<out TOut> : IState
+{
+    internal TOut ReturnProcessedResult(); // and protected
 }
 }

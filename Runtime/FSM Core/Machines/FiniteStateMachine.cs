@@ -42,9 +42,6 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
         OnStateChange?.Invoke(ActiveState);
     }
 
-    private void Activate<TIn>(IActivatedState<TIn> state, TIn data)
-    {
-        state.ActiveState(this, data);
-    }
+    private void Activate<TIn>(IActivatedState<TIn> state, TIn data) => state.ActivateState(this, data);
 }
 }

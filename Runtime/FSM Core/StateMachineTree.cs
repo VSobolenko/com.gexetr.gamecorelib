@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.FSMCore.States;
 using Game.FSMCore.Transitions;
@@ -32,34 +33,42 @@ public class StateMachineTree
         }
     }
 
-    
     #region States
 
-    public void AddState(IState state) => _states.Add(state);
+    public StateMachineTree AddState(IState state)
+    {
+        _states.Add(state);
 
-    public void AddState(params IState[] states)
+        return this;
+    }
+
+    public StateMachineTree AddState(params IState[] states)
     {
         foreach (var state in states)
         {
             AddState(state);
         }
+
+        return this;
     }
 
-    public void RemoveState(IState state)
+    public StateMachineTree RemoveState(IState state)
     {
         if (_states.Remove(state) == false)
         {
             Log.Warning($"Can't remove state from tree: StateType={state.GetType()}");
         }
+
+        return this;
     }
 
     public List<IState> GetStates() => _states;
 
     #endregion
-    
+
     #region Transitions
 
-    public void AddTransition(BaseTransition baseTransition, int priority = 0)
+    public StateMachineTree AddTransition(BaseTransition baseTransition, int priority = 0)
     {
         _transitions.Add(new TransitionData
         {
@@ -68,9 +77,11 @@ public class StateMachineTree
         });
 
         _transitions = _transitions.OrderByDescending(x => x.priority).ToList();
+
+        return this;
     }
 
-    public void AddTransition(params BaseTransition[] baseTransition)
+    public StateMachineTree AddTransition(params BaseTransition[] baseTransition)
     {
         foreach (var transition in baseTransition)
         {
@@ -82,19 +93,23 @@ public class StateMachineTree
         }
 
         _transitions = _transitions.OrderByDescending(x => x.priority).ToList();
+
+        return this;
     }
 
-    public void RemoveTransition(BaseTransition baseTransition)
+    public StateMachineTree RemoveTransition(BaseTransition baseTransition)
     {
         var transitionData = _transitions.FirstOrDefault(x => x.transition == baseTransition);
         if (transitionData.Equals(default) || transitionData.transition == null)
         {
             Log.Warning($"Can't remove transition from tree: Transition={baseTransition}");
 
-            return;
+            return this;
         }
 
         _transitions.Remove(transitionData);
+
+        return this;
     }
 
     public TTransition GetTransition<TTransition>() where TTransition : BaseTransition
@@ -110,7 +125,11 @@ public class StateMachineTree
         return default;
     }
 
+    public IEnumerable<BaseTransition> GetTransitions() => _transitions.Select(x => x.transition);
+
     #endregion
+
+    public IState this[int i] => _states[i];
 }
 
 internal struct TransitionData

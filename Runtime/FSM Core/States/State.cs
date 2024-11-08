@@ -1,7 +1,9 @@
 ﻿namespace Game.FSMCore.States
 {
-public abstract class State<TIn, TOut> : DeadState<TIn>
+public abstract class State<TIn, TOut> : DeadState<TIn>, IEndState<TOut>
 {
-    protected internal abstract TOut ReturnProcessedResult();
+    TOut IEndState<TOut>.ReturnProcessedResult() => ReturnProcessedResult();
+    
+    protected abstract TOut ReturnProcessedResult();
 }
 }

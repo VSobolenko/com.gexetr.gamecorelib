@@ -8,6 +8,6 @@ public interface IStateMachine
     IState ActiveState { get; }
     IState PreviousState { get; }
     event Action<IState> OnStateChange;
-    protected internal void ChangeState(IState newState);
+    protected internal void ChangeState(IState newState); //remove protected?
 }
 }

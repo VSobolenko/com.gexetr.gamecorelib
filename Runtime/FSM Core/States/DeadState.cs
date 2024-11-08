@@ -5,7 +5,7 @@ public abstract class DeadState<TIn> : BaseState, IActivatedState<TIn>
     protected IStateMachine stateMachine;
     protected TIn inputData;
 
-    void IActivatedState<TIn>.ActiveState(IStateMachine machine, TIn data)
+    void IActivatedState<TIn>.ActivateState(IStateMachine machine, TIn data)
     {
         LogDebugInfo();
 
