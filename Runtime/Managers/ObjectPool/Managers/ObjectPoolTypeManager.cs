@@ -172,7 +172,7 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         var pooledObject = _factoryGameObjects.Instantiate(prefab, parent);
         pooledObject.SetActive(false);
         pooledObject.Pool = this;
-
+        pooledObject.name += pooledObject.GetHashCode();
         return pooledObject;
     }
 

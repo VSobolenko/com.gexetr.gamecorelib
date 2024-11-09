@@ -65,7 +65,7 @@ public class FSMGraphView : GraphView
 
         return stateNode;
     }
-    
+
     public void CreateTransition<TDateTransfer>(AliveTransition<TDateTransfer> transition)
     {
         var sourceState = (IState) GetPrivateValue(transition, "_sourceState");
@@ -77,11 +77,11 @@ public class FSMGraphView : GraphView
     {
         var sourceStates = (List<IEndState<IState>>) GetPrivateValue(transition, "_sourceStates");
         var targetState = (IState) GetPrivateValue(transition, "_targetState");
-        
+
         foreach (var sourceState in sourceStates)
             ConnectStates(sourceState, targetState);
     }
-    
+
     public void CreateTransition<TIn, TOut>(EntryTransition<TIn, TOut> transition)
     {
         var targetState = (DeadState<TIn>) GetPrivateValue(transition, "_targetState");

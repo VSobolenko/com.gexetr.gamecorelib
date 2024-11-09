@@ -3,7 +3,7 @@ using Game.FSMCore.States;
 
 namespace Game.FSMCore.Transitions
 {
-public abstract class AliveTransition<TDataTransfer> : DeadTransition<TDataTransfer> 
+public abstract class AliveTransition<TDataTransfer> : DeadTransition<TDataTransfer>
 {
     private readonly IEndState<TDataTransfer> _sourceState;
     private readonly IActivatedState<TDataTransfer> _targetState;

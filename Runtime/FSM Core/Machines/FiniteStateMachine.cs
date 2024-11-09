@@ -34,7 +34,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
         SwitchState(state);
         Activate(state, data);
     }
-    
+
     private void SwitchState(IState state)
     {
         PreviousState = ActiveState;

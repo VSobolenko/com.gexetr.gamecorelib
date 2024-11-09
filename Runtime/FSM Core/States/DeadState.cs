@@ -13,8 +13,10 @@ public abstract class DeadState<TIn> : BaseState, IActivatedState<TIn>
         stateMachine = machine;
         OnStateActivated();
     }
-    
-    protected virtual void OnStateActivated() { }
+
+    protected virtual void OnStateActivated()
+    {
+    }
 
     private void LogDebugInfo()
     {

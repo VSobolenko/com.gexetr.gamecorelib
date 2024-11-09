@@ -42,11 +42,10 @@ public class Source : KeyPooledObject
     
     private IEnumerator AutoAction(float duration, Action completeAction = null)
     {
-        //yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(duration);
         completeAction?.Invoke();
         _autoAction = null;
-        yield return new WaitForSeconds(duration);
-
+        //yield return new WaitForSeconds(duration);
     }
     
     private IEnumerator FadeSound(float duration, float targetVolume, Action completeAction = null)

@@ -18,6 +18,9 @@ public abstract class DeadTransition<TIn> : BaseTransition
     internal sealed override bool Decide() => IsDecidedTransient && CanDecide();
 
     protected abstract bool CanDecide();
-    protected virtual void OnTransit() { }
+
+    protected virtual void OnTransit()
+    {
+    }
 }
 }

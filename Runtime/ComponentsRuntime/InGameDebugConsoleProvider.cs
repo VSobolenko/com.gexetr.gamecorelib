@@ -9,8 +9,6 @@ namespace Game.Components
 /// </summary>
 public class InGameDebugConsoleProvider : MonoBehaviour
 {
-#if DEVELOPMENT_BUILD
-
     [SerializeField] private bool _enableInEditor;
     [SerializeField] private int _countTouchToDestroy = 5;
 
@@ -50,6 +48,5 @@ public class InGameDebugConsoleProvider : MonoBehaviour
         if (Input.touchCount == _countTouchToDestroy)
             Destroy(_cachedConsole.gameObject);
     }
-#endif
 }
 }

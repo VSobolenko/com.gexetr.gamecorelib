@@ -5,7 +5,7 @@ using Game.FSMCore.States;
 
 namespace Game.FSMCore.Transitions
 {
-public abstract class Many2OneTransition<TDataTransfer> : DeadTransition<TDataTransfer> 
+public abstract class Many2OneTransition<TDataTransfer> : DeadTransition<TDataTransfer>
 {
     private readonly List<IEndState<TDataTransfer>> _sourceStates;
     private readonly IActivatedState<TDataTransfer> _targetState;
@@ -35,7 +35,7 @@ public abstract class Many2OneTransition<TDataTransfer> : DeadTransition<TDataTr
             if (i == 0)
                 transitionData = data;
         }
-        
+
         _targetState.ActivateState(stateMachine, transitionData);
         stateMachine.ChangeState(_targetState);
     }

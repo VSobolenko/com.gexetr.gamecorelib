@@ -20,9 +20,17 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
 
     private readonly Dictionary<Type, IState> _states = new();
 
-    public void AddState<TState>(TState state) where TState : IState => _states.Add(typeof(TState), state);
+    public LiteStateMachine AddState<TState>(TState state) where TState : IState
+    {
+        _states.Add(typeof(TState), state);
+        return this;
+    }
 
-    public bool RemoveState<TState>(TState state) where TState : IState => _states.Remove(typeof(TState));
+    public LiteStateMachine RemoveState<TState>(TState state) where TState : IState
+    {
+        _states.Remove(typeof(TState));
+        return this;
+    }
 
     public void Update() => ActiveState?.UpdateState();
 

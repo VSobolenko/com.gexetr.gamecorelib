@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Game;
 using Game.FSMCore;
 using Game.FSMCore.Profiler;
 using Game.InternalData;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -66,12 +63,8 @@ public class FSMVisualizer : EditorWindow
         _activeToolBar.Add(findButton);
         foreach (var fsmLinker in _fsmLinkers)
         {
-            if (_fsmLinkers == null)
-            {
-                Log.Warning("This FSM was stopped or delete");
-
+            if (fsmLinker == null)
                 return;
-            }
 
             var fsmButton = new Button
             {
@@ -85,6 +78,7 @@ public class FSMVisualizer : EditorWindow
     private void FindFSMLinkers() => _fsmLinkers = FindObjectsByType<FSMProfilerProvider>(FindObjectsSortMode.None);
 
     private FiniteStateMachine _stateMachine;
+
     private void DrawFSM(FiniteStateMachine stateMachine)
     {
         if (stateMachine == null)
@@ -92,9 +86,7 @@ public class FSMVisualizer : EditorWindow
         _stateMachine = stateMachine;
         OnEnable();
         foreach (var state in stateMachine.Tree.GetStates())
-        {
             _graph.CreateStateNode((dynamic) state);
-        }
 
         foreach (var transition in stateMachine.Tree.GetTransitions())
             _graph.CreateTransition((dynamic) transition);
@@ -102,15 +94,18 @@ public class FSMVisualizer : EditorWindow
 
     private void Update()
     {
-        if (_stateMachine == null || _graph._states.Count == 0) 
+        if (_stateMachine == null || _graph._states.Count == 0)
             return;
 
         var nodeOld = _graph._states.FirstOrDefault(x => x.sourceState == _stateMachine.ActiveState);
         var node = _graph._states.FirstOrDefault(x => x.sourceState == _stateMachine.ActiveState);
+
         if (node == null || nodeOld == null)
             return;
-        _graph.RemoveFromSelection(nodeOld);
-        //_graph.AddToSelection(node);
+
+        foreach (var graphState in _graph._states)
+            graphState.selected = false;
+
         node.selected = true;
     }
 }
