@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
+using Game.DynamicData;
 using Game.FSMCore;
-using Game.FSMCore.Profiler;
-using Game.InternalData;
+using Game.FSMCore.Machines;
+using Game.FSMCore.Profilers;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

@@ -1,4 +1,4 @@
-﻿using Game.InternalData;
+﻿using Game.DynamicData;
 using UnityEngine;
 
 namespace Game.Components.EditorComponent

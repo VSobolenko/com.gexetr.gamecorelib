@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using UnityObject = UnityEngine.Object;
 
 namespace Game.Components
 {
@@ -62,12 +62,12 @@ public class SceneCheckForNullProvider : MonoBehaviour
                             (_enableClassPath ? $"({instance.GetType().Name})" : string.Empty);
             var text = $"GO={parent.name}; " +
                        $"Field={fieldInfo.Name}; " +
-                       $"IsUnityObj={fieldInfo.GetValue(instance) is Object}" +
+                       $"IsUnityObj={fieldInfo.GetValue(instance) is UnityObject}" +
                        $"\nField path: {filedPath}" +
                        $"\nScene path: {GetScenePath(parent.transform)}";
 
             var systemObject = fieldInfo.GetValue(instance);
-            if ((systemObject is Object unityObject && unityObject == null) || (systemObject == null))
+            if ((systemObject is UnityObject unityObject && unityObject == null) || (systemObject == null))
                 Debug.Log(text);
             else if ((fieldInfo.FieldType.IsClass || fieldInfo.FieldType.IsValueType) &&
                      _accessible.Contains(fieldInfo.FieldType.Assembly.GetName().Name))

@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.FSMCore.States;
 
-namespace Game.FSMCore
+namespace Game.FSMCore.Machines
 {
 public class FiniteStateMachine : IStateMachine, IStateMachineOperator
 {

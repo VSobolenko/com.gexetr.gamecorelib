@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
-using Game.InternalData;
+using Game.DynamicData;
 using UnityEngine;
 
-namespace Game
+namespace Game.Utility
 {
 public static class Log
 {

@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using Game.Utility;
 using UnityEngine;
 
 namespace Game.Components.EditorComponent

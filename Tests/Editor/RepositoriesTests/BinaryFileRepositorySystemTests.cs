@@ -6,6 +6,7 @@ using FluentAssertions;
 using Game;
 using Game.IO;
 using Game.IO.Managers;
+using Game.Utility;
 using NUnit.Framework;
 using WarehouseKeeper.Test.TestingElements;
 

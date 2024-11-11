@@ -1,5 +1,6 @@
 ﻿using Game.Localizations.Components;
 using Game.Localizations.Managers;
+using Game.Utility;
 using UnityEngine;
 
 namespace Game.Localizations.Installers

@@ -1,4 +1,6 @@
-﻿namespace Game.FSMCore.States
+﻿using Game.Utility;
+
+namespace Game.FSMCore.States
 {
 public abstract class DeadState<TIn> : BaseState, IActivatedState<TIn>
 {

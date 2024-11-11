@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Game.FSMCore.Machines;
+using UnityEngine;
 
-namespace Game.FSMCore.Profiler
+namespace Game.FSMCore.Profilers
 {
 public class FSMProfilerProvider : MonoBehaviour
 {

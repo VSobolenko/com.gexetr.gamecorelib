@@ -2,8 +2,9 @@
 using System.Linq;
 using Game.FSMCore.States;
 using Game.FSMCore.Transitions;
+using Game.Utility;
 
-namespace Game.FSMCore
+namespace Game.FSMCore.Machines
 {
 public class StateMachineTree
 {

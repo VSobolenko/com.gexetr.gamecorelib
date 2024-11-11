@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.InternalData
+namespace Game.DynamicData
 {
 internal static class GameData
 {

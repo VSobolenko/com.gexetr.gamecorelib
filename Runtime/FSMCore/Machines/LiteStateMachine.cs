@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Game.FSMCore.States;
 
-namespace Game.FSMCore
+namespace Game.FSMCore.Machines
 {
 public interface IStateMachineOperator
 {
