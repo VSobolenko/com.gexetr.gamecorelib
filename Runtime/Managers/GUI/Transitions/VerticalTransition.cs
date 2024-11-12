@@ -25,7 +25,7 @@ internal class VerticalTransition : IWindowTransition
         var transform = windowProperties.rectTransform;
         windowProperties.mediator.SetInteraction(false);
 
-        var activePos = transform.localPosition;
+        var activePos = WindowTransitionStatic.startPoint;
         var startPos = new Vector3(activePos.x, activePos.y + transform.rect.height, activePos.z);
 
         transform.localPosition = startPos;
@@ -43,7 +43,7 @@ internal class VerticalTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
 
         var transform = windowProperties.rectTransform;
-        var activePos = transform.localPosition;
+        var activePos = WindowTransitionStatic.startPoint;
 
         windowProperties.mediator.SetInteraction(false);
         var targetPosition = new Vector3(activePos.x, activePos.y - transform.rect.height, activePos.z);
@@ -52,7 +52,7 @@ internal class VerticalTransition : IWindowTransition
         {
             windowProperties.mediator.SetInteraction(true);
             completionSource.SetResult(true);
-            transform.localPosition = activePos;
+            //transform.localPosition = activePos;
         });
 
         return completionSource.Task;

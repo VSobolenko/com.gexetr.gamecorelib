@@ -15,6 +15,7 @@ internal class WindowsFactory : IWindowFactory
     private readonly IFactoryGameObjects _factory;
 
     private static readonly Dictionary<Type, Type> WindowMediatorMap = new(5);
+    private string _uiRootPath = "UI/UIRoot";
 
     public WindowsFactory(IMediatorInstantiator container, IResourceManagement resourceManagement, IFactoryGameObjects factory)
     {
@@ -25,6 +26,13 @@ internal class WindowsFactory : IWindowFactory
         MapMediatorTypes();
     }
 
+    public WindowsFactory WithParameter(string uIRootPath)
+    {
+        _uiRootPath = uIRootPath;
+
+        return this;
+    }
+    
     private static void MapMediatorTypes()
     {
         var mediators = AppDomain.CurrentDomain.GetAssemblies()
@@ -44,7 +52,7 @@ internal class WindowsFactory : IWindowFactory
             }
 
             if (windowType != null)
-                WindowMediatorMap.Add(mediator, windowType);
+                WindowMediatorMap.TryAdd(mediator, windowType);
         }
     }
 
@@ -52,7 +60,10 @@ internal class WindowsFactory : IWindowFactory
     {
         uiRoot = null;
 
-        var rootPrefab = Resources.Load("UI/UIRoot") as GameObject;
+        var rootPrefab = _resourceManagement.LoadAsset<GameObject>(_uiRootPath);
+
+        if (Application.isEditor && rootPrefab == null)
+            throw new ArgumentNullException($"Can't load UI Root by path: {_uiRootPath}");
 
         if (rootPrefab == null)
             return false;
@@ -71,7 +82,11 @@ internal class WindowsFactory : IWindowFactory
 
         if (WindowMediatorMap.TryGetValue(mediatorType, out var windowType) == false)
         {
-            Log.Error($"For {mediatorType} Window type not found");
+            var errorMessage = $"For {mediatorType} Window type not found";
+            if (Application.isEditor)
+                throw new ArgumentNullException(errorMessage);
+            
+            Log.Error(errorMessage);
 
             return false;
         }
@@ -79,12 +94,17 @@ internal class WindowsFactory : IWindowFactory
         var prefabKey = $"UI/{mediatorType.Name.Replace("MediatorUI", "")}";
         var prefab = _resourceManagement.LoadAsset<GameObject>(prefabKey);
 
+        if (Application.isEditor && prefab == null)
+            throw new ArgumentNullException($"Can't load Prefab by path: {prefabKey}");
         if (prefab == null)
             return false;
 
         if (prefab.GetComponent(windowType) == null)
         {
-            Log.Error($"Can't find \"{windowType}\" component in {prefab.gameObject}.");
+            var errorMessage = $"Can't find \"{windowType}\" component in {prefab.gameObject}.";
+            if (Application.isEditor)
+                throw new ArgumentNullException(errorMessage);
+            Log.Error(errorMessage);
 
             return false;
         }

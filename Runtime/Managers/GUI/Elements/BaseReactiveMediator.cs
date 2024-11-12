@@ -40,6 +40,8 @@ public abstract class BaseReactiveMediator<TWindow, TReactive> : IMediator
     
     public void SetActive(bool value) => window.gameObject.SetActive(value);
     
+    public void SetPosition(Vector3 value) => window.transform.localPosition = value;
+    
     public void SetInteraction(bool value) => window.canvasGroup.blocksRaycasts = value;
 
     public bool IsActive() => window.gameObject.activeInHierarchy;

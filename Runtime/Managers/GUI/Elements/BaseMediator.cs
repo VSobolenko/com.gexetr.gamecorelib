@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.GUI.Windows
 {
@@ -37,6 +39,7 @@ public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
     public virtual void OnDestroy() { }
 
     public void SetActive(bool value) => window.gameObject.SetActive(value);
+    public void SetPosition(Vector3 value) => window.transform.localPosition = value;
     public void SetInteraction(bool value) => window.canvasGroup.blocksRaycasts = value;
     public bool IsActive() => window.gameObject.activeInHierarchy;
     public void Destroy() => Object.Destroy(window.gameObject);

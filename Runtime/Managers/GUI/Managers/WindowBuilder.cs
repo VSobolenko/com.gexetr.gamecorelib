@@ -35,7 +35,11 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
         where TMediator : class, IMediator
     {
         if (_windowFactory.TryCreateWindow<TMediator>(_root, out var mediator, out var window) == false)
+        {
+            if (Application.isEditor)
+                throw new ArgumentNullException($"Can't create mediator {typeof(TMediator)}");
             return default;
+        }
 
         mediator.SetActive(true);
         mediator.SetInteraction(true);
@@ -81,6 +85,7 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
         _windows[index - 1].mediator.SetActive(true);
         _windows[index - 1].mediator.SetInteraction(true);
         _windows[index - 1].mediator.OnFocus();
+        _windows[index - 1].mediator.SetPosition(Vector3.zero);
         RestoreVisibilityMode();
     }
 

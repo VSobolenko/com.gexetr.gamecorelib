@@ -2,7 +2,7 @@
 
 namespace Game.GUI.Windows.Factories
 {
-internal interface IWindowFactory
+public interface IWindowFactory
 {
     public bool TryCreateWindowsRoot(Transform root, out Transform uiRoot);
 

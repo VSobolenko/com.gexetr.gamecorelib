@@ -25,6 +25,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
         Tree.DisposeMachine();
     }
 
+    [Obsolete("It breaks the concept of the FSM. It will be removed soon")]
     public void ForceTransitTo<TIn>(DeadState<TIn> state, TIn data)
     {
         if (Tree.GetStates().Contains(state) == false)

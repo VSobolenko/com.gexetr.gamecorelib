@@ -40,7 +40,7 @@ internal class BouncedTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
 
         var transform = windowProperties.rectTransform;
-        var activePos = transform.localPosition;
+        //var activePos = transform.localPosition;
 
         windowProperties.mediator.SetInteraction(false);
 
@@ -48,7 +48,7 @@ internal class BouncedTransition : IWindowTransition
         {
             windowProperties.mediator.SetInteraction(true);
             completionSource.SetResult(true);
-            transform.localPosition = activePos;
+            //transform.localPosition = activePos;
         });
 
         return completionSource.Task;

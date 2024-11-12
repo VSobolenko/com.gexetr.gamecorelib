@@ -25,10 +25,10 @@ internal class HorizontalTransition : IWindowTransition
         var transform = windowProperties.rectTransform;
         windowProperties.mediator.SetInteraction(false);
 
-        var activePos = transform.localPosition;
-        var startPos = new Vector3(activePos.x + transform.rect.width, activePos.y, activePos.z);
+        var activePos = WindowTransitionStatic.startPoint;
+        var startedPos = new Vector3(activePos.x + transform.rect.width, activePos.y, activePos.z);
 
-        transform.localPosition = startPos;
+        transform.localPosition = startedPos;
         MoveWindow(transform, Vector3.zero, () =>
         {
             windowProperties.mediator.SetInteraction(true);
@@ -43,7 +43,7 @@ internal class HorizontalTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
 
         var transform = windowProperties.rectTransform;
-        var activePos = transform.localPosition;
+        var activePos = WindowTransitionStatic.startPoint;
 
         windowProperties.mediator.SetInteraction(false);
         var targetPosition = new Vector3(activePos.x - transform.rect.width, activePos.y, activePos.z);
@@ -52,7 +52,7 @@ internal class HorizontalTransition : IWindowTransition
         {
             windowProperties.mediator.SetInteraction(true);
             completionSource.SetResult(true);
-            transform.localPosition = activePos;
+            //transform.localPosition = activePos;
         });
 
         return completionSource.Task;
