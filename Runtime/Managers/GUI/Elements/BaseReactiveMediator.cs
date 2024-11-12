@@ -37,15 +37,10 @@ public abstract class BaseReactiveMediator<TWindow, TReactive> : IMediator
     }
 
     protected virtual void ProceedButtonAction(TReactive action) { }
-    
-    public void SetActive(bool value) => window.gameObject.SetActive(value);
-    
-    public void SetPosition(Vector3 value) => window.transform.localPosition = value;
-    
-    public void SetInteraction(bool value) => window.canvasGroup.blocksRaycasts = value;
-
-    public bool IsActive() => window.gameObject.activeInHierarchy;
-
-    public void Destroy() => Object.Destroy(window.gameObject);
+    public virtual void SetActive(bool value) => window.gameObject.SetActive(value);
+    public virtual void SetPosition(Vector3 value) => window.transform.localPosition = value;
+    public virtual void SetInteraction(bool value) => window.canvasGroup.blocksRaycasts = value;
+    public virtual bool IsActive() => window.gameObject.activeInHierarchy;
+    public virtual void Destroy() => Object.Destroy(window.gameObject);
 }
 }
