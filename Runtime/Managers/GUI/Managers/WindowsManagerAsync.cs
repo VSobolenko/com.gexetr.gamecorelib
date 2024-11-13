@@ -8,19 +8,21 @@ namespace Game.GUI.Windows.Managers
 {
 internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
 {
-    private readonly IWindowTransition _defaultTransition;
+    private readonly IWindowTransition _defaultOpenTransition;
+    private readonly IWindowTransition _defaultCloseTransition;
 
     public WindowsManagerAsync(IWindowFactory windowFactory, Transform rootUi, WindowSettings settings,
-                               IWindowTransition defaultTransition) : base(windowFactory, rootUi)
+                               IWindowTransition openTransition, IWindowTransition closeTransition) : base(windowFactory, rootUi)
     {
-        _defaultTransition = defaultTransition;
+        _defaultOpenTransition = openTransition;
+        _defaultCloseTransition = closeTransition;
     }
 
     public async Task<TMediator> OpenWindowOnTopAsync<TMediator>(Action<TMediator> initWindow = null)
-        where TMediator : class, IMediator => await OpenWindowAsync(_defaultTransition, false, initWindow);
+        where TMediator : class, IMediator => await OpenWindowAsync(_defaultOpenTransition, false, initWindow);
 
     public async Task<TMediator> OpenWindowOverAsync<TMediator>(Action<TMediator> initWindow = null)
-        where TMediator : class, IMediator => await OpenWindowAsync(_defaultTransition, true, initWindow);
+        where TMediator : class, IMediator => await OpenWindowAsync(_defaultOpenTransition, true, initWindow);
 
     public async Task<TMediator> OpenWindowOnTopAsync<TMediator>(IWindowTransition transition = null,
                                                                  Action<TMediator> initWindow = null)
@@ -34,18 +36,20 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
                                                              Action<TMediator> initWindow)
         where TMediator : class, IMediator
     {
-        var countWindows = windowBuilder.Count;
-        var closeTask = countWindows > 0
-            ? transition.Close(windowBuilder[countWindows - 1])
-            : Task.CompletedTask;
-        var windowData = windowBuilder.OpenWindowSilently(initWindow);
-        var openTask = transition != null
-            ? transition.Open(windowData)
-            : Task.CompletedTask;
+        var closingWindow = windowBuilder.Count > 0 ? windowBuilder[^1] : default;
+        var openingWindow = windowBuilder.OpenWindowSilently(initWindow);
+        
+        var closeTask = closingWindow?.mediator != null ? transition.Close(closingWindow) : Task.CompletedTask;
+        var openTask = transition.Open(openingWindow);
 
+        closingWindow?.mediator?.SetInteraction(false);
+        openingWindow.mediator?.SetInteraction(false);
+        
         await Task.WhenAll(closeTask, openTask);
 
-        return windowData.mediator as TMediator;
+        openingWindow.mediator?.SetInteraction(true);
+        
+        return openingWindow.mediator as TMediator;
     }
 
     public async Task<bool> CloseWindowAsync<TMediator>() where TMediator : class, IMediator
@@ -56,8 +60,13 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
                 continue;
 
             var closingWindows = windowBuilder[i];
-            var openingWindow = i == windowBuilder.Count - 1 ? default : windowBuilder[^1];
-            var result = await CloseWindowAsync(closingWindows, openingWindow, i, _defaultTransition);
+            WindowProperties openingWindow = null;
+            if (i == windowBuilder.Count - 1 && i != 0)
+                openingWindow = windowBuilder[i - 1];
+            else
+                openingWindow = null;
+            
+            var result = await CloseWindowAsync(closingWindows, openingWindow, i, _defaultCloseTransition);
 
             return result;
         }
@@ -75,7 +84,7 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
 
             var closingWindows = windowBuilder[i];
             var openingWindow = windowBuilder.Count == 1 ? default : windowBuilder[i - 1];
-            var result = await CloseWindowAsync(closingWindows, openingWindow, i, _defaultTransition);
+            var result = await CloseWindowAsync(closingWindows, openingWindow, i, _defaultCloseTransition);
 
             return result;
         }
@@ -86,16 +95,16 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
     private async Task<bool> CloseWindowAsync(WindowProperties closingWindow, WindowProperties openingWindow,
                                               int closingWindowIndex, IWindowTransition transition)
     {
-        transition = _defaultTransition;
-        var closeTask = closingWindow.mediator != null && transition != null
-            ? transition.Close(closingWindow)
-            : Task.CompletedTask;
-        var openTask = openingWindow.mediator != null && transition != null
-            ? transition.Open(openingWindow)
-            : Task.CompletedTask;
+        var closeTask = transition.Close(closingWindow);
+        var openTask = openingWindow.mediator != null ? transition.Open(openingWindow) : Task.CompletedTask;
 
+        closingWindow.mediator.SetInteraction(false);
+        openingWindow.mediator?.SetInteraction(false);
+        
         await Task.WhenAll(closeTask, openTask);
-        openingWindow.mediator?.SetActive(true);
+        
+        openingWindow.mediator?.SetInteraction(true);
+
         windowBuilder.CloseWindow(closingWindowIndex);
 
         return true;

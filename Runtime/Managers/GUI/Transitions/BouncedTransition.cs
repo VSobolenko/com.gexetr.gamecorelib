@@ -7,6 +7,8 @@ namespace Game.GUI.Windows.Transitions
 {
 internal class BouncedTransition : IWindowTransition
 {
+    private readonly Vector3 _openStartedScale = new(0.3f, 0.3f, 0.3f);
+    private readonly Vector3 _closeEndScale = new(0.3f, 0.3f, 0.3f);
     private readonly WindowSettings _settings;
     private readonly int _width;
     private readonly int _height;
@@ -21,16 +23,20 @@ internal class BouncedTransition : IWindowTransition
     public Task Open(WindowProperties windowProperties)
     {
         var completionSource = new TaskCompletionSource<bool>();
-
         var transform = windowProperties.rectTransform;
-        windowProperties.mediator.SetInteraction(false);
         
-        transform.localScale = Vector3.zero;
-        BounceWindow(transform, Vector3.one, _settings.TransitionMoveDuration / 2f, () =>
-        {
-            windowProperties.mediator.SetInteraction(true);
-            completionSource.SetResult(true);
-        });
+        windowProperties.mediator.SetActive(false);
+        transform.localScale = _openStartedScale;
+
+        BounceWindow(transform, Vector3.one, _settings.MoveDuration / 2f / _settings.Synchronicity, _settings.OpenType,
+            () =>
+            {
+                windowProperties.mediator.SetActive(true);
+            },
+            () =>
+            {
+                completionSource.SetResult(true);
+            });
 
         return completionSource.Task;
     }
@@ -38,28 +44,24 @@ internal class BouncedTransition : IWindowTransition
     public Task Close(WindowProperties windowProperties)
     {
         var completionSource = new TaskCompletionSource<bool>();
-
         var transform = windowProperties.rectTransform;
-        //var activePos = transform.localPosition;
 
-        windowProperties.mediator.SetInteraction(false);
-
-        BounceWindow(transform, Vector3.zero, 0, () =>
+        BounceWindow(transform, _closeEndScale, 0, _settings.CloseType, null, () =>
         {
-            windowProperties.mediator.SetInteraction(true);
+            windowProperties.mediator.SetActive(false);
             completionSource.SetResult(true);
-            //transform.localPosition = activePos;
         });
 
         return completionSource.Task;
     }
 
-    private void BounceWindow(Transform transform, Vector3 to, float startDelay, TweenCallback completeAction)
+    private void BounceWindow(Transform transform, Vector3 to, float startDelay, Ease ease, TweenCallback actionAfterDelay, TweenCallback completeAction)
     {
         var seq = DOTween.Sequence();
         seq.PrependInterval(startDelay)
-           .Append(transform.DOScale(to, _settings.TransitionMoveDuration / 2f)
-                            .SetEase(_settings.MoveType))
+           .Append(transform.DOScale(to, _settings.MoveDuration / 2f)
+                            .SetEase(ease)
+                            .OnStart(actionAfterDelay))
            .OnComplete(completeAction);
     }
 }

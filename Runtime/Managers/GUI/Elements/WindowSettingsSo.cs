@@ -8,17 +8,23 @@ namespace Game.GUI.Windows
 [Serializable]
 internal class WindowSettings
 {
-    [SerializeField] private float _transitionMoveDuration = .5f;
-    [SerializeField] private Ease _moveType = Ease.Linear;
+    [SerializeField] private float _moveDuration = .5f;
+    [SerializeField] private float _fadeDuration = .5f;
+    [SerializeField, Range(0.1f, 10), Min(0.1f)] private float _synchronicity = 1; // use not for all transition
+    [SerializeField] private Ease _openType = Ease.Linear;
+    [SerializeField] private Ease _closeType = Ease.Linear;
 
-    public float TransitionMoveDuration => _transitionMoveDuration;
-    public Ease MoveType => _moveType;
+    public float MoveDuration => _moveDuration;
+    public float FadeDuration => _fadeDuration;
+    public float Synchronicity => _synchronicity;
+    public Ease OpenType => _openType;
+    public Ease CloseType => _closeType;
 }
 
 [CreateAssetMenu(fileName = nameof(WindowSettings), menuName = GameData.EditorName +"/Window Settings", order = 3)]
 internal class WindowSettingsSo : ScriptableObject
 {
     [Header("Default Transition")]
-    public WindowSettings windowSettings;
+    public WindowSettings defaultSettings;
 }
 }

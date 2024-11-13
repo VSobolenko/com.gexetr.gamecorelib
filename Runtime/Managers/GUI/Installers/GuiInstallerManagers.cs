@@ -11,24 +11,30 @@ namespace Game.GUI.Installers
 public static partial class GuiInstaller
 {
     public static IWindowsManagerAsync Manager(IWindowFactory windowFactory,
-                                               IWindowTransition transition,
-                                               Transform rootUi = null) =>
+        IWindowTransition transition,
+        Transform rootUi = null) =>
         ManagerAsync(windowFactory, transition, rootUi);
 
     public static IWindowsManagerAsync ManagerAsync(IWindowFactory windowFactory,
-                                                    IWindowTransition transition,
-                                                    Transform rootUi = null) =>
-        new WindowsManagerAsync(windowFactory, rootUi, WindowSettings, transition);
+        IWindowTransition transition,
+        Transform rootUi = null) =>
+        ManagerAsync(windowFactory, transition, transition, rootUi);
+    
+    public static IWindowsManagerAsync ManagerAsync(IWindowFactory windowFactory,
+        IWindowTransition openTransition,
+        IWindowTransition closeTransition,
+        Transform rootUi = null) =>
+        new WindowsManagerAsync(windowFactory, rootUi, WindowSettings, openTransition, closeTransition);
 
     public static IWindowFactory WindowFactory(IMediatorInstantiator mediatorBuilder,
-                                               IResourceManagement resourceManagement,
-                                               IFactoryGameObjects factory) =>
+        IResourceManagement resourceManagement,
+        IFactoryGameObjects factory) =>
         new WindowsFactory(mediatorBuilder, resourceManagement, factory);
     
     public static IWindowFactory WindowFactory(IMediatorInstantiator mediatorBuilder,
-                                               IResourceManagement resourceManagement,
-                                               IFactoryGameObjects factory,
-                                               string uiRootPath) =>
+        IResourceManagement resourceManagement,
+        IFactoryGameObjects factory,
+        string uiRootPath) =>
         new WindowsFactory(mediatorBuilder, resourceManagement, factory)
             .WithParameter(uiRootPath);
 }

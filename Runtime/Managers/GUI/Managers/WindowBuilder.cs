@@ -51,6 +51,7 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
         {
             mediator = mediator,
             rectTransform = (RectTransform) window.transform,
+            canvasGroup = window.canvasGroup,
             mode = OpenMode.Silently,
         };
 

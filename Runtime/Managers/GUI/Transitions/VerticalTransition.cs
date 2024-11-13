@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DG.Tweening;
 using Game.GUI.Windows.Managers;
+using Game.Utility.Extensions;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
@@ -23,15 +24,11 @@ internal class VerticalTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
 
         var transform = windowProperties.rectTransform;
-        windowProperties.mediator.SetInteraction(false);
+        var startPosY = GetStartedPointY(transform);
 
-        var activePos = WindowTransitionStatic.startPoint;
-        var startPos = new Vector3(activePos.x, activePos.y + transform.rect.height, activePos.z);
-
-        transform.localPosition = startPos;
-        MoveWindow(transform, Vector3.zero, () =>
+        transform.SetLocalY(startPosY);
+        MoveWindow(transform, 0, _settings.OpenType, () =>
         {
-            windowProperties.mediator.SetInteraction(true);
             completionSource.SetResult(true);
         });
 
@@ -43,26 +40,33 @@ internal class VerticalTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
 
         var transform = windowProperties.rectTransform;
-        var activePos = WindowTransitionStatic.startPoint;
-
-        windowProperties.mediator.SetInteraction(false);
-        var targetPosition = new Vector3(activePos.x, activePos.y - transform.rect.height, activePos.z);
-
-        MoveWindow(transform, targetPosition, () =>
+        var targetPositionY = GetEndPointY(transform);
+        
+        MoveWindow(transform, targetPositionY, _settings.CloseType, () =>
         {
-            windowProperties.mediator.SetInteraction(true);
             completionSource.SetResult(true);
-            //transform.localPosition = activePos;
         });
 
         return completionSource.Task;
     }
 
-    private void MoveWindow(RectTransform transform, Vector3 to, TweenCallback completeAction)
+    private void MoveWindow(RectTransform transform, float to, Ease ease, TweenCallback completeAction)
     {
-        transform.DOLocalMove(to, _settings.TransitionMoveDuration)
-                 .SetEase(_settings.MoveType)
+        transform.DOLocalMoveY(to, _settings.MoveDuration)
+                 .SetEase(ease)
                  .OnComplete(completeAction);
+    }
+    
+    protected virtual float GetStartedPointY(RectTransform transform)
+    {
+        var startingPoint = WindowTransitionStatic.startPoint;
+        return startingPoint.y + transform.rect.height;
+    }
+    
+    protected virtual float GetEndPointY(RectTransform transform)
+    {
+        var startingPoint = WindowTransitionStatic.startPoint;
+        return startingPoint.y - transform.rect.height;
     }
 }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Game.GUI.Windows.Managers;
-using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
 {
