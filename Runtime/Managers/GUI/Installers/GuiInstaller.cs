@@ -22,7 +22,7 @@ public static partial class GuiInstaller
         var so = Resource.LoadAsset<WindowSettingsSo>(ResourcesWindowSettingsPath);
 
         if (so != null)
-            return so.windowSettings;
+            return so.defaultSettings;
         Log.Error($"Can't load input so settings. Path to so: {ResourcesWindowSettingsPath}");
 
         return default;
