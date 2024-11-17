@@ -63,7 +63,7 @@ internal class WindowsFactory : IWindowFactory
         var rootPrefab = _resourceManagement.LoadAsset<GameObject>(_uiRootPath);
 
         if (Application.isEditor && rootPrefab == null)
-            throw new ArgumentNullException($"Can't load UI Root by path: {_uiRootPath}");
+            throw new ArgumentNullException(_uiRootPath, $"Can't load UI Root by path: {_uiRootPath}");
 
         if (rootPrefab == null)
             return false;
@@ -84,7 +84,7 @@ internal class WindowsFactory : IWindowFactory
         {
             var errorMessage = $"For {mediatorType} Window type not found";
             if (Application.isEditor)
-                throw new ArgumentNullException(errorMessage);
+                throw new ArgumentNullException(mediatorType.Name, errorMessage);
             
             Log.Error(errorMessage);
 
@@ -95,7 +95,7 @@ internal class WindowsFactory : IWindowFactory
         var prefab = _resourceManagement.LoadAsset<GameObject>(prefabKey);
 
         if (Application.isEditor && prefab == null)
-            throw new ArgumentNullException($"Can't load Prefab by path: {prefabKey}");
+            throw new ArgumentNullException(prefabKey, $"Can't load Prefab by path: {prefabKey}");
         if (prefab == null)
             return false;
 
@@ -103,7 +103,7 @@ internal class WindowsFactory : IWindowFactory
         {
             var errorMessage = $"Can't find \"{windowType}\" component in {prefab.gameObject}.";
             if (Application.isEditor)
-                throw new ArgumentNullException(errorMessage);
+                throw new ArgumentNullException(windowType.Name, errorMessage);
             Log.Error(errorMessage);
 
             return false;

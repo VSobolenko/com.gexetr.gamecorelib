@@ -37,7 +37,7 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
         if (_windowFactory.TryCreateWindow<TMediator>(_root, out var mediator, out var window) == false)
         {
             if (Application.isEditor)
-                throw new ArgumentNullException($"Can't create mediator {typeof(TMediator)}");
+                throw new ArgumentNullException(typeof(TMediator).Name, $"Can't create mediator {typeof(TMediator)}");
             return default;
         }
 
@@ -50,7 +50,7 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
         var windowData = new WindowProperties
         {
             mediator = mediator,
-            rectTransform = (RectTransform) window.transform,
+            rectTransform = window.overrideTransition != null ? window.overrideTransition : (RectTransform) window.transform,
             canvasGroup = window.canvasGroup,
             mode = OpenMode.Silently,
         };

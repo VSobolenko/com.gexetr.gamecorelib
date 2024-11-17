@@ -17,10 +17,8 @@ public class LocalizableTMP : LocalizableBehaviour
 
     private ILocalizationManager _localizationManager;
 
-#if UNITY_EDITOR
     [Header("Editor features"), SerializeField] private LocalizationManagerType editorManagerType;
     [SerializeField] private LanguageType languageForTranslate;
-#endif
 
     protected virtual void Initialize(ILocalizationManager localizationManager) =>
         _localizationManager = localizationManager;

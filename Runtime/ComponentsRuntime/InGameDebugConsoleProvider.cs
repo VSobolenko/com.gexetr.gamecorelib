@@ -10,6 +10,7 @@ namespace Game.Components
 /// </summary>
 public class InGameDebugConsoleProvider : MonoBehaviour
 {
+    [SerializeField] private bool _enableSelfDestruct = true;
     [SerializeField] private bool _enableInEditor;
     [SerializeField] private int _countTouchToDestroy = 5;
 
@@ -19,7 +20,10 @@ public class InGameDebugConsoleProvider : MonoBehaviour
 
     private void Start()
     {
-        EnableInGameDebugConsole();
+        if (_enableSelfDestruct)
+            Destroy(gameObject);
+        else
+            EnableInGameDebugConsole();
     }
 
     private void EnableInGameDebugConsole()

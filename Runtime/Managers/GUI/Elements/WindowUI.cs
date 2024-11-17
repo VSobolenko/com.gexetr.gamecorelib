@@ -6,6 +6,7 @@ namespace Game.GUI.Windows
 public class WindowUI : MonoBehaviour
 {
     [SerializeField] protected internal CanvasGroup canvasGroup;
+    [SerializeField] protected internal RectTransform overrideTransition;
 
     [ContextMenu("Validate")]
     private void Reset()

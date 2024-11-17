@@ -17,6 +17,7 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
     private TaskCompletionSource<PurchaseResponseResult> _purchaseCompletionSource;
     private IStoreController _controller;
     private IExtensionProvider _extensions;
+
     public HashSet<GameProduct> Products { get; private set; }
 
     public IAPShopManager(GameProduct[] sourceProducts)
@@ -65,14 +66,14 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
-        if (_initializationCompletionSource?.TrySetResult(false) == false)
-            Log.Error($"Initialize Failed: {error.ToString()}");
+        _initializationCompletionSource?.TrySetResult(false);
+        Log.Error($"Initialize Failed: {error.ToString()}");
     }
 
     public void OnInitializeFailed(InitializationFailureReason error, string? message)
     {
-        if (_initializationCompletionSource?.TrySetResult(false) == false)
-            Log.Error($"Initialize Failed: {error.ToString()}; Message: {message}");
+        _initializationCompletionSource?.TrySetResult(false);
+        Log.Error($"Initialize Failed: {error.ToString()}; Message: {message}");
     }
 
     public Task<PurchaseResponseResult> PurchaseProduct(string productId)
@@ -159,14 +160,13 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
             message = $"ProductId={failureDescription.productId};" +
                       $"Result={failureDescription.reason};" +
                       $"Message={failureDescription.message}",
-            
+
             result = failureDescription.reason switch
             {
                 PurchaseFailureReason.UserCancelled => PurchaseResult.Cancel,
                 _ => PurchaseResult.Error
             },
         };
-
 
         if (_purchaseCompletionSource?.TrySetResult(purchaseResult) == false)
             Log.InternalError();

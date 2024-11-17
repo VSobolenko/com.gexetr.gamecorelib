@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Game.DynamicData;
 using UnityEngine;
 
@@ -6,6 +8,7 @@ namespace Game.Utility
 {
 public static class Log
 {
+    public static bool enableAnalyticsEvents = true;
     private static string InfoType => "[info]";
     private static string WarningType => "[warning]";
     private static string ErrorType => "[error]";
@@ -29,6 +32,7 @@ public static class Log
         Debug.Log($"{LogType(InfoType, Green)} " + text);
 #endif
     }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Warning(string text)
     {
@@ -52,7 +56,7 @@ public static class Log
         Debug.Log($"{LogType(ExceptionType, Pink)} " + text);
 #endif
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void InternalError()
     {
@@ -62,11 +66,21 @@ public static class Log
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Analytics(object action)
+    {
+#if ENABLE_LOG
+        if (enableAnalyticsEvents == false)
+            return;
+        Debug.Log($"{LogType(AnalyticsType, Yellow)} " +
+                  $"Event={action.GetType().Name};" +
+                  $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}");
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string LogType(string type, string color)
     {
-        return Application.isEditor ? 
-            string.Format(color, type) : 
-            string.Concat($"[{GameData.Identifier}]", string.Format(color, type));
+        return Application.isEditor ? string.Format(color, type) : string.Concat($"[{GameData.Identifier}]", type);
     }
 
     #region Colors

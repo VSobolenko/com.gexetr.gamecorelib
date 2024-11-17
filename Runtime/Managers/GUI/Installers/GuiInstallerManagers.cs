@@ -24,7 +24,7 @@ public static partial class GuiInstaller
         IWindowTransition openTransition,
         IWindowTransition closeTransition,
         Transform rootUi = null) =>
-        new WindowsManagerAsync(windowFactory, rootUi, WindowSettings, openTransition, closeTransition);
+        new WindowsManagerAsync(windowFactory, rootUi, _windowSettings, openTransition, closeTransition);
 
     public static IWindowFactory WindowFactory(IMediatorInstantiator mediatorBuilder,
         IResourceManagement resourceManagement,

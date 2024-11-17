@@ -52,7 +52,10 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
         return openingWindow.mediator as TMediator;
     }
 
-    public async Task<bool> CloseWindowAsync<TMediator>() where TMediator : class, IMediator
+    public async Task<bool> CloseWindowAsync<TMediator>() where TMediator : class, IMediator =>
+        await CloseWindowAsync<TMediator>(_defaultCloseTransition);
+
+    public async Task<bool> CloseWindowAsync<TMediator>(IWindowTransition transition) where TMediator : class, IMediator
     {
         for (var i = 0; i < windowBuilder.Count; i++)
         {
@@ -63,19 +66,21 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
             WindowProperties openingWindow = null;
             if (i == windowBuilder.Count - 1 && i != 0)
                 openingWindow = windowBuilder[i - 1];
-            else
-                openingWindow = null;
             
-            var result = await CloseWindowAsync(closingWindows, openingWindow, i, _defaultCloseTransition);
+            var result = await CloseWindowAsync(closingWindows, openingWindow, i, transition);
 
             return result;
         }
 
         return false;
     }
+        
 
-    // DANGER - похожий метод, посмотреть
-    public async Task<bool> CloseWindowAsync<TMediator>(TMediator mediator) where TMediator : class, IMediator
+    public async Task<bool> CloseWindowAsync<TMediator>(TMediator mediator) where TMediator : class, IMediator =>
+        await CloseWindowAsync(_defaultCloseTransition, mediator);
+
+    public async Task<bool> CloseWindowAsync<TMediator>(IWindowTransition transition, TMediator mediator)
+        where TMediator : class, IMediator
     {
         for (var i = 0; i < windowBuilder.Count; i++)
         {
@@ -84,7 +89,7 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
 
             var closingWindows = windowBuilder[i];
             var openingWindow = windowBuilder.Count == 1 ? default : windowBuilder[i - 1];
-            var result = await CloseWindowAsync(closingWindows, openingWindow, i, _defaultCloseTransition);
+            var result = await CloseWindowAsync(closingWindows, openingWindow, i, transition);
 
             return result;
         }

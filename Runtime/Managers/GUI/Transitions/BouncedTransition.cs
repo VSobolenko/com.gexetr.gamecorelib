@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DG.Tweening;
 using Game.GUI.Windows.Managers;
 using UnityEngine;
@@ -24,19 +25,14 @@ internal class BouncedTransition : IWindowTransition
     {
         var completionSource = new TaskCompletionSource<bool>();
         var transform = windowProperties.rectTransform;
-        
+
         windowProperties.mediator.SetActive(false);
         transform.localScale = _openStartedScale;
 
-        BounceWindow(transform, Vector3.one, _settings.MoveDuration / 2f / _settings.Synchronicity, _settings.OpenType,
-            () =>
-            {
-                windowProperties.mediator.SetActive(true);
-            },
-            () =>
-            {
-                completionSource.SetResult(true);
-            });
+        BounceWindow(transform, Vector3.one, _settings.bouncedOpen.duration / 2f,
+                     _settings.bouncedOpen.duration / 2f / _settings.Synchronicity,
+                     _settings.bouncedOpen.ease,
+                     () => { windowProperties.mediator.SetActive(true); }, () => { completionSource.SetResult(true); });
 
         return completionSource.Task;
     }
@@ -46,20 +42,23 @@ internal class BouncedTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
         var transform = windowProperties.rectTransform;
 
-        BounceWindow(transform, _closeEndScale, 0, _settings.CloseType, null, () =>
-        {
-            windowProperties.mediator.SetActive(false);
-            completionSource.SetResult(true);
-        });
+        BounceWindow(transform, _closeEndScale, _settings.bouncedClose.duration / 2f, 0, _settings.bouncedClose.ease,
+                     null,
+                     () =>
+                     {
+                         windowProperties.mediator.SetActive(false);
+                         completionSource.SetResult(true);
+                     });
 
         return completionSource.Task;
     }
 
-    private void BounceWindow(Transform transform, Vector3 to, float startDelay, Ease ease, TweenCallback actionAfterDelay, TweenCallback completeAction)
+    private void BounceWindow(Transform transform, Vector3 to, float duration, float startDelay, Ease ease,
+                              TweenCallback actionAfterDelay, TweenCallback completeAction)
     {
         var seq = DOTween.Sequence();
         seq.PrependInterval(startDelay)
-           .Append(transform.DOScale(to, _settings.MoveDuration / 2f)
+           .Append(transform.DOScale(to, duration)
                             .SetEase(ease)
                             .OnStart(actionAfterDelay))
            .OnComplete(completeAction);

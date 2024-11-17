@@ -6,13 +6,15 @@ using UnityEngine;
 namespace Game.GUI.Windows
 {
 [Serializable]
-internal class WindowSettings
+public class WindowSettings
 {
     [SerializeField] private float _moveDuration = .5f;
     [SerializeField] private float _fadeDuration = .5f;
     [SerializeField, Range(0.1f, 10), Min(0.1f)] private float _synchronicity = 1; // use not for all transition
     [SerializeField] private Ease _openType = Ease.Linear;
     [SerializeField] private Ease _closeType = Ease.Linear;
+    [SerializeField] internal TransitionSettings bouncedOpen;
+    [SerializeField] internal TransitionSettings bouncedClose;
 
     public float MoveDuration => _moveDuration;
     public float FadeDuration => _fadeDuration;
@@ -26,5 +28,12 @@ internal class WindowSettingsSo : ScriptableObject
 {
     [Header("Default Transition")]
     public WindowSettings defaultSettings;
+}
+
+[Serializable]
+internal struct TransitionSettings
+{
+    public float duration;
+    public Ease ease;
 }
 }

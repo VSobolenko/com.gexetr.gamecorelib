@@ -13,7 +13,9 @@ public interface IWindowsManagerAsync : IWindowsManager
         where TMediator : class, IMediator;
 
     Task<bool> CloseWindowAsync<TMediator>() where TMediator : class, IMediator;
+    Task<bool> CloseWindowAsync<TMediator>(IWindowTransition transition) where TMediator : class, IMediator;
 
     Task<bool> CloseWindowAsync<TMediator>(TMediator mediator) where TMediator : class, IMediator;
+    Task<bool> CloseWindowAsync<TMediator>(IWindowTransition transition, TMediator mediator) where TMediator : class, IMediator;
 }
 }

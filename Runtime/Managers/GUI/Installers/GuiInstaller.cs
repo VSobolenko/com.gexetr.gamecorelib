@@ -1,31 +1,32 @@
-﻿using Game.AssetContent;
+﻿using System;
+using Game.AssetContent;
 using Game.AssetContent.Managers;
 using Game.GUI.Windows;
-using Game.Utility;
 
 namespace Game.GUI.Installers
 {
 public static partial class GuiInstaller
 {
-    private const string ResourcesWindowSettingsPath = "WindowSettings";
-    private static readonly WindowSettings WindowSettings;
-    private static readonly IResourceManagement Resource;
+    private const string ResourcesWindowSettingsPath = "UI/WindowSettings";
+    private static readonly IResourceManagement ResourceManagement;
+    private static WindowSettings _windowSettings;
 
     static GuiInstaller()
     {
-        Resource = new ResourceManagement();
-        WindowSettings = LoadInputSettings();
+        ResourceManagement = new ResourceManagement();
+        _windowSettings = LoadInputSettings();
     }
 
     private static WindowSettings LoadInputSettings()
     {
-        var so = Resource.LoadAsset<WindowSettingsSo>(ResourcesWindowSettingsPath);
+        var so = ResourceManagement.LoadAsset<WindowSettingsSo>(ResourcesWindowSettingsPath);
 
         if (so != null)
             return so.defaultSettings;
-        Log.Error($"Can't load input so settings. Path to so: {ResourcesWindowSettingsPath}");
 
-        return default;
+        throw new ArgumentNullException(ResourcesWindowSettingsPath, $"Can't load input so settings. Path to so: {ResourcesWindowSettingsPath}");
     }
+
+    public static void SetSettings(WindowSettings windowSettings) => _windowSettings = windowSettings;
 }
 }
