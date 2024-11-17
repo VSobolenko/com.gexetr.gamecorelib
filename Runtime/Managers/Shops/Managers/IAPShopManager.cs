@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Game.Utility;
+using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 
@@ -17,8 +18,16 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
     private TaskCompletionSource<PurchaseResponseResult> _purchaseCompletionSource;
     private IStoreController _controller;
     private IExtensionProvider _extensions;
-
+    private bool _isInitializedInProcess;
     public HashSet<GameProduct> Products { get; private set; }
+
+    private int _initStart;
+    private int _unityServicesManagerComplete;
+    private int _unityPurchasingStart;
+    private int _initializedComplete;
+    private int _initializedFailed;
+    private InitializationFailureReason _initializedFailedError;
+    private string _initializedFailedMessage = string.Empty;
 
     public IAPShopManager(GameProduct[] sourceProducts)
     {
@@ -37,8 +46,16 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
             return await Task.FromResult(false);
         }
 
-        var unityServices = new UnityServicesManager();
-        await unityServices.Initialize();
+        _isInitializedInProcess = true;
+        _initStart++;
+        await InitializeUnityServices();
+        InitializeUnityPurchasing();
+
+        return await _initializationCompletionSource.Task;
+    }
+
+    private void InitializeUnityPurchasing()
+    {
         Products = new HashSet<GameProduct>(_sourceProducts.Length);
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
         foreach (var sourceProduct in _sourceProducts)
@@ -51,10 +68,23 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
 
         _initializationCompletionSource = new TaskCompletionSource<bool>();
         UnityPurchasing.Initialize(this, builder);
-
-        return await _initializationCompletionSource.Task;
+        _unityPurchasingStart++;
     }
 
+    private async Task InitializeUnityServices()
+    {
+        var unityServices = new UnityServicesManager();
+        await unityServices.Initialize();
+        _unityServicesManagerComplete++;
+    }
+
+    private async Task AttemptToReInitialize()
+    {
+        _isInitializedInProcess = true;
+        if (UnityServicesManager.isInitialize == false)
+            await InitializeUnityServices();
+        InitializeUnityPurchasing();
+    }
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
         _controller = controller;
@@ -62,30 +92,45 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
 
         if (_initializationCompletionSource?.TrySetResult(true) == false)
             Log.InternalError();
+        _initializedComplete++;
+        _isInitializedInProcess = false;
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         _initializationCompletionSource?.TrySetResult(false);
         Log.Error($"Initialize Failed: {error.ToString()}");
+        _initializedFailed++;
+        _initializedFailedError = error;
+        _initializedFailedMessage = "!";
+        _isInitializedInProcess = false;
     }
 
     public void OnInitializeFailed(InitializationFailureReason error, string? message)
     {
         _initializationCompletionSource?.TrySetResult(false);
         Log.Error($"Initialize Failed: {error.ToString()}; Message: {message}");
+        _initializedFailed++;
+        _initializedFailedError = error;
+        _initializedFailedMessage = message;
+        _isInitializedInProcess = false;
     }
 
-    public Task<PurchaseResponseResult> PurchaseProduct(string productId)
+    public async Task<PurchaseResponseResult> PurchaseProduct(string productId)
     {
-        if (_controller == null)
-            return Task.FromResult(new PurchaseResponseResult
-            {
-                result = PurchaseResult.Error,
-                message = "Null _controller",
-            });
-
         _purchaseCompletionSource = new TaskCompletionSource<PurchaseResponseResult>();
+        if (_controller == null && _isInitializedInProcess)
+        {
+            await AttemptToReInitialize();
+            if (_controller == null)
+            {
+                _purchaseCompletionSource.SetResult(new PurchaseResponseResult
+                {
+                    result = PurchaseResult.Error,
+                    message = $"Null_C;{GetInitializedStatus()}",
+                });
+            }
+        }
 
         try
         {
@@ -94,10 +139,10 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
             {
                 Log.InternalError();
 
-                return Task.FromResult(new PurchaseResponseResult
+                _purchaseCompletionSource.SetResult(new PurchaseResponseResult
                 {
                     result = PurchaseResult.Error,
-                    message = "Product not found",
+                    message = $"Not Found;{GetInitializedStatus()}",
                 });
             }
 
@@ -109,11 +154,11 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
             _purchaseCompletionSource.SetResult(new PurchaseResponseResult
             {
                 result = PurchaseResult.Error,
-                message = e.Message,
+                message = e.Message + $";{GetInitializedStatus()}",
             });
         }
 
-        return _purchaseCompletionSource.Task;
+        return await _purchaseCompletionSource.Task;
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
@@ -121,7 +166,7 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
         if (_purchaseCompletionSource?.TrySetResult(new PurchaseResponseResult
         {
             result = PurchaseResult.Success,
-            message = "ProcessPurchase method",
+            message = "ProcessPurchase_Method - Success",
         }) == false)
             Log.InternalError();
 
@@ -136,7 +181,10 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
                 if (_purchaseCompletionSource?.TrySetResult(new PurchaseResponseResult
                 {
                     result = PurchaseResult.Cancel,
-                    message = "OnPurchaseFailed method",
+                    message = "OPM1:" +
+                              $"Reason:{failureReason};" +
+                              $"Id={product.definition.id};" +
+                              $"{GetInitializedStatus()}",
                 }) == false)
                     Log.InternalError();
 
@@ -145,7 +193,10 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
                 if (_purchaseCompletionSource?.TrySetResult(new PurchaseResponseResult
                 {
                     result = PurchaseResult.Error,
-                    message = "OnPurchaseFailed method",
+                    message = "OPM2:" +
+                              $"Reason:{failureReason}" +
+                              $"Id={product.definition.id};" +
+                              $"{GetInitializedStatus()}",
                 }) == false)
                     Log.InternalError();
 
@@ -157,9 +208,11 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
     {
         var purchaseResult = new PurchaseResponseResult
         {
-            message = $"ProductId={failureDescription.productId};" +
-                      $"Result={failureDescription.reason};" +
-                      $"Message={failureDescription.message}",
+            message = $"OPM3; " +
+                      $"ID={failureDescription.productId};" +
+                      $"Reason={failureDescription.reason};" +
+                      $"Msg={failureDescription.message};" +
+                      $"{GetInitializedStatus()}",
 
             result = failureDescription.reason switch
             {
@@ -170,6 +223,42 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
 
         if (_purchaseCompletionSource?.TrySetResult(purchaseResult) == false)
             Log.InternalError();
+    }
+
+    private string GetInitializedStatus()
+    {
+        return $"ST={_initStart};" +
+               $"USM={_unityServicesManagerComplete};" +
+               $"USME={(UnityServicesManager.isInitialize ? 1 : 0)}|{UnityServicesManager.lastError};" +
+               $"UP={_unityPurchasingStart};" +
+               $"End={_initializedComplete};" +
+               $"F={_initializedFailed};" +
+               $"FRs={_initializedFailedError};" +
+               $"FMs={_initializedFailedMessage};" +
+               $"Crl={(_controller != null ? 1 : 0)};" +
+               $"Ext={(_extensions != null ? 1 : 0)};" +
+               $"IsGP={IsInstallFromGooglePlay()};" +
+               $"CT={Products?.Count ?? -1};";
+    }
+    
+    private static int IsInstallFromGooglePlay()
+    {
+        try
+        {
+            using AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            using AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            using (AndroidJavaObject packageManager = currentActivity.Call<AndroidJavaObject>("getPackageManager"))
+            {
+                string packageName = currentActivity.Call<string>("getPackageName");
+                var googlePlayPackage = packageManager.Call<string>("getInstallerPackageName", packageName);
+
+                return googlePlayPackage == "com.android.vending" ? 1 : 0;
+            }
+        }
+        catch (Exception)
+        {
+            return -1;
+        }
     }
 }
 }

@@ -23,7 +23,7 @@ public abstract class DeadState<TIn> : BaseState, IActivatedState<TIn>
     private void LogDebugInfo()
     {
         stateCounter++;
-        Log.Info($"[{stateCounter}]Active state: {GetType().Name}");
+        //Log.Info($"[{stateCounter}]Active state: {GetType().Name}");
     }
 }
 }

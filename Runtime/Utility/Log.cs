@@ -8,7 +8,7 @@ namespace Game.Utility
 {
 public static class Log
 {
-    public static bool enableAnalyticsEvents = true;
+    public static bool enableAnalyticsEvents = false;
     private static string InfoType => "[info]";
     private static string WarningType => "[warning]";
     private static string ErrorType => "[error]";

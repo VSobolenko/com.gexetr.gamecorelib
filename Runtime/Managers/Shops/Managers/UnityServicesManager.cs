@@ -8,21 +8,24 @@ namespace Game.Shops
 {
 internal class UnityServicesManager
 {
+    internal static string lastError = string.Empty;
+    internal static bool isInitialize;
     private const string EnvironmentKey = "production";
 
-    public Task Initialize()
+    public async Task Initialize()
     {
         try
         {
             var options = new InitializationOptions().SetEnvironmentName(EnvironmentKey);
     
-            return UnityServices.InitializeAsync(options);
+            await UnityServices.InitializeAsync(options);
+            isInitialize = true;
         }
         catch (Exception exception)
         {
-            Log.Error(exception.Message);
+            lastError = exception.Message;
+            Log.Error(lastError);
         }
-        return Task.CompletedTask;
     }
 }
 }
