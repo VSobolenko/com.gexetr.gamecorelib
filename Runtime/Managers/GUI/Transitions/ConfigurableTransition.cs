@@ -39,7 +39,7 @@ internal class ConfigurableTransition : IWindowTransition
     private void NormalizeWindow(WindowProperties windowProperties)
     {
         windowProperties.mediator.SetPosition(WindowTransitionStatic.startPoint);
-        windowProperties.rectTransform.localScale = Vector3.one;
+        windowProperties.motor.localScale = Vector3.one;
     }
 }
 }

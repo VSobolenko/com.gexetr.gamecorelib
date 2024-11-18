@@ -8,15 +8,15 @@ public class EmptyTransition : IWindowTransition
 {
     public Task Open(WindowProperties windowProperties)
     {
-        windowProperties.rectTransform.localPosition = WindowTransitionStatic.startPoint;
-        windowProperties.rectTransform.localScale = Vector3.one;
+        windowProperties.motor.localPosition = WindowTransitionStatic.startPoint;
+        windowProperties.motor.localScale = Vector3.one;
         return Task.CompletedTask;
     }
 
     public Task Close(WindowProperties windowProperties)
     {
-        windowProperties.rectTransform.localPosition = WindowTransitionStatic.startPoint;
-        windowProperties.rectTransform.localScale = Vector3.one;
+        windowProperties.motor.localPosition = WindowTransitionStatic.startPoint;
+        windowProperties.motor.localScale = Vector3.one;
         return Task.CompletedTask;
     }
 }

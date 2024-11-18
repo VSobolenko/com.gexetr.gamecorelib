@@ -23,8 +23,8 @@ internal class VerticalTransition : IWindowTransition
     {
         var completionSource = new TaskCompletionSource<bool>();
 
-        var transform = windowProperties.rectTransform;
-        var startPosY = GetStartedPointY(transform);
+        var transform = windowProperties.motor;
+        var startPosY = GetStartedPointY(windowProperties.rectTransform);
 
         transform.SetLocalY(startPosY);
         MoveWindow(transform, 0, _settings.OpenType, () =>
@@ -39,8 +39,8 @@ internal class VerticalTransition : IWindowTransition
     {
         var completionSource = new TaskCompletionSource<bool>();
 
-        var transform = windowProperties.rectTransform;
-        var targetPositionY = GetEndPointY(transform);
+        var transform = windowProperties.motor;
+        var targetPositionY = GetEndPointY(windowProperties.rectTransform);
         
         MoveWindow(transform, targetPositionY, _settings.CloseType, () =>
         {

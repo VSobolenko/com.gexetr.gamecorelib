@@ -54,7 +54,8 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
             canvasGroup = window.canvasGroup,
             mode = OpenMode.Silently,
         };
-
+        windowData.motor = window.overrideTransition != null ? window.overrideTransition : windowData.rectTransform;
+        
         var lastWindowData = _windows.Count > 0 ? _windows[^1] : windowData;
         _windows.Add(windowData);
 

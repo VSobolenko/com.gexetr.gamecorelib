@@ -23,8 +23,8 @@ internal class HorizontalTransition : IWindowTransition
     {
         var completionSource = new TaskCompletionSource<bool>();
 
-        var transform = windowProperties.rectTransform;
-        var startedPos = GetStartedPointX(transform);
+        var transform = windowProperties.motor;
+        var startedPos = GetStartedPointX(windowProperties.rectTransform);
 
         transform.SetLocalX(startedPos);
         MoveWindow(transform, 0, _settings.OpenType, () =>
@@ -39,8 +39,8 @@ internal class HorizontalTransition : IWindowTransition
     {
         var completionSource = new TaskCompletionSource<bool>();
 
-        var transform = windowProperties.rectTransform;
-        var targetPosition = GetEndPointX(transform);
+        var transform = windowProperties.motor;
+        var targetPosition = GetEndPointX(windowProperties.rectTransform);
 
         MoveWindow(transform, targetPosition, _settings.CloseType, () =>
         {

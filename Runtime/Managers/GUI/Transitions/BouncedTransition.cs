@@ -24,7 +24,7 @@ internal class BouncedTransition : IWindowTransition
     public Task Open(WindowProperties windowProperties)
     {
         var completionSource = new TaskCompletionSource<bool>();
-        var transform = windowProperties.rectTransform;
+        var transform = windowProperties.motor;
 
         windowProperties.mediator.SetActive(false);
         transform.localScale = _openStartedScale;
@@ -40,7 +40,7 @@ internal class BouncedTransition : IWindowTransition
     public Task Close(WindowProperties windowProperties)
     {
         var completionSource = new TaskCompletionSource<bool>();
-        var transform = windowProperties.rectTransform;
+        var transform = windowProperties.motor;
 
         BounceWindow(transform, _closeEndScale, _settings.bouncedClose.duration / 2f, 0, _settings.bouncedClose.ease,
                      null,
