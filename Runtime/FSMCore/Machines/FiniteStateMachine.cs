@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using Game.FSMCore.States;
 
 namespace Game.FSMCore.Machines
 {
+[DebuggerNonUserCode]
 public class FiniteStateMachine : IStateMachine, IStateMachineOperator
 {
     public IState ActiveState { get; private set; }

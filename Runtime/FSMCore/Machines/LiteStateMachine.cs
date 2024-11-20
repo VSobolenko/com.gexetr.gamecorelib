@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Game.FSMCore.States;
 
 namespace Game.FSMCore.Machines
@@ -10,6 +11,7 @@ public interface IStateMachineOperator
     void StopMachine();
 }
 
+[DebuggerNonUserCode]
 public class LiteStateMachine : IStateMachine, IStateMachineOperator
 {
     public IState ActiveState { get; private set; }

@@ -7,7 +7,6 @@
         "Unity.Services.Core.Environments",
         "Unity.Addressables",
         "Unity.ResourceManager",
-        "DOTween.Modules",
         "UniTask",
         "UnityEngine.Purchasing",
         "UnityEngine.Purchasing.Stores"

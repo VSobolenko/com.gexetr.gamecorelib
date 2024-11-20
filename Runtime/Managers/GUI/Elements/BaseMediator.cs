@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -24,6 +25,7 @@ namespace Game.GUI.Windows
 /// +--------------------------------+
 /// </summary>
 /// <typeparam name="TWindow"></typeparam>
+[DebuggerNonUserCode]
 public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
 {
     protected readonly TWindow window;
@@ -33,10 +35,21 @@ public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
         this.window = window;
     }
 
-    public virtual void OnInitialize() { }
-    public virtual void OnFocus() { }
-    public virtual void OnUnfocused() { }
-    public virtual void OnDestroy() { }
+    public virtual void OnInitialize()
+    {
+    }
+
+    public virtual void OnFocus()
+    {
+    }
+
+    public virtual void OnUnfocused()
+    {
+    }
+
+    public virtual void OnDestroy()
+    {
+    }
 
     public virtual void SetActive(bool value) => window.gameObject.SetActive(value);
     public virtual void SetPosition(Vector3 value) => window.transform.localPosition = value;

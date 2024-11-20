@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Game.FSMCore.States;
 using Game.FSMCore.Transitions;
@@ -6,6 +7,7 @@ using Game.Utility;
 
 namespace Game.FSMCore.Machines
 {
+[DebuggerNonUserCode]
 public class StateMachineTree
 {
     private List<TransitionData> _transitions = new(5);

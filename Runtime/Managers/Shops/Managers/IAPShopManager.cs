@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Game.Utility;
@@ -11,6 +12,7 @@ using UnityEngine.Purchasing.Extension;
 
 namespace Game.Shops
 {
+[DebuggerNonUserCode]
 internal class IAPShopManager : IShopManager, IDetailedStoreListener
 {
     private readonly GameProduct[] _sourceProducts;

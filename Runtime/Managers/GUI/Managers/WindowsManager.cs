@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Game.GUI.Windows.Factories;
 using Game.Utility;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
+[DebuggerNonUserCode]
 internal class WindowsManager : IDisposable, IWindowsManager
 {
     protected readonly WindowBuilder windowBuilder;

@@ -5,11 +5,9 @@
         "UnityEditor.TestRunner",
         "UnityEngine.TestRunner",
         "GameCoreLib",
-        "Zenject",
         "Unity.ResourceManager",
         "Unity.Addressables",
-        "UniTask",
-        "BoundfoxStudios.FluentAssertions"
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -17,8 +15,7 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
-        "Newtonsoft.Json.dll",
-        "Moq.dll"
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [

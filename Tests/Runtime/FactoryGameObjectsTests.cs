@@ -2,19 +2,17 @@
 using Game.Factories.Managers;
 using NUnit.Framework;
 using UnityEngine;
-using Zenject;
 
 namespace GameTests
 {
 [TestFixture]
-public class FileSaveManagerTests
+public class FactoryGameObjectsTests
 {
     [Test]
     public void InstantiateEmpty_CreateNewEmptyGameObject_ShouldReturnNewEmptyGameObject()
     {
         // Arrange
-        var container = new DiContainer();
-        IFactoryGameObjects factoryGameObjects = new DependencyInjectionFactory(container);
+        IFactoryGameObjects factoryGameObjects = new StandardObjectsFactory();
         
         // Act
         var gameObject = factoryGameObjects.InstantiateEmpty();
