@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Game.FSMCore.States;
 
 namespace Game.FSMCore.Machines
@@ -11,7 +10,6 @@ public interface IStateMachineOperator
     void StopMachine();
 }
 
-[DebuggerNonUserCode]
 public class LiteStateMachine : IStateMachine, IStateMachineOperator
 {
     public IState ActiveState { get; private set; }
@@ -60,5 +58,7 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
     private TState GetState<TState>() where TState : class, IState => _states[typeof(TState)] as TState;
 
     private void Activate<TIn>(IActivatedState<TIn> state, TIn data) => state.ActivateState(this, data);
+
+    public IState this[Type type] => _states[type];
 }
 }

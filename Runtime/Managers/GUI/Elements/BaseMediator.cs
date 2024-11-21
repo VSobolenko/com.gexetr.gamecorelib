@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using UnityEngine;
-using Object = UnityEngine.Object;
+﻿using UnityEngine;
 
 namespace Game.GUI.Windows
 {
@@ -25,7 +22,6 @@ namespace Game.GUI.Windows
 /// +--------------------------------+
 /// </summary>
 /// <typeparam name="TWindow"></typeparam>
-[DebuggerNonUserCode]
 public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
 {
     protected readonly TWindow window;

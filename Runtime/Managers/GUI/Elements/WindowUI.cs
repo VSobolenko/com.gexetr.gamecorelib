@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.GUI.Windows
 {
-[DefaultExecutionOrder(11), RequireComponent(typeof(CanvasGroup)), DisallowMultipleComponent, DebuggerNonUserCode]
+[DefaultExecutionOrder(11), RequireComponent(typeof(CanvasGroup))]
 public class WindowUI : MonoBehaviour
 {
     [SerializeField] protected internal CanvasGroup canvasGroup;

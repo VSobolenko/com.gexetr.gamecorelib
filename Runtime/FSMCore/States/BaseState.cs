@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-
-namespace Game.FSMCore.States
+﻿namespace Game.FSMCore.States
 {
-[DebuggerNonUserCode]
 public abstract class BaseState : IState
 {
     public virtual void UpdateState() { }

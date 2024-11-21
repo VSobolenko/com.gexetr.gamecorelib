@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DG.Tweening;
 using Game.GUI.Windows.Managers;
 using UnityEngine;

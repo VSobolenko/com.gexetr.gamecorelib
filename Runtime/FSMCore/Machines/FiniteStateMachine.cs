@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
+using Game.FSMCore.Profilers;
 using Game.FSMCore.States;
+using UnityEngine;
 
 namespace Game.FSMCore.Machines
 {
-[DebuggerNonUserCode]
 public class FiniteStateMachine : IStateMachine, IStateMachineOperator
 {
     public IState ActiveState { get; private set; }
@@ -16,7 +16,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
 
     public void Update()
     {
-        ActiveState.UpdateState();
+        ActiveState?.UpdateState();
         Tree.UpdateTree();
     }
 
@@ -25,6 +25,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
         ActiveState?.Dispose();
         SwitchState(null);
         Tree.DisposeMachine();
+        StopDebug();
     }
 
     [Obsolete("It breaks the concept of the FSM. It will be removed soon")]
@@ -46,5 +47,35 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
     }
 
     private void Activate<TIn>(IActivatedState<TIn> state, TIn data) => state.ActivateState(this, data);
+    
+    private FSMProfilerProvider _profiler;
+    private bool _isOwnProfiler;
+
+    public FiniteStateMachine AddDebugger(GameObject root = null)
+    {
+        if (Application.isEditor == false)
+            return this;
+        
+        _isOwnProfiler = root == null;
+        
+        if (root == null)
+            root = new GameObject("FSM Linker");
+        
+        if (root.TryGetComponent(out _profiler))
+        {
+            _profiler.stateMachine = this;
+            return this;
+        }
+
+        _profiler = root.AddComponent<FSMProfilerProvider>();
+        _profiler.stateMachine = this;
+        return this;
+    }
+
+    private void StopDebug()
+    {
+        if (_profiler != null)
+            UnityEngine.Object.Destroy(_isOwnProfiler ? _profiler.gameObject : _profiler);
+    }
 }
 }

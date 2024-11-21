@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Game.GUI.Windows.Factories;
 using Game.GUI.Windows.Transitions;
@@ -7,7 +6,6 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-[DebuggerNonUserCode]
 internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
 {
     private readonly IWindowTransition _defaultOpenTransition;

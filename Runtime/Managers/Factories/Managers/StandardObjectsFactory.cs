@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 namespace Game.Factories.Managers
 {
-[DebuggerNonUserCode]
 internal class StandardObjectsFactory : IFactoryGameObjects
 {
     private const string NewGameObjectName = "Empty GameObject";

@@ -3,7 +3,7 @@ using Game.FSMCore.States;
 
 namespace Game.FSMCore.Transitions
 {
-public abstract class EntryTransition<TIn, TOut> : DeadTransition<TIn>
+public abstract class EntryTransition<TIn> : DeadTransition<TIn>
 {
     private readonly TIn _inputData;
     private readonly IActivatedState<TIn> _targetState;
@@ -11,7 +11,7 @@ public abstract class EntryTransition<TIn, TOut> : DeadTransition<TIn>
     private protected override bool IsDecidedTransient => stateMachine.ActiveState == null;
 
     protected EntryTransition(IStateMachine stateMachine, TIn inputData,
-                              State<TIn, TOut> targetState) : base(stateMachine, targetState)
+                              IActivatedState<TIn> targetState) : base(stateMachine, targetState)
     {
         _inputData = inputData;
         _targetState = targetState;
@@ -27,5 +27,7 @@ public abstract class EntryTransition<TIn, TOut> : DeadTransition<TIn>
         _targetState.ActivateState(stateMachine, _inputData);
         stateMachine.ChangeState(_targetState);
     }
+
+    protected sealed override bool CanDecide() => true;
 }
 }

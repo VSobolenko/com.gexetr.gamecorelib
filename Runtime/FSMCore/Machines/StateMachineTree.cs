@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.FSMCore.States;
 using Game.FSMCore.Transitions;
@@ -7,7 +7,6 @@ using Game.Utility;
 
 namespace Game.FSMCore.Machines
 {
-[DebuggerNonUserCode]
 public class StateMachineTree
 {
     private List<TransitionData> _transitions = new(5);
@@ -131,6 +130,8 @@ public class StateMachineTree
     #endregion
 
     public IState this[int i] => _states[i];
+    
+    public IState this[Type type] => _states.FirstOrDefault(x => x.GetType() == type);
 }
 
 internal struct TransitionData

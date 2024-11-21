@@ -95,16 +95,16 @@ public class FSMVisualizer : EditorWindow
 
     private void Update()
     {
-        if (_stateMachine == null || _graph._states.Count == 0)
+        if (_stateMachine == null || _graph.states.Count == 0)
             return;
 
-        var nodeOld = _graph._states.FirstOrDefault(x => x.sourceState == _stateMachine.ActiveState);
-        var node = _graph._states.FirstOrDefault(x => x.sourceState == _stateMachine.ActiveState);
+        var nodeOld = _graph.states.FirstOrDefault(x => x.sourceState == _stateMachine.ActiveState);
+        var node = _graph.states.FirstOrDefault(x => x.sourceState == _stateMachine.ActiveState);
 
         if (node == null || nodeOld == null)
             return;
 
-        foreach (var graphState in _graph._states)
+        foreach (var graphState in _graph.states)
             graphState.selected = false;
 
         node.selected = true;

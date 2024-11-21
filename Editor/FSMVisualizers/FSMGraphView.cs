@@ -12,11 +12,11 @@ namespace GameEditor.FSMVisualizers
 {
 public class FSMGraphView : GraphView
 {
-    public readonly List<FSMNode> _states = new();
+    public readonly List<FSMNode> states = new();
     private readonly Vector2 _defaultNodeSize = new(150, 200);
     private readonly Vector2 _distance = new(10, 0);
 
-    private Vector2 _activeDistance = Vector2.zero;
+    private Vector2 _activeDistance;
 
     public FSMGraphView()
     {
@@ -24,11 +24,11 @@ public class FSMGraphView : GraphView
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());
-
         var grid = new GridBackground();
         Insert(0, grid);
         grid.StretchToParentSize();
         _distance = new Vector2(_distance.x + _defaultNodeSize.x, _distance.y);
+        _activeDistance = contentRect.center;
     }
 
     public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -45,6 +45,9 @@ public class FSMGraphView : GraphView
         return compPorts;
     }
 
+    public FSMNode CreateStateNode<TIn, TOut>(BaseState state) =>
+        CreateEmptyNode(state);
+    
     public FSMNode CreateStateNode<TIn, TOut>(State<TIn, TOut> state) =>
         CreateStateNode<TIn>(state).UpdateToOutput<TOut>();
 
@@ -58,7 +61,7 @@ public class FSMGraphView : GraphView
             sourceState = state,
             isOriginal = true,
         };
-        _states.Add(stateNode);
+        states.Add(stateNode);
         _activeDistance += shift ? _distance : Vector2.zero;
         stateNode.SetPosition(new Rect(_activeDistance, _defaultNodeSize));
         AddElement(stateNode);
@@ -82,7 +85,7 @@ public class FSMGraphView : GraphView
             ConnectStates(sourceState, targetState);
     }
 
-    public void CreateTransition<TIn, TOut>(EntryTransition<TIn, TOut> transition)
+    public void CreateTransition<TIn, TOut>(EntryTransition<TIn> transition)
     {
         var targetState = (DeadState<TIn>) GetPrivateValue(transition, "_targetState");
         var originalNode = GetNodeInstanceByState(targetState);
@@ -121,7 +124,7 @@ public class FSMGraphView : GraphView
     }
 
     private FSMNode GetNodeInstanceByState(IState state, bool isOriginal = true) =>
-        _states.First(x => x.sourceState == state && (x.isOriginal || isOriginal));
+        states.First(x => x.sourceState == state && (x.isOriginal || isOriginal));
 
     private static void ConnectNodes(FSMNode sourceNode, FSMNode targetNode)
     {
