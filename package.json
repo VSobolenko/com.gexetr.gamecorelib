@@ -1,6 +1,6 @@
 {
   "name": "com.gexetr.gamecorelib",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "displayName": "Game Core Lib",
   "unity": "2020.3",
   "description": "Common usable Mangers and Utilities for Unity.",
@@ -18,7 +18,7 @@
     "fsm"
   ],
   "author": {
-    "name": "Game Core Lib by Gexetr",
+    "name": "Gexetr",
     "url": "https://github.com/VSobolenko/"
   },
   "repository": {
