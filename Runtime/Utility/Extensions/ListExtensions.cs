@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Game.Utility.Extensions
+namespace Game.Extensions
 {
 public static class ListExtensions
 {

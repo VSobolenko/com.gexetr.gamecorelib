@@ -1,5 +1,5 @@
 ﻿using Game.Inputs.Managers;
-using Game.Utility;
+using Game;
 using UnityEngine;
 
 namespace Game.Inputs.Installers

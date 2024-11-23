@@ -6,7 +6,6 @@ using FluentAssertions;
 using Game;
 using Game.IO;
 using Game.IO.Managers;
-using Game.Utility;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;

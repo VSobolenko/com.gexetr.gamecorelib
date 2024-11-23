@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.CompilerServices;
 using Game.DynamicData;
 using UnityEngine;
 
-namespace Game.Utility
+namespace Game
 {
 public static class Log
 {

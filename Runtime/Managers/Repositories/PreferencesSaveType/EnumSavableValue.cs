@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Utility;
+using Game;
 using UnityEngine;
 
 namespace Game.PreferencesSaveType

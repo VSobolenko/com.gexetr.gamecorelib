@@ -1,4 +1,4 @@
-﻿using Game.Utility;
+﻿using Game;
 
 namespace Game.FSMCore.States
 {

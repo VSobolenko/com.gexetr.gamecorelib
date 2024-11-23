@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Game.IO;
-using Game.Utility;
+using Game;
 
 namespace Game.Repositories.Managers
 {

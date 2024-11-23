@@ -1,6 +1,5 @@
 ﻿using Game;
 using Game.Localizations.Components;
-using Game.Utility;
 using UnityEditor;
 using UnityEngine;
 

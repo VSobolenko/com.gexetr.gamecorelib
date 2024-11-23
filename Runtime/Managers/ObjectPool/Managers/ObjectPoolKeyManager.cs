@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Game.DynamicData;
 using Game.Factories;
-using Game.Utility;
+using Game;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityObject = UnityEngine.Object;

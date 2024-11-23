@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.GUI.Windows.Factories;
-using Game.Utility;
+using Game;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Managers

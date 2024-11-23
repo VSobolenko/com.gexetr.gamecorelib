@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DG.Tweening;
 using Game.GUI.Windows.Managers;
-using Game.Utility.Extensions;
+using Game.Extensions;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions

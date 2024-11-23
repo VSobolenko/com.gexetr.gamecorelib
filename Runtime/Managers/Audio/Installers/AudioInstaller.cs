@@ -1,6 +1,6 @@
 ﻿using Game.Audio.Managers;
 using Game.Factories;
-using Game.Utility;
+using Game;
 
 namespace Game.Audio.Installers
 {

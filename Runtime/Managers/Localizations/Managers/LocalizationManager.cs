@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml;
 using Game.Localizations.Components;
 using Game.PreferencesSaveType;
-using Game.Utility;
+using Game;
 using UnityEngine;
 
 namespace Game.Localizations.Managers

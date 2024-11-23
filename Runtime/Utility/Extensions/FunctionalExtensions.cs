@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Utility.Extensions
+namespace Game.Extensions
 {
 public static class FunctionalExtensions
 {

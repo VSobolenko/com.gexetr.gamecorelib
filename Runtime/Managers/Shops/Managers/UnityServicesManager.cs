@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Game.Utility;
+using Game;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 

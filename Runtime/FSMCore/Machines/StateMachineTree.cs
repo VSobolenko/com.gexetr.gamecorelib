@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.FSMCore.States;
 using Game.FSMCore.Transitions;
-using Game.Utility;
+using Game;
 
 namespace Game.FSMCore.Machines
 {
