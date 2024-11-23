@@ -1,60 +1,64 @@
-Dependency:
+### Dependency:
 Dotween(GUI)
- 1. https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7
- 2. https://dotween.demigiant.com/download.php
+ 1. `https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7`
+ 2. `https://dotween.demigiant.com/download.php`
 UniTask (ObjectPool)
- 1. https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package
- 2. (UPM) https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask
+ 1. `https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package`
+ 2. (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
+    
 Addressables (Resource Managements)
- 1. com.unity.addressables (Unity Registry)
- 2. https://github.com/needle-mirror/com.unity.addressables
+ 1. `com.unity.addressables` (Unity Registry)
+ 2. `https://github.com/needle-mirror/com.unity.addressables`
 In App Purchasing(Shop)
- 1. com.unity.purchasing (Unity Registry)
- 2. https://github.com/needle-mirror/com.unity.purchasing
+ 1. `com.unity.purchasing` (Unity Registry)
+ 2. `https://github.com/needle-mirror/com.unity.purchasing`
 R3(General) + NuGetForUnity-FluentAssertion(Tests)
- 1. https://github.com/Cysharp/R3?tab=readme-ov-file#unity (R3-general)
- 2. (UPM) https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity (NuGet)
+ 1. `https://github.com/Cysharp/R3?tab=readme-ov-file#unity` (R3-general)
+ 2. (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity` (NuGet)
    - R3
    - ObservableCollections
    - ObservableCollections.R3
    - FluentAssertions
- 3. (UPM) https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity (R3-unity)
+ 3. (UPM) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity` (R3-unity)
 GameCoreLib (GCL)
- 1. (UMP + Git) https://github.com/VSobolenko/com.gexetr.gamecorelib
- 2. (dll) https://github.com/VSobolenko/com.gexetr.gamecorelib-shared
+ 1. (UMP + Git) `https://github.com/VSobolenko/com.gexetr.gamecorelib`
+ 2. (dll) `https://github.com/VSobolenko/com.gexetr.gamecorelib-shared`
 
-//SETUP
-git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib - add submodule to folder root
-git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib Packages/com.gexetr.gamecorelib - add submodule to folder Assets (./GameCor/.git)
+#### //SETUP
+- `git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib` - add submodule to folder root
+- add submodule to folder Packages (./GameCor/.git):
+```
+git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib Packages/com.gexetr.gamecorelib
+```
 
 .. git clone https://github.com/VSobolenko...
-git submodule init - run this command after "git clone" to initialize the submodule 
-git submodule update - run this command after "git submodule init" to fetch repository data and checkout commit(analog "git clone" but for a submodule)
+- `git submodule init` - run this command after "git clone" to initialize the submodule 
+- `git submodule update` - run this command after "git submodule init" to fetch repository data and checkout commit(analog "git clone" but for a submodule)
 
 что бы не делать init и update после git clone, а автоматически сразу инициализировать подмодули, можно клонировани с параметром "--recurse-submodules"
-git clone --recurse-submodules https://github.com/VSobolenko
+- `git clone --recurse-submodules` https://github.com/VSobolenko
 
 если клонирование было без параметра "--recurse-submodules", то можно выполнить команду ниже, для быстрой инициализации и репозитория
-git submodule update --init - объединение команд "git submodule init" и "git submodule update"
-git submodule update --init --recursive - объединение команд "git submodule init" и "git submodule update"
+- `git submodule update --init` - объединение команд "git submodule init" и "git submodule update"
+- `git submodule update --init --recursive` - объединение команд "git submodule init" и "git submodule update"
 
-//UPDATE
+#### //UPDATE
 для получения изменений, необходимо перейти в папку с подмодулем и выполнить команды "git fetch" и "git merge origin/master"
-git submodule update --remote [ModuleName] - автоматическое выполнение команд "git fetch" и "git merge origin/master", до текущего состояния ветки master
-git submodule update --remote --merge [ModuleName] - автоматическое выполнение команд "git fetch" и "git merge origin/master", до текущего состояния ветки master
-git config -f .gitmodules submodule.DbConnector.branch [BranchName] - установление ветки [BranchName] по умолчанию
-git push --recurse-submodules=on-demand - отправить изменения и локальные и всех подмодулей
-git push --recurse-submodules=check - отправить локальные изменения и если присутсвует изменения в подмодуле остановить всё выполнение команды
+- `git submodule update --remote [ModuleName]` - автоматическое выполнение команд "git fetch" и "git merge origin/master", до текущего состояния ветки master
+- `git submodule update --remote --merge [ModuleName]` - автоматическое выполнение команд "git fetch" и "git merge origin/master", до текущего состояния ветки master
+- `git config -f .gitmodules submodule.DbConnector.branch [BranchName]` - установление ветки [BranchName] по умолчанию
+- `git push --recurse-submodules=on-demand` - отправить изменения и локальные и всех подмодулей
+- `git push --recurse-submodules=check` - отправить локальные изменения и если присутсвует изменения в подмодуле остановить всё выполнение команды
 
-//USEFUL
-git config status.submodulesummary 1 - отображать краткие сведения для сабмодуля при выполнении команды git status
-git config --global diff.submodule log -более детальныя информация при команде git diff
+#### //USEFUL
+- `git config status.submodulesummary 1` - отображать краткие сведения для сабмодуля при выполнении команды git status
+- `git config --global diff.submodule log` -более детальныя информация при команде git diff
 
-//DELETE
-удалить сам модуль
-удалить .gitmodule
-удалить .git/modules
-удалить .git/config/submodule
+#### //DELETE
+- удалить сам модуль
+- удалить .gitmodule
+- удалить .git/modules
+- удалить .git/config/submodule
 
 FSM
 1. Managers
