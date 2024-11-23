@@ -2,6 +2,7 @@
 Dotween(GUI)
  1. `https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7`
  2. `https://dotween.demigiant.com/download.php`
+
 UniTask (ObjectPool)
  1. `https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package`
  2. (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
@@ -9,9 +10,11 @@ UniTask (ObjectPool)
 Addressables (Resource Managements)
  1. `com.unity.addressables` (Unity Registry)
  2. `https://github.com/needle-mirror/com.unity.addressables`
+
 In App Purchasing(Shop)
  1. `com.unity.purchasing` (Unity Registry)
  2. `https://github.com/needle-mirror/com.unity.purchasing`
+
 R3(General) + NuGetForUnity-FluentAssertion(Tests)
  1. `https://github.com/Cysharp/R3?tab=readme-ov-file#unity` (R3-general)
  2. (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity` (NuGet)
@@ -20,6 +23,7 @@ R3(General) + NuGetForUnity-FluentAssertion(Tests)
    - ObservableCollections.R3
    - FluentAssertions
  3. (UPM) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity` (R3-unity)
+
 GameCoreLib (GCL)
  1. (UMP + Git) `https://github.com/VSobolenko/com.gexetr.gamecorelib`
  2. (dll) `https://github.com/VSobolenko/com.gexetr.gamecorelib-shared`
