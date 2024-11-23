@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Game;
@@ -5,7 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.AssetContent.Managers
 {
@@ -106,26 +107,17 @@ internal class AddressablesManager : System.IDisposable, IResourceManagement
 #endif
     }
 
-    public async Task<AsyncOperationHandle<SceneInstance>> LoadSceneAsync(
-        string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true)
+    public async Task LoadSceneAsync(string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true)
     {
         if (string.IsNullOrEmpty(key))
-        {
-            Log.Warning("Unable to load empty key");
-
-            return default;
-        }
+            throw new ArgumentException("Unable to load empty key");
 
         if (await IsKeyExistAsync(key) == false)
-        {
-            Log.Warning($"Asset key not found: \"{key}\"");
-
-            return default;
-        }
+            throw new ArgumentException("Asset key not found: \"{key}\"");
 
         var handle = Addressables.LoadSceneAsync(key, loadMode, activateOnLoad);
 
-        return handle;
+        await handle.Task;
     }
 
     // ToDo: test this method

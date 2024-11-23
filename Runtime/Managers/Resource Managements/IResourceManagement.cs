@@ -12,7 +12,7 @@ public interface IResourceManagement
 
     Task<T>  LoadAssetAsync<T>(string key) where T : Object;
 
-    Task<AsyncOperationHandle<SceneInstance>> LoadSceneAsync(string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true);
+    Task LoadSceneAsync(string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true);
 
     void ClearMemory();
 }

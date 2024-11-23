@@ -22,9 +22,16 @@ internal class ResourceManagement : IResourceManagement
         return taskSource.Task;
     }
 
-    public Task<AsyncOperationHandle<SceneInstance>> LoadSceneAsync(string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true)
+    public async Task LoadSceneAsync(string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true)
     {
-        throw new System.NotImplementedException();
+        var request = SceneManager.LoadSceneAsync(key, loadMode);
+        var taskSource = new TaskCompletionSource<bool>();
+        request.completed += _ =>
+        {
+            taskSource.SetResult(true);
+        };
+
+        await taskSource.Task;
     }
 
     public void ClearMemory()
