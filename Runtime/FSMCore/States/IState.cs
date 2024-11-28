@@ -14,6 +14,6 @@ public interface IActivatedState<in TIn> : IState
 
 public interface IEndState<out TOut> : IState
 {
-    internal TOut ReturnProcessedResult(); // and protected
+    internal TOut ReturnStateProcessedResult(); // and protected
 }
 }

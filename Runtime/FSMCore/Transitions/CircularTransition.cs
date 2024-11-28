@@ -19,7 +19,7 @@ public abstract class CircularTransition<TIn, TOut> : DeadTransition<TIn>
     {
         OnTransit();
 
-        _sourceState.ReturnProcessedResult();
+        _sourceState.ReturnStateProcessedResult();
         _sourceState.Dispose();
         _targetState.ActivateState(stateMachine, default);
         stateMachine.ChangeState(_targetState);
@@ -44,7 +44,7 @@ public abstract class CircularCycleTransition<TTransferData> : DeadTransition<TT
     {
         OnTransit();
 
-        var result = _sourceState.ReturnProcessedResult();
+        var result = _sourceState.ReturnStateProcessedResult();
         _sourceState.Dispose();
         _targetState.ActivateState(stateMachine, result);
         stateMachine.ChangeState(_targetState);

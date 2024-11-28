@@ -31,5 +31,8 @@ public static class ListExtensions
             list[count] = value;
         }
     }
+
+    public static T Random<T>(this IList<T> collection, int minIndex = 0, int maxIndex = 1) =>
+        collection[UnityEngine.Random.Range(minIndex, maxIndex)];
 }
 }

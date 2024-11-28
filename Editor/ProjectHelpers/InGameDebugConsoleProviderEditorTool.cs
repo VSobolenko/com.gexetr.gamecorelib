@@ -1,9 +1,9 @@
 ﻿using Game.DynamicData;
 using UnityEngine;
 
-namespace Game.Components.EditorComponent
+namespace GameEditor.Tools
 {
-public static class InGameDebugConsoleProjectProviderEditor
+public static class InGameDebugConsoleProviderEditorTool
 {
     private const string InResourcesFolder = "Assets/Plugins/IngameDebugConsole/Resources/IngameDebugConsole.prefab";
     private const string OutsideResourcesFolder = "Assets/Plugins/IngameDebugConsole/IngameDebugConsole.prefab";

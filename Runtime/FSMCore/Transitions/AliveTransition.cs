@@ -25,7 +25,7 @@ public abstract class AliveTransition<TDataTransfer> : DeadTransition<TDataTrans
 
         OnTransit();
 
-        var transitionData = _sourceState.ReturnProcessedResult();
+        var transitionData = _sourceState.ReturnStateProcessedResult();
         _sourceState.Dispose();
         _targetState.ActivateState(stateMachine, transitionData);
         stateMachine.ChangeState(_targetState);
