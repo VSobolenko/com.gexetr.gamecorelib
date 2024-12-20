@@ -8,6 +8,6 @@ namespace Game.Components.Utilities
 /// </summary>
 internal class RaycastBypassEditorUI : MonoBehaviour
 {
-    private void Awake() => throw new ArgumentException($"{name} has editor only {GetType().Name} component.");
+    private void Awake() => throw new ArgumentException($"\"{name}\" has editor only \"{GetType().Name}\" component.");
 }
 }

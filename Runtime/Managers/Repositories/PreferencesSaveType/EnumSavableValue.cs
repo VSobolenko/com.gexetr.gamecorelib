@@ -6,8 +6,8 @@ namespace Game.PreferencesSaveType
 {
 internal class EnumSavableValue<T> : BaseSavableValue<T> where T: struct, Enum
 {
-    public EnumSavableValue(string playerPrefsPath, T defaultValue = default) : 
-        base(playerPrefsPath, defaultValue)
+    public EnumSavableValue(string playerPrefsKey, T defaultValue = default) : 
+        base(playerPrefsKey, defaultValue)
     {
     }
 

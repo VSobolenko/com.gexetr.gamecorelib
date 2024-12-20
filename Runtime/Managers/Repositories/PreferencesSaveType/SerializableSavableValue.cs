@@ -5,16 +5,17 @@ using UnityEngine;
 
 namespace Game.PreferencesSaveType
 {
-internal class SerializableSavableValue<T> : BaseSavableValue<T>
+public class SerializableSavableValue<T> : BaseSavableValue<T>
 {
-    public SerializableSavableValue(string playerPrefsPath, T defaultValue = default) 
-        : base(playerPrefsPath, defaultValue)
+    public SerializableSavableValue(string playerPrefsKey, T defaultValue = default) 
+        : base(playerPrefsKey, defaultValue)
     {
     }
 
     //ToDo: refactor(using(...)) ant testing this elements
     protected override T LoadValue(ref string path)
     {
+        Log.Error("NE DODELANO");
         var stringToDeserialize = PlayerPrefs.GetString(path, "");
 
         var bytes = Convert.FromBase64String(stringToDeserialize);
@@ -27,6 +28,7 @@ internal class SerializableSavableValue<T> : BaseSavableValue<T>
     //ToDo: refactor(using(...)) ant testing this elements
     protected override void SaveValue(ref string path)
     {
+        Log.Error("NE DODELANO");
         var memoryStream = new MemoryStream();
         var bf = new BinaryFormatter();
         bf.Serialize(memoryStream, cachedValue);

@@ -28,7 +28,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
         StopDebug();
     }
 
-    [Obsolete("It breaks the concept of the FSM. It will be removed soon")]
+    [Obsolete("It breaks the concept of the FSM. Use Lite version or Many2One transition")]
     public void ForceTransitTo<TIn>(DeadState<TIn> state, TIn data)
     {
         if (Tree.GetStates().Contains(state) == false)
@@ -43,13 +43,15 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
     {
         PreviousState = ActiveState;
         ActiveState = state;
-        OnStateChange?.Invoke(ActiveState);
+        LogDebugIfEnable(state);
+        OnStateChange?.Invoke(state);
     }
 
     private void Activate<TIn>(IActivatedState<TIn> state, TIn data) => state.ActivateState(this, data);
     
     private FSMProfilerProvider _profiler;
     private bool _isOwnProfiler;
+    private bool _enableLogger;
 
     public FiniteStateMachine AddDebugger(GameObject root = null)
     {
@@ -76,6 +78,28 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
     {
         if (_profiler != null)
             UnityEngine.Object.Destroy(_isOwnProfiler ? _profiler.gameObject : _profiler);
+    }
+
+    public FiniteStateMachine EnableLogger()
+    {
+        _enableLogger = true;
+
+        return this;
+    }
+
+    public FiniteStateMachine DisableLogger()
+    {
+        _enableLogger = false;
+
+        return this;
+    }
+    private void LogDebugIfEnable(IState state)
+    {
+        if (_enableLogger == false)
+            return;
+        BaseState.stateCounter++;
+        var stateName = state == null ? "Null_Or_Empty" : state.GetType().Name;
+        Log.Info($"[{BaseState.stateCounter}] Active state: {stateName}");
     }
 }
 }

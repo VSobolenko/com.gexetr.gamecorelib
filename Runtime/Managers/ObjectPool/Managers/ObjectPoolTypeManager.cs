@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Game.DynamicData;
 using Game.Factories;
-using Game;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -70,7 +69,7 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public void Prepare<T>(T prefab, int count) where T : UnityObject, IPoolable
+    public void Prepare<T>(T prefab, int count) where T : Component, IPoolable
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
@@ -84,8 +83,7 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         }
     }
 
-    public async Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default)
-        where T : UnityObject, IPoolable
+    public async Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default) where T : Component, IPoolable
     {
         Warn(prefab, count);
 
@@ -102,19 +100,19 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         }
     }
 
-    public T Get<T>(T prefab) where T : UnityObject, IPoolable =>
+    public T Get<T>(T prefab) where T : Component, IPoolable =>
         InternalGet(prefab, Vector3.zero, Quaternion.identity, null);
 
-    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : UnityObject, IPoolable =>
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable =>
         InternalGet(prefab, position, rotation, null);
 
-    public T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : UnityObject, IPoolable =>
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable =>
         InternalGet(prefab, position, rotation, parent);
 
-    public T Get<T>(T prefab, Transform parent) where T : UnityObject, IPoolable =>
+    public T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable =>
         InternalGet(prefab, Vector3.zero, Quaternion.identity, parent);
 
-    public void Release<T>(T prefabInstance) where T : UnityObject, IPoolable
+    public void Release<T>(T prefabInstance) where T : Component, IPoolable
     {
         if (prefabInstance == null)
             throw new ArgumentException($"Can't release null prefab");
@@ -149,7 +147,7 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         return pooledObject;
     }
 
-    protected virtual void Warn<T>(T prefab, int expectedCountNewElements) where T : UnityObject, IPoolable
+    protected virtual void Warn<T>(T prefab, int expectedCountNewElements) where T : Component, IPoolable
     {
         if (_pool.ContainsKey(prefab.GetType()))
             return;
@@ -168,7 +166,7 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         _poolProfiler?.Update();
     }
 
-    private IPoolable CreateNewElement<T>(T prefab, Transform parent) where T : UnityObject, IPoolable
+    private IPoolable CreateNewElement<T>(T prefab, Transform parent) where T : Component, IPoolable
     {
         var pooledObject = _factoryGameObjects.Instantiate(prefab, parent);
         pooledObject.SetActive(false);

@@ -18,7 +18,7 @@ public class SceneCheckForNullEditorProvider : MonoBehaviour
     [SerializeField] private bool _enableClassPath;
     [SerializeField] private List<MonoBehaviour> _monoBehaviour;
 
-    private void Start() => throw new ArgumentException($"{name} has editor only {GetType().Name} component.");
+    private void Start() => throw new ArgumentException($"\"{name}\" has editor only \"{GetType().Name}\" component.");
 
     [ContextMenu("Auto check")]
     public void AutoTest()

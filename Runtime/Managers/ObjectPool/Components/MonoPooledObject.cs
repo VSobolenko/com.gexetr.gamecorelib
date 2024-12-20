@@ -2,7 +2,7 @@
 
 namespace Game.Pools
 {
-public class KeyPooledObject : BasePooledObject
+public class MonoPooledObject : BasePooledObject
 {
     [SerializeField] private string key;
 
@@ -12,7 +12,7 @@ public class KeyPooledObject : BasePooledObject
     private void OnValidate()
     {
         if (string.IsNullOrEmpty(key))
-            key = GetType() + "." + name;
+            key = $"{GetType().Name}.{name}";
     }
 }
 }

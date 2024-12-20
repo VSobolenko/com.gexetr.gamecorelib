@@ -2,10 +2,10 @@
 
 namespace Game.PreferencesSaveType
 {
-internal class BoolSavableValue : BaseSavableValue<bool>
+public class BoolSavableValue : BaseSavableValue<bool>
 {
-    public BoolSavableValue(string playerPrefsPath, bool defaultValue = default) 
-        : base(playerPrefsPath, defaultValue)
+    public BoolSavableValue(string playerPrefsKey, bool defaultValue = default) 
+        : base(playerPrefsKey, defaultValue)
     {
     }
 

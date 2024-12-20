@@ -1,8 +1,11 @@
-﻿using Game;
+﻿using System.Collections.Generic;
+using Game;
 using Game.Components.Utilities;
 using Game.DynamicData;
 using TMPro;
 using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,57 +14,100 @@ namespace GameEditor.Tools
 [CustomEditor(typeof(RaycastBypassEditorUI))]
 public class RaycastBypassEditorTools : Editor
 {
+    private readonly List<GameObject> _lasModifyGameObjects = new();
+    private ReorderableList _reorderableList;
+
     [MenuItem(GameData.EditorName + "/Create RaycastUI Handler")]
     public static void CreateSceneRaycastBypassObject()
     {
         var go = new GameObject("Raycast UI Handler", typeof(RaycastBypassEditorUI));
+        if (IsPrefabStage(out var prefabRoot))
+            go.transform.SetParent(prefabRoot, false);
+
+        Undo.RegisterCreatedObjectUndo(go, "Create GameObject");
         Selection.activeGameObject = go;
+    }
+
+    private static bool IsPrefabStage(out Transform root)
+    {
+        root = null;
+        var prefabContext = PrefabStageUtility.GetCurrentPrefabStage()?.prefabContentsRoot;
+
+        if (prefabContext == null)
+            return false;
+        root = prefabContext.transform;
+
+        return true;
+    }
+
+    private void OnEnable() => InitializeReorderableList();
+
+    private void InitializeReorderableList()
+    {
+        _reorderableList = new ReorderableList(_lasModifyGameObjects, typeof(GameObject), true, false, false, false)
+        {
+            drawElementCallback = (rect, index, isActive, isFocused) =>
+            {
+                GameObject gameObject = _lasModifyGameObjects[index];
+
+                EditorGUI.ObjectField(rect, gameObject, typeof(GameObject), true);
+            }
+        };
     }
 
     public override void OnInspectorGUI()
     {
-        if (GUILayout.Button("Disable graphic raycast in children") && target is RaycastBypassEditorUI raycastGraphic)
-            DisableRaycastInChildren<Graphic>(raycastGraphic.gameObject);
-        GUILayout.Space(10);
+        var buttonStyle = GUILayout.Height(30);
+        
+        if (GUILayout.Button("Disable graphic raycast", buttonStyle))
+            SetRaycastsFoundedByType<Graphic>(false);
 
-        if (GUILayout.Button("Disable images raycast in children") && target is RaycastBypassEditorUI raycastImage)
-            DisableRaycastInChildren<Image>(raycastImage.gameObject);
-        GUILayout.Space(10);
+        if (GUILayout.Button("Disable images raycast", buttonStyle))
+            SetRaycastsFoundedByType<Image>(false);
 
-        if (GUILayout.Button("Disable TextMeshProUGUI raycast in children") &&
-            target is RaycastBypassEditorUI raycastTextMeshProUGUI)
-            DisableRaycastInChildren<TextMeshProUGUI>(raycastTextMeshProUGUI.gameObject);
-        GUILayout.Space(10);
-
-        if (GUILayout.Button("Disable All Graphic raycast in scene/prefab"))
-            DisableRaycastFindByType<Graphic>();
-        GUILayout.Space(10);
+        if (GUILayout.Button("Disable TextMeshProUGUI raycast", buttonStyle))
+            SetRaycastsFoundedByType<TextMeshProUGUI>(false);
+        
+        if (GUILayout.Button("Enable graphic raycast", buttonStyle))
+            SetRaycastsFoundedByType<TextMeshProUGUI>(true);
+        
+        // Not working vertical scroll
+        // GUILayout.Label("Last Modified GameObjects:");
+        // DrawReadonlyReorderableList(); 
     }
-
-    private void DisableRaycastFindByType<T>() where T : Graphic
+    
+    private void SetRaycastsFoundedByType<T>(bool isRaycastTargets) where T : Graphic
     {
-        var raycastComponents = FindObjectsOfType<T>(true);
-        DisableRaycast(raycastComponents);
+        var raycastComponents = IsPrefabStage(out var prefabRoot)
+            ? prefabRoot.GetComponentsInChildren<T>(true)
+            : FindObjectsOfType<T>(true);
+        SetRaycastTargetComponents(raycastComponents, isRaycastTargets);
     }
 
-    private void DisableRaycastInChildren<T>(GameObject assignedGameObject) where T : Graphic
+    private void SetRaycastInChildren<T>(GameObject assignedGameObject, bool isRaycastTargets) where T : Graphic
     {
         var raycastComponents = assignedGameObject.GetComponentsInChildren<T>(true);
-        DisableRaycast(raycastComponents);
+        SetRaycastTargetComponents(raycastComponents, isRaycastTargets);
     }
 
-    private void DisableRaycast<T>(T[] raycastComponents) where T : Graphic
+    private void SetRaycastTargetComponents<T>(IReadOnlyCollection<T> raycastComponents, bool isRaycastTargets) where T : Graphic
     {
-        var countDisable = 0;
+        _lasModifyGameObjects.Clear();
         foreach (var component in raycastComponents)
         {
-            if (component.raycastTarget)
-                countDisable++;
-            component.raycastTarget = false;
+            if (component.raycastTarget != isRaycastTargets)
+            {
+                _lasModifyGameObjects.Add(component.gameObject);
+                EditorUtility.SetDirty(component);
+            }
+
+            component.raycastTarget = isRaycastTargets;
         }
 
-        Log.Info($"Disable raycast: Count Raycast Objects={raycastComponents.Length}; Count Disabled={countDisable}");
+        Log.Info($"[Raycast Handler] Count Raycast Targets={raycastComponents.Count}; Count Disabled={_lasModifyGameObjects.Count}");
         EditorUtility.SetDirty(this);
     }
+    
+    private void DrawReadonlyReorderableList() => _reorderableList.DoList(EditorGUILayout.GetControlRect());
 }
 }

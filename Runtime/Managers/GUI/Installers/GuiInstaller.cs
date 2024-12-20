@@ -8,23 +8,23 @@ namespace Game.GUI.Installers
 public static partial class GuiInstaller
 {
     private const string ResourcesWindowSettingsPath = "UI/WindowSettings";
-    private static readonly IResourceManagement ResourceManagement;
+    private static readonly IResourceManager ResourceManager;
     private static WindowSettings _windowSettings;
 
     static GuiInstaller()
     {
-        ResourceManagement = new ResourceManagement();
+        ResourceManager = new ResourceManager();
         _windowSettings = LoadInputSettings();
     }
 
     private static WindowSettings LoadInputSettings()
     {
-        var so = ResourceManagement.LoadAsset<WindowSettingsSo>(ResourcesWindowSettingsPath);
+        var so = ResourceManager.LoadAsset<WindowSettingsSo>(ResourcesWindowSettingsPath);
 
         if (so != null)
             return so.defaultSettings;
 
-        throw new ArgumentNullException(ResourcesWindowSettingsPath, $"Can't load input so settings. Path to so: {ResourcesWindowSettingsPath}");
+        throw new ArgumentNullException(ResourcesWindowSettingsPath, $"Can't load SO settings. Path to so: {ResourcesWindowSettingsPath}");
     }
 
     public static void SetSettings(WindowSettings windowSettings) => _windowSettings = windowSettings;

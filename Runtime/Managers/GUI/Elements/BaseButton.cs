@@ -1,10 +1,16 @@
 ﻿using System;
-using Game;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.GUI.Windows.Components
 {
+/// <summary>
+/// for fast Editor Buttons add the following code:
+/// 
+/// [ContextMenu("Editor simulate click")] protected override void SimulateClick() => base.SimulateClick();
+/// [ContextMenu("Editor force validate")] protected override void ForceValidate() => base.ForceValidate(); 
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class BaseButton<T> : MonoBehaviour where T : struct, Enum
 {
     [SerializeField] private ButtonConfiguration<T> configuration;
@@ -21,14 +27,16 @@ public class BaseButton<T> : MonoBehaviour where T : struct, Enum
     
     private void OnValidate() => configuration?.ValidateButton(transform);
     
-    [ContextMenu("Editor simulate click")]
-    protected void SimulateClick() => configuration.SimulateClick();
+    // Cannot use as MenuItem, because log warning: .SimulateClick is generic and cannot be used for menu commands.
+    protected virtual void SimulateClick() => configuration.SimulateClick();
     
-    [ContextMenu("Editor force validate")]
-    protected void ForceValidate() => OnValidate();
+    // Cannot use as MenuItem, because: .ForceValidate is generic and cannot be used for menu commands.
+    protected virtual void ForceValidate() => OnValidate();
 }
 
-
+/// <summary>
+/// To serialize generic parameters, it is necessary to use a nested-additional class!
+/// </summary>
 [Serializable,]
 public class ButtonConfiguration<T> where T : struct, Enum
 {

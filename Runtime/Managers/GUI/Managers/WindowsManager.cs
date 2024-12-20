@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-internal class WindowsManager : IDisposable, IWindowsManager
+internal class WindowsManager : IWindowsManager
 {
     protected readonly WindowBuilder windowBuilder;
 

@@ -27,15 +27,15 @@ public static partial class GuiInstaller
         new WindowsManagerAsync(windowFactory, rootUi, _windowSettings, openTransition, closeTransition);
 
     public static IWindowFactory WindowFactory(IMediatorInstantiator mediatorBuilder,
-        IResourceManagement resourceManagement,
+        IResourceManager resourceManager,
         IFactoryGameObjects factory) =>
-        new WindowsFactory(mediatorBuilder, resourceManagement, factory);
+        new WindowsFactory(mediatorBuilder, resourceManager, factory);
     
     public static IWindowFactory WindowFactory(IMediatorInstantiator mediatorBuilder,
-        IResourceManagement resourceManagement,
+        IResourceManager resourceManager,
         IFactoryGameObjects factory,
         string uiRootPath) =>
-        new WindowsFactory(mediatorBuilder, resourceManagement, factory)
+        new WindowsFactory(mediatorBuilder, resourceManager, factory)
             .WithParameter(uiRootPath);
 }
 }

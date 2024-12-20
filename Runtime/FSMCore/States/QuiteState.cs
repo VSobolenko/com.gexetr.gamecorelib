@@ -1,17 +1,15 @@
 ﻿namespace Game.FSMCore.States
 {
-public abstract class DeadState<TIn> : BaseState, IActivatedState<TIn>
+public abstract class QuiteState : BaseState, IQuiteState
 {
     protected IStateMachine stateMachine;
-    protected TIn inputData;
 
-    void IActivatedState<TIn>.ActivateState(IStateMachine machine, TIn data)
+    void IQuiteState.ActivateState(IStateMachine machine)
     {
-        inputData = data;
         stateMachine = machine;
         OnStateActivated();
     }
-
+    
     protected virtual void OnStateActivated() { }
 }
 }

@@ -2,9 +2,9 @@
 
 namespace Game.AssetContent.Installers
 {
-public static class ResourceManagementInstaller
+public static class ResourceManagerInstaller
 {
-    public static IResourceManagement Addressable() => new AddressablesManager();
-    public static IResourceManagement Resources() => new ResourceManagement();
+    public static IResourceManager Addressable() => new AddressablesManager();
+    public static IResourceManager Resources() => new ResourceManager();
 }
 }

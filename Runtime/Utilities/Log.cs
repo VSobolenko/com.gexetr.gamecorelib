@@ -7,6 +7,7 @@ namespace Game
 {
 public static class Log
 {
+    public static bool enable = true;
     public static bool enableAnalyticsEvents = false;
     private static string InfoType => "[info]";
     private static string WarningType => "[warning]";
@@ -20,7 +21,7 @@ public static class Log
     public static void Write(string text)
     {
 #if ENABLE_LOG
-        Debug.Log(text);
+        InternalLog(text);
 #endif
     }
 
@@ -28,7 +29,7 @@ public static class Log
     public static void Info(string text)
     {
 #if ENABLE_LOG
-        Debug.Log($"{LogType(InfoType, Green)} " + text);
+        InternalLog($"{ColoredLogType(InfoType, Green)} " + text);
 #endif
     }
 
@@ -36,7 +37,7 @@ public static class Log
     public static void Warning(string text)
     {
 #if ENABLE_LOG
-        Debug.Log($"{LogType(WarningType, Orange)} " + text);
+        InternalLog($"{ColoredLogType(WarningType, Orange)} " + text);
 #endif
     }
 
@@ -44,7 +45,7 @@ public static class Log
     public static void Error(string text)
     {
 #if ENABLE_LOG
-        Debug.Log($"{LogType(ErrorType, Red)} " + text);
+        InternalLog($"{ColoredLogType(ErrorType, Red)} " + text);
 #endif
     }
 
@@ -52,7 +53,7 @@ public static class Log
     public static void Exception(string text)
     {
 #if ENABLE_LOG
-        Debug.Log($"{LogType(ExceptionType, Pink)} " + text);
+        InternalLog($"{ColoredLogType(ExceptionType, Pink)} " + text);
 #endif
     }
 
@@ -60,7 +61,7 @@ public static class Log
     public static void InternalError()
     {
 #if ENABLE_LOG
-        Debug.Log($"{LogType(CriticalType, Blue)} " + "Internal error");
+        InternalLog($"{ColoredLogType(CriticalType, Blue)} " + "Internal error");
 #endif
     }
 
@@ -70,14 +71,24 @@ public static class Log
 #if ENABLE_LOG
         if (enableAnalyticsEvents == false)
             return;
-        Debug.Log($"{LogType(AnalyticsType, Yellow)} " +
-                  $"Event={action.GetType().Name};" +
-                  $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}");
+        InternalLog($"{ColoredLogType(AnalyticsType, Yellow)} " +
+                    $"Event={action.GetType().Name};" +
+                    $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}");
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string LogType(string type, string color)
+    private static void InternalLog(string text)
+    {
+#if ENABLE_LOG
+        if (enable == false)
+            return;
+        Debug.Log(text);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static string ColoredLogType(string type, string color)
     {
         return Application.isEditor ? string.Format(color, type) : string.Concat($"[{GameData.Identifier}]", type);
     }

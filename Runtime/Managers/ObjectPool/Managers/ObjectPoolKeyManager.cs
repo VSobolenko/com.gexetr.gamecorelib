@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Game.DynamicData;
 using Game.Factories;
-using Game;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityObject = UnityEngine.Object;
@@ -69,7 +68,7 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public void Prepare<T>(T prefab, int count) where T : UnityObject, IPoolable
+    public void Prepare<T>(T prefab, int count) where T : Component, IPoolable
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
@@ -81,8 +80,7 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         _poolProfiler?.Update();
     }
 
-    public async Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default)
-        where T : UnityObject, IPoolable
+    public async Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default) where T : Component, IPoolable
     {
         Warn(prefab, count);
 
@@ -100,19 +98,19 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         }
     }
 
-    public T Get<T>(T prefab) where T : UnityObject, IPoolable =>
+    public T Get<T>(T prefab) where T : Component, IPoolable =>
         InternalGet(prefab, Vector3.zero, Quaternion.identity, null);
 
-    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : UnityObject, IPoolable =>
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable =>
         InternalGet(prefab, position, rotation, null);
 
-    public T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : UnityObject, IPoolable =>
-        InternalGet(prefab, position, rotation, parent);
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable =>
+        InternalGet(prefab, position, rotation, parent, inWorldSpace);
 
-    public T Get<T>(T prefab, Transform parent) where T : UnityObject, IPoolable =>
-        InternalGet(prefab, Vector3.zero, Quaternion.identity, parent);
+    public T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable =>
+        InternalGet(prefab, Vector3.zero, Quaternion.identity, parent, inWorldSpace);
 
-    public void Release<T>(T prefabInstance) where T : UnityObject, IPoolable
+    public void Release<T>(T prefabInstance) where T : Component, IPoolable
     {
         if (prefabInstance == null)
             throw new ArgumentException($"Can't release null prefab");
@@ -124,8 +122,8 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         CreateOrReturnElementToPool(prefabInstance, true);
     }
 
-    private T InternalGet<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent)
-        where T : UnityObject, IPoolable
+    private T InternalGet<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true)
+        where T : Component, IPoolable
     {
         if (prefab == null)
             throw new ArgumentException($"Can't get null prefab");
@@ -135,10 +133,18 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
 
         if (_pool[prefab.Key].Count == 0)
             CreateOrReturnElementToPool(prefab, false);
-
+        
         var pooledObject = _pool[prefab.Key].Pop();
-        pooledObject.SetParent(parent);
-        pooledObject.SetPositionAndRotation(position, rotation);
+        if (inWorldSpace)
+        {
+            pooledObject.SetPositionAndRotation(position, rotation);
+            pooledObject.SetParent(parent);
+        }
+        else
+        {
+            pooledObject.SetParent(parent);
+            pooledObject.SetPositionAndRotation(position, rotation);
+        }
         pooledObject.SetActive(true);
         pooledObject.OnUse();
 
@@ -148,7 +154,7 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
     }
 
     private void CreateOrReturnElementToPool<T>(T prefab, bool isInstance)
-        where T : UnityObject, IPoolable
+        where T : Component, IPoolable
     {
         var parent = GetPoolRoot(prefab);
         var pooledObject = isInstance ? prefab : _factoryGameObjects.Instantiate(prefab, parent);
@@ -177,6 +183,9 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
             Log.Warning("Pool capacity exceeded. Use an increased size of the original container");
             defaultCapacity = _pool.Count;
         }
+        
+        if (string.IsNullOrEmpty(prefab.Key))
+            Log.Warning($"Added Empty key to Pool. Prefab name \"{prefab.name}\"");
 
         _pool.Add(prefab.Key, new Stack<IPoolable>(expectedCountNewElements));
     }

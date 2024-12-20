@@ -11,15 +11,15 @@ namespace Game.GUI.Windows.Factories
 internal class WindowsFactory : IWindowFactory
 {
     private readonly IMediatorInstantiator _container;
-    private readonly IResourceManagement _resourceManagement;
+    private readonly IResourceManager _resourceManager;
     private readonly IFactoryGameObjects _factory;
 
     private static readonly Dictionary<Type, Type> WindowMediatorMap = new(5);
     private string _uiRootPath = "UI/UIRoot";
 
-    public WindowsFactory(IMediatorInstantiator container, IResourceManagement resourceManagement, IFactoryGameObjects factory)
+    public WindowsFactory(IMediatorInstantiator container, IResourceManager resourceManager, IFactoryGameObjects factory)
     {
-        _resourceManagement = resourceManagement;
+        _resourceManager = resourceManager;
         _factory = factory;
         _container = container;
 
@@ -60,7 +60,7 @@ internal class WindowsFactory : IWindowFactory
     {
         uiRoot = null;
 
-        var rootPrefab = _resourceManagement.LoadAsset<GameObject>(_uiRootPath);
+        var rootPrefab = _resourceManager.LoadAsset<GameObject>(_uiRootPath);
 
         if (Application.isEditor && rootPrefab == null)
             throw new ArgumentNullException(_uiRootPath, $"Can't load UI Root by path: {_uiRootPath}");
@@ -92,7 +92,7 @@ internal class WindowsFactory : IWindowFactory
         }
 
         var prefabKey = $"UI/{mediatorType.Name.Replace("MediatorUI", "")}";
-        var prefab = _resourceManagement.LoadAsset<GameObject>(prefabKey);
+        var prefab = _resourceManager.LoadAsset<GameObject>(prefabKey);
 
         if (Application.isEditor && prefab == null)
             throw new ArgumentNullException(prefabKey, $"Can't load Prefab by path: {prefabKey}");
@@ -109,7 +109,7 @@ internal class WindowsFactory : IWindowFactory
             return false;
         }
 
-        window = _factory.InstantiatePrefab(prefab, root).GetComponent<WindowUI>();
+        window = _factory.InstantiatePrefab(prefab, root.position, root.rotation, root).GetComponent<WindowUI>();
         mediator = _container.Instantiate<TMediator>(window);
 
         return mediator != null;

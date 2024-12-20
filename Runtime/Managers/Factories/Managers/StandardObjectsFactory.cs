@@ -45,31 +45,31 @@ internal class StandardObjectsFactory : IFactoryGameObjects
         InternalInstantiateBase(name, position, rotation, parent, components);
 
     // Creates a new object from a prefab
-    public GameObject InstantiatePrefab(Object prefab) => Object.Instantiate(prefab) as GameObject;
+    public GameObject InstantiatePrefab(GameObject prefab) => Object.Instantiate(prefab) as GameObject;
 
-    public GameObject InstantiatePrefab(Object prefab, Transform parent) => 
+    public GameObject InstantiatePrefab(GameObject prefab, Transform parent) => 
         Object.Instantiate(prefab, parent) as GameObject;
 
-    public GameObject InstantiatePrefab(Object prefab, Vector3 position, Quaternion rotation, Transform parent) =>
+    public GameObject InstantiatePrefab(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) =>
         Object.Instantiate(prefab, position, rotation, parent) as GameObject;
 
     // Creates a new object from a prefab that already has a component T
-    public T Instantiate<T>(T prefab) where T : Object => Object.Instantiate(prefab);
+    public T Instantiate<T>(T prefab) where T : Component => Object.Instantiate(prefab);
 
-    public T Instantiate<T>(T prefab, IEnumerable<object> extraArgs) where T : Object => 
+    public T Instantiate<T>(T prefab, IEnumerable<object> extraArgs) where T : Component => 
         Object.Instantiate(prefab);
 
-    public T Instantiate<T>(T prefab, Transform parent) where T : Object => 
+    public T Instantiate<T>(T prefab, Transform parent) where T : Component => 
         Object.Instantiate(prefab, parent);
 
-    public T Instantiate<T>(T prefab, Transform parent, IEnumerable<object> extraArgs) where T : Object =>
+    public T Instantiate<T>(T prefab, Transform parent, IEnumerable<object> extraArgs) where T : Component =>
         Object.Instantiate(prefab, parent);
 
-    public T Instantiate<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Object =>
+    public T Instantiate<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Component =>
         Object.Instantiate(prefab, position, rotation, parent);
 
     public T Instantiate<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent,
-                            IEnumerable<object> extraArgs) where T : Object =>
+                            IEnumerable<object> extraArgs) where T : Component =>
         Object.Instantiate(prefab, position, rotation, parent);
     
     // Creates a new object and adds a new component to it

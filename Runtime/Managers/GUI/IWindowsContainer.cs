@@ -1,6 +1,8 @@
-﻿namespace Game.GUI.Windows
+﻿using System;
+
+namespace Game.GUI.Windows
 {
-public interface IWindowsContainer
+public interface IWindowsContainer : IDisposable
 {
     /// <summary>
     /// Returns a list of available windows by type, if there is more than one such type

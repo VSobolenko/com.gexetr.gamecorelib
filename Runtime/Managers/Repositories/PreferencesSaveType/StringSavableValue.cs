@@ -2,10 +2,10 @@
 
 namespace Game.PreferencesSaveType
 {
-internal class StringSavableValue : BaseSavableValue<string>
+public class StringSavableValue : BaseSavableValue<string>
 {
-    public StringSavableValue(string playerPrefsPath, string defaultValue = default) 
-        : base(playerPrefsPath, defaultValue)
+    public StringSavableValue(string playerPrefsKey, string defaultValue = default) 
+        : base(playerPrefsKey, defaultValue)
     {
     }
 

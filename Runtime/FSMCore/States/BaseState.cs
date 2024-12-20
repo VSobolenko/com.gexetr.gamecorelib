@@ -6,6 +6,6 @@ public abstract class BaseState : IState
 
     public virtual void Dispose() { }
 
-    private protected static int stateCounter;
+    internal static int stateCounter;
 }
 }

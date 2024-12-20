@@ -40,25 +40,62 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
         ActiveState = null;
     }
 
-    public void TransitTo<TState, TIn>(TIn data) where TState : DeadState<TIn>
+    public LiteStateMachine TransitTo<TState, TIn>(TIn data) where TState : class, IActivatedState<TIn>
     {
-        ActiveState?.Dispose();
         var state = GetState<TState>();
         SwitchState(state);
-        Activate(state, data);
+        state.ActivateState(this, data);
+
+        return this;
     }
 
+    public LiteStateMachine TransitTo<TState>() where TState : class, IQuiteState
+    {
+        var state = GetState<TState>();
+        SwitchState(state);
+        state.ActivateState(this);
+        
+        return this;
+    }
+    
     private void SwitchState(IState state)
     {
         PreviousState = ActiveState;
+        ActiveState?.Dispose();
         ActiveState = state;
-        OnStateChange?.Invoke(ActiveState);
+        TryLogDebug(state);
+        OnStateChange?.Invoke(state);
     }
 
     private TState GetState<TState>() where TState : class, IState => _states[typeof(TState)] as TState;
 
-    private void Activate<TIn>(IActivatedState<TIn> state, TIn data) => state.ActivateState(this, data);
-
     public IState this[Type type] => _states[type];
+    
+    public int Count => _states.Count;
+        
+    private bool _enableLogger;
+    
+    public LiteStateMachine EnableLogger()
+    {
+        _enableLogger = true;
+
+        return this;
+    }
+
+    public LiteStateMachine DisableLogger()
+    {
+        _enableLogger = false;
+
+        return this;
+    }
+    
+    private void TryLogDebug(IState state)
+    {
+        if (_enableLogger == false)
+            return;
+        BaseState.stateCounter++;
+        var stateName = state == null ? "Null_Or_Empty" : state.GetType().Name;
+        Log.Info($"[{BaseState.stateCounter}] Active state: {stateName}");
+    }
 }
 }

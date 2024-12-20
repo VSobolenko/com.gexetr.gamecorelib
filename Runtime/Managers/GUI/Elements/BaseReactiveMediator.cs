@@ -16,24 +16,24 @@ public abstract class BaseReactiveMediator<TWindow, TReactive> : IMediator
         this.reactiveButton = reactiveButton;
     }
 
-    public virtual void OnInitialize()
-    {
-        foreach (var button in reactiveButton)
-        {
-            button.OnClickButton += ProceedButtonAction;
-        }
-    }
+    public virtual void OnInitialize() { }
 
     public virtual void OnFocus() { }
 
     public virtual void OnUnfocused() { }
 
-    public virtual void OnDestroy()
+    public virtual void OnDestroy() { }
+
+    protected void SubscribeToWindowsButtons()
     {
         foreach (var button in reactiveButton)
-        {
+            button.OnClickButton += ProceedButtonAction;
+    }
+
+    protected void UnsubscribeToWindowsButtons()
+    {
+        foreach (var button in reactiveButton)
             button.OnClickButton -= ProceedButtonAction;
-        }
     }
 
     protected virtual void ProceedButtonAction(TReactive action) { }

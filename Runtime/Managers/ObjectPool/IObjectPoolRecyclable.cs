@@ -9,6 +9,6 @@ public interface IObjectPoolRecyclable
     /// </summary>
     /// <param name="prefabInstance">Object instance</param>
     /// <typeparam name="T">Object type</typeparam>
-    void Release<T>(T prefabInstance) where T : Object, IPoolable;
+    void Release<T>(T prefabInstance) where T : Component, IPoolable;
 }
 }

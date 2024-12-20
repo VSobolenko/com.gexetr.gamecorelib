@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace Game.PreferencesSaveType
 {
-internal abstract class BaseSavableValue<T> : IDisposable
+public abstract class BaseSavableValue<T> : IDisposable
 {
-    private string _playerPrefsPath;
+    private string _playerPrefsKey;
     private bool _valueInitialize;
     protected readonly T defaultValue;
     protected T cachedValue;
     private static event Action OnValueChangedOutside;
     
-    protected BaseSavableValue(string playerPrefsPath, T defaultValue = default)
+    protected BaseSavableValue(string playerPrefsKey, T defaultValue = default)
     {
-        if (string.IsNullOrEmpty(playerPrefsPath))
+        if (string.IsNullOrEmpty(playerPrefsKey))
             throw new Exception("Empty playerPrefsPath in savableValue");
         
-        _playerPrefsPath = playerPrefsPath;
+        _playerPrefsKey = playerPrefsKey;
         this.defaultValue = defaultValue;
         _valueInitialize = false;
         OnValueChangedOutside += ProcessValueChangedOutside;
@@ -28,20 +28,21 @@ internal abstract class BaseSavableValue<T> : IDisposable
         {
             if (_valueInitialize) 
                 return cachedValue;
-
-            var containsSaves = ContainsSaves();
-            cachedValue = containsSaves ? LoadValue(ref _playerPrefsPath) : defaultValue;
+            
+            cachedValue = defaultValue;
+            if (ContainsStoredValue())
+                cachedValue = LoadValue(ref _playerPrefsKey);
+            else
+                SaveValue(ref _playerPrefsKey);
             _valueInitialize = true;
-
-            if (containsSaves == false)
-                SaveValue(ref _playerPrefsPath);
 
             return cachedValue;
         }
         set
         {
+            if (cachedValue.Equals(value) == false)
+                SaveValue(ref _playerPrefsKey);
             cachedValue = value;
-            SaveValue(ref _playerPrefsPath);
             _valueInitialize = true;
         }
     }
@@ -50,11 +51,11 @@ internal abstract class BaseSavableValue<T> : IDisposable
     
     protected abstract void SaveValue(ref string path);
 
-    private bool ContainsSaves() => PlayerPrefs.HasKey(_playerPrefsPath);
+    private bool ContainsStoredValue() => PlayerPrefs.HasKey(_playerPrefsKey);
 
     public void Reset()
     {
-        PlayerPrefs.DeleteKey(_playerPrefsPath);
+        PlayerPrefs.DeleteKey(_playerPrefsKey);
         _valueInitialize = false;
     }
 
@@ -66,6 +67,7 @@ internal abstract class BaseSavableValue<T> : IDisposable
     public void Dispose()
     {
         OnValueChangedOutside -= ProcessValueChangedOutside;
+        var autoSave = Value;
     }
     
     public static void ResetAll()

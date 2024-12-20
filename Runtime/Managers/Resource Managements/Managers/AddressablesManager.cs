@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Game;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
@@ -10,7 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace Game.AssetContent.Managers
 {
-internal class AddressablesManager : System.IDisposable, IResourceManagement
+internal class AddressablesManager : System.IDisposable, IResourceManager
 {
     private readonly Dictionary<string, AsyncOperationHandle> _loadedHandlers;
 
@@ -24,11 +25,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManagement
     public T LoadAsset<T>(string key) where T : Object
     {
         if (string.IsNullOrEmpty(key))
-        {
-            Log.Warning("Unable to load null or empty key");
-
-            return null;
-        }
+            throw new ArgumentException("Unable to load null or empty key");
 
         if (_loadedHandlers.ContainsKey(key))
         {
@@ -37,19 +34,18 @@ internal class AddressablesManager : System.IDisposable, IResourceManagement
             return existHandle.IsDone == false ? existHandle.WaitForCompletion() : existHandle.Result;
         }
 
-        if (IsKeyExist(key) == false)
-        {
-            Log.Warning($"Asset key not found: \"{key}\"");
+        if (Application.isEditor && IsKeyExist(key) == false)
+            throw new ArgumentNullException(key, $"Asset key not found: \"{key}\"");
 
+        if (IsKeyExist(key) == false)
             return null;
-        }
 
         var handle = Addressables.LoadAssetAsync<T>(key);
         var asset = handle.WaitForCompletion();
 
         if (IsHandleCompleteSuccess(ref handle) == false)
         {
-            Log.Error($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
+            Log.Error($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}; Key={key}");
 
             return default;
         }
@@ -61,19 +57,15 @@ internal class AddressablesManager : System.IDisposable, IResourceManagement
 
     public async Task<T> LoadAssetAsync<T>(string key) where T : Object
     {
-#if RELEASE_BUILD
-        try
-        {
-#endif
         if (string.IsNullOrEmpty(key))
+            throw new ArgumentException("Unable to load null or empty key");
+
+        if (_loadedHandlers.ContainsKey(key))
         {
-            Log.Warning("Unable to load null or empty key");
+            var existHandle = _loadedHandlers[key].Convert<T>();
 
-            return null;
+            return existHandle.IsDone == false ? existHandle.WaitForCompletion() : existHandle.Result;
         }
-
-        if (_loadedHandlers.ContainsKey(key)) 
-            return _loadedHandlers[key].Convert<T>().Result;
 
         if (await IsKeyExistAsync(key) == false)
         {
@@ -95,16 +87,6 @@ internal class AddressablesManager : System.IDisposable, IResourceManagement
         _loadedHandlers.Add(key, handle);
 
         return handle.Result;
-#if RELEASE_BUILD
-            
-        }
-        catch (System.Exception e)
-        {
-            Log.Exception(e.Message);
-
-            return default;
-        }
-#endif
     }
 
     public async Task LoadSceneAsync(string key, LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true)

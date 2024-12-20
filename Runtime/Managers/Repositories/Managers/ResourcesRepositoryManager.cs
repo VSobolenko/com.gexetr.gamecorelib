@@ -11,7 +11,7 @@ internal class ResourcesRepositoryManager<T> : BaseRepositoryManager<T>, IReposi
     {
         _path = path;
         
-        if (typeof(T).IsSubclassOf(typeof(UnityEngine.Object)) == false)
+        if (typeof(T).IsSubclassOf(typeof(Object)) == false)
             throw new System.NotSupportedException("Supported only unity objects in this repository");
     }
 

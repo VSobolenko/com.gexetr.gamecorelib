@@ -42,11 +42,11 @@ public interface IFactoryGameObjects
     /// <returns>
     ///  <para>Created GameObject</para>
     /// </returns>
-    GameObject InstantiatePrefab(Object prefab);
+    GameObject InstantiatePrefab(GameObject prefab);
 
-    GameObject InstantiatePrefab(Object prefab, Transform parent);
+    GameObject InstantiatePrefab(GameObject prefab, Transform parent);
 
-    GameObject InstantiatePrefab(Object prefab, Vector3 position, Quaternion rotation, Transform parent);
+    GameObject InstantiatePrefab(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent);
 
     /// <summary>
     ///  <para>Creates a new object from a prefab that already has a component T</para>
@@ -56,20 +56,20 @@ public interface IFactoryGameObjects
     /// <returns>
     ///  <para>Reference to the component</para>
     /// </returns>
-    T Instantiate<T>(T prefab) where T : Object;
+    T Instantiate<T>(T prefab) where T : Component;
 
-    T Instantiate<T>(T prefab, IEnumerable<object> extraArgs) where T : Object;
+    T Instantiate<T>(T prefab, IEnumerable<object> extraArgs) where T : Component;
 
-    T Instantiate<T>(T prefab, Transform parent) where T : Object;
-    T Instantiate<T>(T prefab, Transform parent, IEnumerable<object> extraArgs) where T : Object;
+    T Instantiate<T>(T prefab, Transform parent) where T : Component;
+    T Instantiate<T>(T prefab, Transform parent, IEnumerable<object> extraArgs) where T : Component;
 
-    T Instantiate<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Object;
+    T Instantiate<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Component;
 
     T Instantiate<T>(T prefab,
                             Vector3 position,
                             Quaternion rotation,
                             Transform parent,
-                            IEnumerable<object> extraArgs) where T : Object;
+                            IEnumerable<object> extraArgs) where T : Component;
 
     //ToDo: Add normal documentation
     /// <summary>

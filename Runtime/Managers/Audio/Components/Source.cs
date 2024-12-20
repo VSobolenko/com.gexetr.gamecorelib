@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Game.Audio
 {
 [RequireComponent(typeof(AudioSource))]
-public class Source : KeyPooledObject
+public class Source : MonoPooledObject
 {
     [field: SerializeField] public AudioSource AudioSource { get; private set; }
     

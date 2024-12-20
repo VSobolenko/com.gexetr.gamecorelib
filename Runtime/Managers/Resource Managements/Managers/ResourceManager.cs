@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Game.AssetContent.Managers
 {
-internal class ResourceManagement : IResourceManagement
+internal class ResourceManager : IResourceManager
 {
     public T LoadAsset<T>(string key) where T : Object => Resources.Load<T>(key);
 

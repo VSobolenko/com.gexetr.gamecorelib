@@ -20,9 +20,9 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     /// <param name="prefab">Object prefab or instance</param>
     /// <param name="count">Quantity to add</param>
     /// <typeparam name="T">Object type</typeparam>
-    void Prepare<T>(T prefab, int count) where T : Object, IPoolable;
+    void Prepare<T>(T prefab, int count) where T : Component, IPoolable;
 
-    Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default) where T : Object, IPoolable;
+    Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default) where T : Component, IPoolable;
 
     /// <summary>
     /// Get object instance from pool
@@ -31,14 +31,15 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     /// <param name="position">Position for the object</param>
     /// <param name="rotation">Orientation of the object</param>
     /// <param name="parent">Parent that will be assigned to the object</param>
+    /// <param name="inWorldSpace">World space</param>
     /// <typeparam name="T">Object type</typeparam>
     /// <returns>The instantiated clone</returns>
-    T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Object, IPoolable;
+    T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable;
 
-    T Get<T>(T prefab) where T : Object, IPoolable;
+    T Get<T>(T prefab) where T : Component, IPoolable;
 
-    T Get<T>(T prefab, Transform parent) where T : Object, IPoolable;
+    T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable;
 
-    T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Object, IPoolable;
+    T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable;
 }
 }
