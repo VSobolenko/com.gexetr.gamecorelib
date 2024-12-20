@@ -2,7 +2,7 @@
 
 namespace Game.IO.Installers
 {
-public class SaveSystemInstaller
+public static class SaveSystemInstaller
 {
     public static ISaveFile FileSaver() => new BinarySave();
 }

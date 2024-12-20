@@ -1,10 +1,9 @@
 ﻿using Game.Inputs.Managers;
-using Game;
 using UnityEngine;
 
 namespace Game.Inputs.Installers
 {
-public class InputInstaller
+public static class InputInstaller
 {
     private const string ResourcesSettingsPath = "InputSettings";
 

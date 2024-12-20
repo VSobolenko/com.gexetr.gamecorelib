@@ -8,8 +8,6 @@ public abstract class BaseTransition : IDisposable
 
     internal abstract void Transit();
 
-    public virtual void Dispose()
-    {
-    }
+    public virtual void Dispose() { }
 }
 }

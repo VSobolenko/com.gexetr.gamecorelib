@@ -1,11 +1,10 @@
 ﻿using Game.Localizations.Components;
 using Game.Localizations.Managers;
-using Game;
 using UnityEngine;
 
 namespace Game.Localizations.Installers
 {
-public class LocalizationInstaller
+public static class LocalizationInstaller
 {
     private const string ResourcesSettingsPath = "Localization/LocalizationSettings";
 

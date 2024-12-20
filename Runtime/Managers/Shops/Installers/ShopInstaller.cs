@@ -1,9 +1,8 @@
-﻿using Game;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Shops.Installers
 {
-public class ShopInstaller
+public static class ShopInstaller
 {
     private const string ResourcesSettingsPath = "Shop/ProductsConfig";
     private static readonly ProductsSettingsCollections Settings;

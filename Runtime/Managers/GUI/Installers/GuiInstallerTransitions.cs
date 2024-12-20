@@ -1,6 +1,4 @@
-﻿using System;
-using Game.GUI.Windows;
-using Game.GUI.Windows.Transitions;
+﻿using Game.GUI.Windows.Transitions;
 
 namespace Game.GUI.Installers
 {

@@ -2,10 +2,6 @@
 Dotween(GUI)
  1. `https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7`
  2. `https://dotween.demigiant.com/download.php`
-
-UniTask (ObjectPool)
- 1. `https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package`
- 2. (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
     
 Addressables (Resource Managements)
  1. `com.unity.addressables` (Unity Registry)
@@ -15,8 +11,12 @@ In App Purchasing(Shop)
  1. `com.unity.purchasing` (Unity Registry)
  2. `https://github.com/needle-mirror/com.unity.purchasing`
 
+UniTask (ObjectPool)
+ 1. `https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package`
+ 2. (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
+
 R3(General) + NuGetForUnity-FluentAssertion(Tests)
- 1. `https://github.com/Cysharp/R3?tab=readme-ov-file#unity` (R3-general)
+ 1. Description: `https://github.com/Cysharp/R3?tab=readme-ov-file#unity` (R3-general)
  2. (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity` (NuGet)
    - R3
    - ObservableCollections
@@ -70,6 +70,7 @@ FSM
  - FSM
 2. States
  - DeadState -i
+ - QuiteState
  - State -io
 3. Transitions
  - Alive -io
@@ -93,22 +94,17 @@ Managers
 
 Don't forget:
 1. TextMeshPro
-2. DoTween
-3. Unitask
-4. R3
-5. Zenject / VContainer
-6. Odin Inspector
-7. Addressables
-8. GCL
-9. .gitignore, .gitattributes, .gitconfig, .editorconfig
-10. Rainbow Folders
-12. NiceVibrations
-13. Andoid Logcat
-14. URP / HDRP
-15. CI/CD
-16. Feature
-17. .asmdef
-18. AssemblyInfo
+2. Zenject / VContainer
+3. Addressables
+4. .gitignore, .gitattributes, .gitconfig, .editorconfig
+5. NiceVibrations
+6. Andoid Logcat
+7. URP / HDRP
+8. CI/CD
+9. Naughty Attributes
+10. .asmdef
+11. AssemblyInfo
+12. Unity SerializeReferenceExtensions
 
 # Project Structure
     |-- Assets
@@ -124,7 +120,6 @@ Don't forget:
             	|-- Textures/Music
             	|-- Materials/Models
         |-- Import           				//Import assets
-        |-- Plugins
         |-- SandBox          				//Test files
         |-- StreamingAssets
 
@@ -139,6 +134,7 @@ Don't forget:
  - Disable UI `Raycast Target` in gameObject component if he is not responsible for it
  - Disable pixel perfect (if necessary) in canvas: `Canvas - Pixel Perfect`
  - Managed code stripping
+ - Check mark "Static" for static GameObjects
 
  # Scenes
 If there is only one scene, name it: **Main** <br>

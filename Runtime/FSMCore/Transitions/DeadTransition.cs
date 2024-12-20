@@ -19,8 +19,6 @@ public abstract class DeadTransition<TIn> : BaseTransition
 
     protected abstract bool CanDecide();
 
-    protected virtual void OnTransit()
-    {
-    }
+    protected virtual void OnTransit() { }
 }
 }

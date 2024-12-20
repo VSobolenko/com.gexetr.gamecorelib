@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Game.DynamicData;
 using Game;
 using UnityEditor;
@@ -9,27 +10,33 @@ using UnityEngine;
 
 namespace GameEditor.Tools
 {
-/*
-to quickly create a data clearing window, just inherit from this class and add the following code:
-    [MenuItem(DefaultHeader, false)]
-    private static void ShowWindow() => ShowDataCleanerWindow<YOUR_WINDOW_CLASS>();
-
-with setup:
-    [MenuItem(DefaultHeader, false)]
-    private static void ShowWindow() => ShowDataCleanerWindow<DataCleaner>(startupConfigure: window =>
-    {
-        window.confirm = false;
-        window.showHeader = false;
-    });
-*/
+/// <summary>
+///to quickly create a data clearing window, just inherit from this class and add the following code:
+/// [MenuItem(DefaultHeader, false)]
+/// private static void ShowWindow() => ShowDataCleanerWindow<YOUR_WINDOW_CLASS>();
+///
+///with setup:
+/// [MenuItem(DefaultHeader, false)]
+/// private static void ShowWindow() => ShowDataCleanerWindow<YOUR_WINDOW_CLASS>(startupConfigure: window =>
+/// {
+///     window.confirm = false;
+///     window.showHeader = false;
+/// });
+/// 
+///to add custom Buttons and Labels:
+/// public override void AddSetups()
+/// {
+///     AddButton(new ButtonData() { } ).AddLable("...");
+/// }
+/// </summary>
 
 public class GameDataCleaner : EditorWindow
 {
     protected const string DefaultHeader = GameData.EditorName + "/Turbo data";
     private readonly HashSet<ButtonData> _buttons = new(2);
     private readonly HashSet<string> _labels = new(2);
-    protected bool confirm = true;
-    protected bool showHeader = true;
+    public bool confirm = true;
+    public bool showHeader = true;
 
     protected static T ShowDataCleanerWindow<T>(string title = "Data manager", Action<T> startupConfigure = null)
         where T : GameDataCleaner
@@ -37,10 +44,15 @@ public class GameDataCleaner : EditorWindow
         var window = GetWindow<T>();
         window.titleContent = new GUIContent(title);
         window.Show();
-        SetupPlayerPrefs(window);
         startupConfigure?.Invoke(window);
 
         return GetWindow<T>();
+    }
+
+    private void OnEnable()
+    {
+        SetupPlayerPrefs(this);
+        AddSetups();
     }
 
     private static void SetupPlayerPrefs<T>(T window) where T : GameDataCleaner
@@ -52,6 +64,8 @@ public class GameDataCleaner : EditorWindow
         }).AddLabel($"PlayerPrefs: HKCU\\Software\\{PlayerSettings.companyName}\\{Application.productName}");
     }
 
+    protected virtual void AddSetups() { }
+    
     private void OnGUI()
     {
         GUILayout.BeginHorizontal();
@@ -70,34 +84,41 @@ public class GameDataCleaner : EditorWindow
 
         DrawCustomCleaningPoint();
 
-        foreach (var label in _labels)
-            GUILayout.Label(label);
+        DrawCleaningPointsLabels();
         DrawCustomLabels();
     }
 
-    protected GameDataCleaner AddButton(ButtonData button)
+    private void DrawCleaningPointsLabels()
+    {
+        foreach (var label in _labels)
+            EditorGUILayout.SelectableLabel(label);
+            // EditorGUILayout.SelectableLabel(label, EditorStyles.textField); - custom type
+    }
+
+    public GameDataCleaner AddButton(ButtonData button)
     {
         _buttons.Add(button);
 
         return this;
     }
 
-    protected GameDataCleaner AddLabel(string label)
+    public GameDataCleaner AddLabel(string label)
     {
         _labels.Add(label);
 
         return this;
     }
 
-    private void ProcessClearGameData()
+    private GameDataCleaner ProcessClearGameData()
     {
         if (confirm && ConfirmAction("Game Data", "Clear Game data?") == false)
-            return;
+            return this;
 
         foreach (var button in _buttons)
             ProcessClearButtonData(button, considerConfirm: false);
         OnClearGameData();
         Log.Info("Game data cleared!");
+        return this;
     }
 
     private void ProcessClearButtonData(ButtonData button, bool considerConfirm = true)
@@ -121,7 +142,27 @@ public class GameDataCleaner : EditorWindow
         return EditorUtility.DisplayDialog(title, message, okLabel, cancelLabel);
     }
 
-    protected struct ButtonData
+    public bool DeleteFolder(string path, bool log = true)
+    {
+        if (Directory.Exists(path) == false) 
+            return false;
+        Directory.Delete(path, true);
+        if (log)
+            Log.Info($"Directory Success Delete: {path}");
+        return true;
+    }
+    
+    public bool DeleteFile(string filePath, bool log = true)
+    {
+        if (File.Exists(filePath) == false) 
+            return false;
+        File.Delete(filePath);
+        if (log)
+            Log.Info($"File Success Delete: {filePath}");
+        return true;
+    }
+    
+    public struct ButtonData
     {
         public string description;
         public Action action;

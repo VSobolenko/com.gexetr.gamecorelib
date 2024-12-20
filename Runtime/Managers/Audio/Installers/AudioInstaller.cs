@@ -1,10 +1,9 @@
 ﻿using Game.Audio.Managers;
 using Game.Factories;
-using Game;
 
 namespace Game.Audio.Installers
 {
-public class AudioInstaller
+public static class AudioInstaller
 {
     private static readonly AudioSettings _settings;
     private const string ResourcesSettingsPath = "Audio/AudioSettings";

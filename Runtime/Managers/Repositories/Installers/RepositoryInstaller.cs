@@ -3,7 +3,7 @@ using Game.Repositories.Managers;
 
 namespace Game.Repositories.Installers
 {
-public class RepositoryInstaller
+public static class RepositoryInstaller
 {
     public static IRepository<T> File<T>(string path, ISaveFile fileSaver) where T : class, IHasBasicId =>
         new FileRepositoryManager<T>(path, fileSaver);

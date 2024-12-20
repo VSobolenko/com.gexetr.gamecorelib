@@ -32,7 +32,7 @@ internal class ObjectPoolTypeEditorSeparateManager : ObjectPoolTypeManager
         var root = base.GetPoolRoot(prefab);
         var parent = prefab.IsUiElement ? CreateAndSetupUIObjectPoolRoot(root) : CreateObjectPoolRoot(root);
         if (Application.isEditor)
-            parent.name = $"[{_pool.Count}] {prefab.Key}";
+            parent.name = $"[{_pool.Count}] {prefab.GetType().Name}";
         _pool.Add(prefab.Key, parent);
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Pools.Installers
 {
-public class ObjectPoolInstaller
+public static class ObjectPoolInstaller
 {
     public static IObjectPoolManager Key(IFactoryGameObjects factory, Transform parent = null, int poolCapacity = 32)
     {
