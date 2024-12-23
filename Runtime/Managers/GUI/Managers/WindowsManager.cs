@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.GUI.Windows.Factories;
-using Game;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
@@ -86,14 +85,14 @@ internal class WindowsManager : IWindowsManager
 
             return true;
         }
-
+        Log.Warning($"No {typeof(TMediator)} window found to close");
         return false;
     }
 
     public bool CloseWindow<TMediator>(TMediator mediator) where TMediator : class, IMediator
     {
         if (mediator == null)
-            return false;
+            throw new ArgumentNullException($"Close {typeof(TMediator)} null mediator");
 
         for (var i = 0; i < windowBuilder.Count; i++)
         {
@@ -104,7 +103,7 @@ internal class WindowsManager : IWindowsManager
 
             return true;
         }
-
+        Log.Warning($"No {typeof(TMediator)} window found to close");
         return false;
     }
 

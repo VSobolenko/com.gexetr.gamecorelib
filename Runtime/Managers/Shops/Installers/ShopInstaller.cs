@@ -11,8 +11,6 @@ public static class ShopInstaller
     {
         Settings = LoadProductsFromResources();
     }
-
-    public static IShopManager IAP() => new IAPShopManager(Settings.products);
     
     private static ProductsSettingsCollections LoadProductsFromResources()
     {

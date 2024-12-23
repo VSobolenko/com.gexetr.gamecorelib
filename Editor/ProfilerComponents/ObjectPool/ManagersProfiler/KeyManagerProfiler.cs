@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game;
 using Game.Pools;
@@ -9,13 +10,15 @@ namespace GameEditor.Pools
 {
 internal class KeyManagerProfiler : IPoolProfiler
 {
+    private readonly Type _poolType;
     private static int _maxPoolCapacity;
     private static int _maxPoolStackCapacity;
     private readonly Dictionary<string, Stack<IPoolable>> _pool;
     private Dictionary<string, PoolableData> _poolData = new();
 
-    public KeyManagerProfiler(object pool)
+    public KeyManagerProfiler(object pool, Type poolType)
     {
+        _poolType = poolType;
         _pool = pool as Dictionary<string, Stack<IPoolable>>;
         if (_pool == null)
         {
@@ -30,19 +33,9 @@ internal class KeyManagerProfiler : IPoolProfiler
         if (_pool == null)
             return;
 
-        var infoStyle = new GUIStyle(GUI.skin.box)
-        {
-        };
-
-        var greenStyle = new GUIStyle(GUI.skin.textArea)
-        {
-            normal = {textColor = new Color(0.49f, 1f, 0f)},
-        };
-
-        var greenStyle2 = new GUIStyle(GUI.skin.textArea)
-        {
-            normal = {textColor = new Color(0.7f, 1f, 0.75f)},
-        };
+        var infoStyle = new GUIStyle(GUI.skin.box);
+        var greenStyle = new GUIStyle(GUI.skin.textArea) { normal = {textColor = new Color(0.49f, 1f, 0f)}, };
+        var greenStyle2 = new GUIStyle(GUI.skin.textArea) { normal = {textColor = new Color(0.7f, 1f, 0.75f)}, };
 
         OnPoolDataUpdated();
 
@@ -50,8 +43,8 @@ internal class KeyManagerProfiler : IPoolProfiler
 
         if (GUILayout.Button("Clear pool"))
             ClearPool();
-
-        GUILayout.Label($"Profiler type: {GetType().Name}", infoStyle);
+        
+        GUILayout.Label($"[Types] Pool: {_poolType.Name}; Profiler: {GetType().Name}", infoStyle);
         GUILayout.Label($"Pool capacity: {_pool.Keys.Count}\nMax capacity: {_maxPoolCapacity}", greenStyle);
 
         GUILayout.Label($"Full stack capacity: {stackCapacity}\nMax stack capacity: {_maxPoolStackCapacity}",

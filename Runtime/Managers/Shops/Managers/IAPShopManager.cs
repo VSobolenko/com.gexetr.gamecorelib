@@ -61,7 +61,7 @@ internal class IAPShopManager : IShopManager, IDetailedStoreListener
         {
             if (sourceProduct.Ignored)
                 continue;
-            builder.AddProduct(sourceProduct.ProductId, sourceProduct.Type);
+            builder.AddProduct(sourceProduct.ProductId, (UnityEngine.Purchasing.ProductType)sourceProduct.Type);
             Products.Add(sourceProduct);
         }
 

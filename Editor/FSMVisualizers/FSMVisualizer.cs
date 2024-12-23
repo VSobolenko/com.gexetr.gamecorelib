@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Game.DynamicData;
-using Game.FSMCore;
 using Game.FSMCore.Machines;
 using Game.FSMCore.Profilers;
 using UnityEditor;
@@ -17,7 +16,7 @@ public class FSMVisualizer : EditorWindow
     private FSMProfilerProvider[] _fsmLinkers = Array.Empty<FSMProfilerProvider>();
     private Toolbar _activeToolBar;
 
-    [MenuItem(GameData.EditorName + "/FSM Visualizer")]
+    [MenuItem(GameData.EditorName + "/FSM View")]
     private static void OpenWindow()
     {
         var window = GetWindow<FSMVisualizer>();

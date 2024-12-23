@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Pools;
-using Game.Pools.Managers;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
@@ -9,11 +9,13 @@ namespace GameEditor.Pools
 {
 internal class SeparateTypeManagerProfiler : IPoolProfiler
 {
-    private readonly  Dictionary<System.Type, ObjectPool<IPoolable>> _pool;
+    private readonly Type _poolType;
+    private readonly  Dictionary<Type, ObjectPool<IPoolable>> _pool;
 
-    public SeparateTypeManagerProfiler(object pool)
+    public SeparateTypeManagerProfiler(object pool, Type poolType)
     {
-        _pool = pool as  Dictionary<System.Type, ObjectPool<IPoolable>>;
+        _poolType = poolType;
+        _pool = pool as  Dictionary<Type, ObjectPool<IPoolable>>;
         if (_pool == null)
             Debug.LogError($"Can't unboxing pool dictionary for {GetType().Name} profiler");
     }
@@ -23,7 +25,9 @@ internal class SeparateTypeManagerProfiler : IPoolProfiler
         if (_pool == null)
             return;
         
-        GUILayout.Label($"Profiler type: {GetType().Name}");
+        var infoStyle = new GUIStyle(GUI.skin.box);
+        
+        GUILayout.Label($"[Types] Pool: {_poolType.Name}; Profiler: {GetType().Name}", infoStyle);
         GUILayout.Label($"Pool capacity: {_pool.Keys.Count}");
     }
     

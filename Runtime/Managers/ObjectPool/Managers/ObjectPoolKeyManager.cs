@@ -68,19 +68,21 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public void Prepare<T>(T prefab, int count) where T : Component, IPoolable
+    public void Prepare<T>(T prefab, int count, bool force = false) where T : Component, IPoolable
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
 
         Warn(prefab, count);
-
+        
+        var countExists = _pool[prefab.Key].Count;
+        count = force ? count : count - countExists;
         for (var i = 0; i < count; i++)
             CreateOrReturnElementToPool(prefab, false);
         _poolProfiler?.Update();
     }
 
-    public async Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default) where T : Component, IPoolable
+    public async Task PrepareAsync<T>(T prefab, int count, bool force = false, CancellationToken token = default) where T : Component, IPoolable
     {
         Warn(prefab, count);
 
@@ -89,7 +91,7 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
             if (token.IsCancellationRequested)
                 return;
 
-            Prepare(prefab, 1);
+            Prepare(prefab, 1, force);
             _poolProfiler?.Update();
 
             if (token.IsCancellationRequested)

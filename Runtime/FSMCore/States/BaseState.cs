@@ -1,4 +1,6 @@
-﻿namespace Game.FSMCore.States
+﻿using UnityEngine;
+
+namespace Game.FSMCore.States
 {
 public abstract class BaseState : IState
 {
@@ -7,5 +9,8 @@ public abstract class BaseState : IState
     public virtual void Dispose() { }
 
     internal static int stateCounter;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetCounter() => stateCounter = 0;
 }
 }

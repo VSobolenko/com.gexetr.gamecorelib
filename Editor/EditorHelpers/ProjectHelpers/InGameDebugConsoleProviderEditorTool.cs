@@ -1,7 +1,7 @@
 ﻿using Game.DynamicData;
 using UnityEngine;
 
-namespace GameEditor.Tools
+namespace GameEditor.ProjectTools
 {
 public static class InGameDebugConsoleProviderEditorTool
 {
@@ -14,7 +14,7 @@ public static class InGameDebugConsoleProviderEditorTool
     private const string ToResources = "Move to resource folder";
     private const string FromResources = "Move from resource folder";
     
-    [UnityEditor.MenuItem(GameData.EditorName + "/" + Title + "/" + InspectAsset)]
+    [UnityEditor.MenuItem(GameData.EditorName + EditorToolsSubfolder.Project + "/" + Title + "/" + InspectAsset)]
     private static void SelectInGamePrefabStatic()
     {
         var inGameConsole = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(InResourcesFolder);
@@ -30,7 +30,7 @@ public static class InGameDebugConsoleProviderEditorTool
         UnityEditor.Selection.activeObject = inGameConsole;
     }
     
-    [UnityEditor.MenuItem(GameData.EditorName + "/" + Title + "/" + ToResources)]
+    [UnityEditor.MenuItem(GameData.EditorName + EditorToolsSubfolder.Project + "/" + Title + "/" + ToResources)]
     private static void MoveToResourcesStatic()
     {
         var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(OutsideResourcesFolder);
@@ -46,7 +46,7 @@ public static class InGameDebugConsoleProviderEditorTool
         UnityEditor.AssetDatabase.Refresh();
     }
     
-    [UnityEditor.MenuItem(GameData.EditorName + "/" + Title + "/" + FromResources)]
+    [UnityEditor.MenuItem(GameData.EditorName + EditorToolsSubfolder.Project + "/" + Title + "/" + FromResources)]
     private static void MoveFromResourcesStatic()
     {
         var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(InResourcesFolder);

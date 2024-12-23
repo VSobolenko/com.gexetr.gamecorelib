@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game;
+using Game.DynamicData;
 using Game.Pools;
 using Game.Pools.Managers;
 using UnityEditor;
@@ -29,10 +31,20 @@ public class ObjectPoolProfilerEditorTools : Editor
         {typeof(ObjectPoolTypeManager), typeof(TypeManagerProfiler)},
         {typeof(ObjectPoolTypeEditorSeparateManager), typeof(TypeManagerProfiler)},
     };
+
+    [MenuItem(GameData.EditorName + EditorToolsSubfolder.Scene + "/Wake Up Pool Profilers")]
+    private static void WakeUpProfilers()
+    {
+        var profilers = FindObjectsByType<ObjectPoolProfiler>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var profiler in profilers)
+            Log.Info($"{profiler.PoolManager.GetType().Name} Wake Up! I'm here!", profiler);
+        if (profilers.Length == 0)
+            Log.Info($"{nameof(ObjectPoolProfiler)} not found!");
+    }
     
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        // base.OnInspectorGUI();
         var root = CreateInspectorGUI();
         _poolProfiler?.DrawStatus(root);
     }
@@ -75,7 +87,7 @@ public class ObjectPoolProfilerEditorTools : Editor
             return;
         }
         
-        _poolProfiler = Activator.CreateInstance(profilerType, poolProfiler.PoolContainer) as IPoolProfiler;
+        _poolProfiler = Activator.CreateInstance(profilerType, poolProfiler.PoolContainer, managerType) as IPoolProfiler;
     }
 }
 }

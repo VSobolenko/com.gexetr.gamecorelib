@@ -13,19 +13,12 @@ namespace Game.Components.Utilities
 public class SceneCheckForNullEditorProvider : MonoBehaviour
 {
     [Header("If empty check all"), SerializeField]
-    private List<string> _accessible = new() {"Assembly-CSharp", "GameCoreLib"};
+    internal List<string> _accessible = new() {"Assembly-CSharp", "GameCoreLib"};
 
     [SerializeField] private bool _enableClassPath;
     [SerializeField] private List<MonoBehaviour> _monoBehaviour;
 
     private void Start() => throw new ArgumentException($"\"{name}\" has editor only \"{GetType().Name}\" component.");
-
-    [ContextMenu("Auto check")]
-    public void AutoTest()
-    {
-        Collect();
-        Process();
-    }
 
     [ContextMenu("Collect scripts")]
     private void Collect() => _monoBehaviour = GetScripts(_accessible).ToList();
@@ -48,21 +41,21 @@ public class SceneCheckForNullEditorProvider : MonoBehaviour
 
     public static IEnumerable<MonoBehaviour> GetScripts(List<string> accessibleAssembly) => accessibleAssembly.Count > 0
         ? FindObjectsOfType<MonoBehaviour>()
-            .Where(x => accessibleAssembly.Contains(x.GetType().Assembly.GetName().Name))
+            .Where(x => x != null && accessibleAssembly.Contains(x.GetType().Assembly.GetName().Name))
         : FindObjectsOfType<MonoBehaviour>();
 
-    public static bool CheckField<T1>(T1 instance, ICollection<object> ignored, GameObject parent, string parentField,
+    public static bool CheckField<T1>(T1 monoBehaviour, ICollection<object> ignored, GameObject parent, string parentField,
                                       bool enableClassPath, List<string> accessibleAssembly)
     {
         var healthy = true;
-        if (instance == null)
-            throw new ArgumentNullException(nameof(instance));
+        if (monoBehaviour == null)
+            throw new ArgumentNullException(nameof(monoBehaviour));
 
-        if (ignored.Contains(instance))
+        if (ignored.Contains(monoBehaviour))
             return true;
 
-        ignored.Add(instance);
-        var fields = instance
+        ignored.Add(monoBehaviour);
+        var fields = monoBehaviour
                      .GetType()
                      .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -71,14 +64,14 @@ public class SceneCheckForNullEditorProvider : MonoBehaviour
             if (fieldInfo.GetCustomAttributes(typeof(SerializeField), true).Any() == false)
                 continue;
             var filedPath = $"{parentField}/{fieldInfo.Name}" +
-                            (enableClassPath ? $"({instance.GetType().Name})" : string.Empty);
+                            (enableClassPath ? $"({monoBehaviour.GetType().Name})" : string.Empty);
             var text = $"GO={parent.name}; " +
                        $"Field={fieldInfo.Name}; " +
-                       $"IsUnityObj={fieldInfo.GetValue(instance) is Object}" +
+                       $"IsUnityObj={fieldInfo.GetValue(monoBehaviour) is Object}" +
                        $"\nField path: {filedPath}" +
                        $"\nScene path: {GetScenePath(parent.transform)}";
 
-            var systemObject = fieldInfo.GetValue(instance);
+            var systemObject = fieldInfo.GetValue(monoBehaviour);
             if (systemObject is Object unityObject && unityObject == null || (systemObject == null))
             {
                 Log.Warning(text);
@@ -94,5 +87,10 @@ public class SceneCheckForNullEditorProvider : MonoBehaviour
 
     private static string GetScenePath(Transform obj) =>
         obj.parent == null ? obj.name : $"{GetScenePath(obj.parent)}/{obj.name}";
+
+    public void MarkVerifiedGameObjects(List<MonoBehaviour> verifyGameObjectsToNull)
+    {
+        
+    }
 }
 }

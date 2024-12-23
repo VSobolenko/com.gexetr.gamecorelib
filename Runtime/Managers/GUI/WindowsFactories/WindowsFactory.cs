@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.AssetContent;
 using Game.Factories;
-using Game;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Factories

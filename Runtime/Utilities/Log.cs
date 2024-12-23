@@ -18,72 +18,73 @@ public static class Log
     private static string AnalyticsType => "[analytics]";
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Write(string text)
+    public static void Write(string text, Object context = null)
     {
 #if ENABLE_LOG
-        InternalLog(text);
+        InternalLog(text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Info(string text)
+    public static void Info(string text, Object context = null)
     {
 #if ENABLE_LOG
-        InternalLog($"{ColoredLogType(InfoType, Green)} " + text);
+        InternalLog($"{ColoredLogType(InfoType, Green)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Warning(string text)
+    public static void Warning(string text, Object context = null)
     {
 #if ENABLE_LOG
-        InternalLog($"{ColoredLogType(WarningType, Orange)} " + text);
+        InternalLog($"{ColoredLogType(WarningType, Orange)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Error(string text)
+    public static void Error(string text, Object context = null)
     {
 #if ENABLE_LOG
-        InternalLog($"{ColoredLogType(ErrorType, Red)} " + text);
+        InternalLog($"{ColoredLogType(ErrorType, Red)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Exception(string text)
+    public static void Exception(string text, Object context = null)
     {
 #if ENABLE_LOG
-        InternalLog($"{ColoredLogType(ExceptionType, Pink)} " + text);
+        InternalLog($"{ColoredLogType(ExceptionType, Pink)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void InternalError()
+    public static void InternalError(Object context = null)
     {
 #if ENABLE_LOG
-        InternalLog($"{ColoredLogType(CriticalType, Blue)} " + "Internal error");
+        InternalLog($"{ColoredLogType(CriticalType, Blue)} " + "Internal error", context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Analytics(object action)
+    public static void Analytics(object action, Object context = null)
     {
 #if ENABLE_LOG
         if (enableAnalyticsEvents == false)
             return;
         InternalLog($"{ColoredLogType(AnalyticsType, Yellow)} " +
                     $"Event={action.GetType().Name};" +
-                    $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}");
+                    $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}",
+            context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void InternalLog(string text)
+    private static void InternalLog(string text, Object context)
     {
 #if ENABLE_LOG
         if (enable == false)
             return;
-        Debug.Log(text);
+        Debug.Log(text, context);
 #endif
     }
 

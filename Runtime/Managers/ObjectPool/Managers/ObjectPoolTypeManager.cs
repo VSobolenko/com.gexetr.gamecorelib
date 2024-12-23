@@ -69,12 +69,15 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public void Prepare<T>(T prefab, int count) where T : Component, IPoolable
+    public void Prepare<T>(T prefab, int count, bool force = false) where T : Component, IPoolable
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
 
         Warn(prefab, count);
+        
+        var countExists = _pool[prefab.GetType()].CountInactive;
+        count = force ? count : count - countExists;
         for (var i = 0; i < count; i++)
         {
             var parent = GetPoolRoot(prefab);
@@ -83,7 +86,7 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         }
     }
 
-    public async Task PrepareAsync<T>(T prefab, int count, CancellationToken token = default) where T : Component, IPoolable
+    public async Task PrepareAsync<T>(T prefab, int count, bool force = false, CancellationToken token = default) where T : Component, IPoolable
     {
         Warn(prefab, count);
 
@@ -171,7 +174,8 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         var pooledObject = _factoryGameObjects.Instantiate(prefab, parent);
         pooledObject.SetActive(false);
         pooledObject.Pool = this;
-        pooledObject.name += pooledObject.GetHashCode();
+        if (Application.isEditor)
+            pooledObject.name += pooledObject.GetHashCode();
         return pooledObject;
     }
 

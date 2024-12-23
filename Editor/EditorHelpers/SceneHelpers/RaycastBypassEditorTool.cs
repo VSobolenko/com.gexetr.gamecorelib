@@ -9,15 +9,15 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameEditor.Tools
+namespace GameEditor.SceneTools
 {
 [CustomEditor(typeof(RaycastBypassEditorUI))]
-public class RaycastBypassEditorTools : Editor
+public class RaycastBypassEditorTool : Editor
 {
     private readonly List<GameObject> _lasModifyGameObjects = new();
     private ReorderableList _reorderableList;
 
-    [MenuItem(GameData.EditorName + "/Create RaycastUI Handler")]
+    [MenuItem(GameData.EditorName + EditorToolsSubfolder.Scene + "/Create RaycastUI Handler")]
     public static void CreateSceneRaycastBypassObject()
     {
         var go = new GameObject("Raycast UI Handler", typeof(RaycastBypassEditorUI));

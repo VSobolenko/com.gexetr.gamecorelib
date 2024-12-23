@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 namespace Game.Shops
 {
@@ -29,5 +28,12 @@ public enum RewardType : byte
     RemoveAds,
     Hint,
     Amber,
+}
+
+public enum ProductType
+{
+    Consumable,
+    NonConsumable,
+    Subscription
 }
 }
