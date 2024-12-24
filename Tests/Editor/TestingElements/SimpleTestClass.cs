@@ -3,7 +3,7 @@
 namespace WarehouseKeeper.Test.TestingElements
 {
 [Serializable]
-public class SimpleTestClass
+internal class SimpleTestClass
 {
     public int id;
     public string name;

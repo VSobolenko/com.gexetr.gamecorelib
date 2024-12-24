@@ -10,23 +10,24 @@ using UnityEngine;
 
 namespace GameEditor.ProjectTools
 {
-/// <summary>
-///to quickly create a data clearing window, just inherit from this class and add the following code:
+/// <example>
+/// <para>to quickly create a data clearing window, just inherit from this class and add the following code.</para>
+/// <code>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowDataCleanerWindow<YOUR_WINDOW_CLASS>();
+/// private static void ShowWindow() => ShowDataCleanerWindow{YOUR_WINDOW_CLASS}();
 ///
-///with setup:
+/// <para>with setup.</para>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowDataCleanerWindow<YOUR_WINDOW_CLASS>(startupConfigure: window =>
+/// private static void ShowWindow() => ShowDataCleanerWindow{YOUR_WINDOW_CLASS}(startupConfigure: window =>
 /// {
 ///     window.confirm = true;
 ///     window.showHeader = false;
 /// });
 /// 
-///to add custom Buttons and Labels:
+/// <para>to add custom Buttons and Labels.</para>
 /// public override void AddSetups() { AddButton(new ButtonData() { } ).AddLabel("..."); }
-/// 
-/// </summary>
+/// </code>
+/// </example>
 
 public class GameDataCleaner : EditorWindow
 {

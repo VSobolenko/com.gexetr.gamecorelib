@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameEditor.Common
 {
-    public static class CheckForMissingScripts
+    internal static class CheckForMissingScripts
     {
         [MenuItem(GameData.EditorName + EditorToolsSubfolder.Scene + "/Find Missing Scripts")]
         private static void FindMissingScriptsInScene()

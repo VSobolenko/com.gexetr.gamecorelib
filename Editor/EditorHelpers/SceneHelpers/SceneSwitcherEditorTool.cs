@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameEditor.SceneTools
 {
-    public class SceneSwitcher : EditorWindow
+    internal class SceneSwitcher : EditorWindow
     {
         private const string HeaderName = "Scene Loader";
 

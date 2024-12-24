@@ -2,7 +2,7 @@
 
 namespace WarehouseKeeper.Test.TestingElements
 {
-public class TestMonoBehaviour : MonoBehaviour
+internal class TestMonoBehaviour : MonoBehaviour
 {
     
 }

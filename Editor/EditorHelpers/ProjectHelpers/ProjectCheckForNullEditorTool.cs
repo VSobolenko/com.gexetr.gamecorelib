@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace GameEditor.ProjectTools
 {
-    public static class ProjectCheckForNullEditorTool
+    internal static class ProjectCheckForNullEditorTool
     {
         private static readonly List<string> Accessible = new() { "Assembly-CSharp", "GameCoreLib" };
         

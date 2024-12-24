@@ -13,13 +13,6 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     ///  <param name="count">Expected quantity to add</param>
     ///  <param name="force">force add so much even if already there</param>
     ///  <typeparam name="T">Object type</typeparam>
-    /// void Warn<T>(T prefab, int count) where T : Object, IPoolable;
-    ///  <summary>
-    ///  Add ready instances to pool
-    ///  </summary>
-    ///  <param name="prefab">Object prefab or instance</param>
-    ///  <param name="count">Quantity to add</param>
-    ///  <typeparam name="T">Object type</typeparam>
     void Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component, IPoolable;
 
     Task PrepareAsync<T>(T prefab, int count = 0, bool force = false, CancellationToken token = default) where T : Component, IPoolable;
@@ -43,7 +36,7 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable;
 }
 
-public interface IPrefabObjectPool<T> where T : Component, IPoolable
+internal interface IPrefabObjectPool<T> where T : Component, IPoolable //WIP
 {
     T Get();
     T Get(Vector3 position, Quaternion rotation);

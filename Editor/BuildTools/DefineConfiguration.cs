@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.DynamicData;
-using Game;
 using UnityEditor;
-using UnityEditor.Callbacks;
 
 namespace GameEditor.BuildTools
 {
-public class DefineConfiguration
+internal class DefineConfiguration
 {
     private const string LogDefine = "ENABLE_LOG";
     private const string DevBuildDefine = "DEVELOPMENT_BUILD";

@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace GameEditor.Pools
 {
-public interface IPoolProfiler
+    internal interface IPoolProfiler
 {
     void DrawStatus(VisualElement root);
 

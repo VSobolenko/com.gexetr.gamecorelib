@@ -12,7 +12,7 @@ using WarehouseKeeper.Test.TestingElements;
 namespace GameTests.Repository
 {
 [TestFixture]
-public class BinaryFileRepositorySystemTests
+internal class BinaryFileRepositorySystemTests
 {
 #if UNITY_EDITOR
     private const string FileFormat = ".txt";

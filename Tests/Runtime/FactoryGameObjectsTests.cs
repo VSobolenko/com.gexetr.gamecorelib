@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GameTests
 {
 [TestFixture]
-public class FactoryGameObjectsTests
+internal class FactoryGameObjectsTests
 {
     [Test]
     public void InstantiateEmpty_CreateNewEmptyGameObject_ShouldReturnNewEmptyGameObject()

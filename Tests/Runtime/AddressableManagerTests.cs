@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 namespace GameTests.AssetContent
 {
 [TestFixture]
-public class AddressableManagerTests
+internal class AddressableManagerTests
 {
     private const string GameObjectAssetTestKey = "AddressableTestGameObject";
     private const string SceneAssetTestKey = "AddressableTestScene";

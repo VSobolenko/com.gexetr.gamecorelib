@@ -2,7 +2,7 @@
 
 namespace WarehouseKeeper.Test.TestingElements
 {
-public class TestClassWithUnityVectorAndQuaternion
+internal class TestClassWithUnityVectorAndQuaternion
 {
     public int id;
     public string name;

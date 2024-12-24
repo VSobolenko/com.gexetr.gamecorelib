@@ -13,7 +13,7 @@ using WarehouseKeeper.Test.TestingElements;
 namespace GameTests.Repository
 {
 [TestFixture]
-public class JsonUnityRepositoryTests
+internal class JsonUnityRepositoryTests
 {
     private const string FileFormat = ".json";
 

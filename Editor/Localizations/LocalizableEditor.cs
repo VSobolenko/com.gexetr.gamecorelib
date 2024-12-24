@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GameEditor.Localizations
 {
 [CustomEditor(typeof(LocalizableTMP))]
-public class LocalizableEditor : Editor
+internal class LocalizableEditor : Editor
 {
     public override void OnInspectorGUI()
     {

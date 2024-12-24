@@ -16,7 +16,7 @@ namespace GameEditor.Pools
 /// _poolProfilerTypes - establishes a dependency between profiler and manager
 /// </summary>
 [CustomEditor(typeof(ObjectPoolProfiler))]
-public class ObjectPoolProfilerEditorTools : Editor
+internal class ObjectPoolProfilerEditorTools : Editor
 {
     private IPoolProfiler _poolProfiler;
 

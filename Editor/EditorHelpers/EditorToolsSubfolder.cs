@@ -1,6 +1,6 @@
 ﻿namespace GameEditor
 {
-    public static class EditorToolsSubfolder
+    internal static class EditorToolsSubfolder
     {
         public const string Scene = "/Scene";
         public const string Project = "/Project";

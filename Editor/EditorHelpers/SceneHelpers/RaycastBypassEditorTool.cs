@@ -12,7 +12,7 @@ using UnityEngine.UI;
 namespace GameEditor.SceneTools
 {
 [CustomEditor(typeof(RaycastBypassEditorUI))]
-public class RaycastBypassEditorTool : Editor
+internal class RaycastBypassEditorTool : Editor
 {
     private readonly List<GameObject> _lasModifyGameObjects = new();
     private ReorderableList _reorderableList;

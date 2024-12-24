@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameEditor.Common
 {
-    public static class CheckForHighFlagsScripts
+    internal static class CheckForHighFlagsScripts
     {
         [MenuItem(GameData.EditorName + EditorToolsSubfolder.Scene + "/Find Unpredictable Objects")]
         private static void FindUnpredictableObjectsInScene()

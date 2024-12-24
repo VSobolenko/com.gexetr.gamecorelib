@@ -13,7 +13,7 @@ using WarehouseKeeper.Test.TestingElements;
 namespace GameTests.Repository
 {
 [TestFixture]
-public class BinaryRepositoryWithJsonSystemTests
+internal class BinaryRepositoryWithJsonSystemTests
 {
     private const string FileFormat = ".bat";
 

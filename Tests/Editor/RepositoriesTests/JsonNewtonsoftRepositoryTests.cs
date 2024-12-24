@@ -13,7 +13,7 @@ using WarehouseKeeper.Test.TestingElements;
 
 namespace GameTests.Repository
 {
-public class JsonNewtonsoftRepositoryTests
+internal class JsonNewtonsoftRepositoryTests
 {
     private const string FileFormat = ".json";
     

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameEditor.ProjectTools
 {
-public static class InGameDebugConsoleProviderEditorTool
+    internal static class InGameDebugConsoleProviderEditorTool
 {
     private const string InResourcesFolder = "Assets/Plugins/IngameDebugConsole/Resources/IngameDebugConsole.prefab";
     private const string OutsideResourcesFolder = "Assets/Plugins/IngameDebugConsole/IngameDebugConsole.prefab";
