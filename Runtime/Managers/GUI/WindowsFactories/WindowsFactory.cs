@@ -109,10 +109,17 @@ internal class WindowsFactory : IWindowFactory
         }
 
         window = _factory.InstantiatePrefab(prefab, root).GetComponent<WindowUI>();
-
+        SetTransformValuesFromPrefab(window, prefab);
         mediator = _container.Instantiate<TMediator>(window);
 
         return mediator != null;
+    }
+
+    private static void SetTransformValuesFromPrefab(Component window, GameObject prefab)
+    {
+        var transform = window.transform;
+        transform.SetLocalPositionAndRotation(prefab.transform.localPosition, prefab.transform.localRotation);
+        transform.localScale = prefab.transform.localScale;
     }
 }
 }

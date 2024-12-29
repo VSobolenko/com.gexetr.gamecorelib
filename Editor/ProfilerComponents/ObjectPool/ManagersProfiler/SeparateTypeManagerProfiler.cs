@@ -27,7 +27,7 @@ internal class SeparateTypeManagerProfiler : IPoolProfiler
         
         var infoStyle = new GUIStyle(GUI.skin.box);
         
-        GUILayout.Label($"[Types] Pool: {_poolType.Name}; Profiler: {GetType().Name}", infoStyle);
+        GUILayout.Label($"Pool: {_poolType.Name}\nProfiler: {GetType().Name}", infoStyle);
         GUILayout.Label($"Pool capacity: {_pool.Keys.Count}");
     }
     

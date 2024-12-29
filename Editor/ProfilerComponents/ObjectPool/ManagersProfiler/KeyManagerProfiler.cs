@@ -44,7 +44,7 @@ internal class KeyManagerProfiler : IPoolProfiler
         if (GUILayout.Button("Clear pool"))
             ClearPool();
         
-        GUILayout.Label($"[Types] Pool: {_poolType.Name}; Profiler: {GetType().Name}", infoStyle);
+        GUILayout.Label($"Pool: {_poolType.Name}\nProfiler: {GetType().Name}", infoStyle);
         GUILayout.Label($"Pool capacity: {_pool.Keys.Count}\nMax capacity: {_maxPoolCapacity}", greenStyle);
 
         GUILayout.Label($"Full stack capacity: {stackCapacity}\nMax stack capacity: {_maxPoolStackCapacity}",

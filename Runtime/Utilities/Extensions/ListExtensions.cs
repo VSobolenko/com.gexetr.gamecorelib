@@ -32,7 +32,7 @@ public static class ListExtensions
         }
     }
 
-    public static T Random<T>(this IList<T> collection, int minIndex = 0, int maxIndex = 1) =>
-        collection[UnityEngine.Random.Range(minIndex, maxIndex)];
+    public static T Random<T>(this IList<T> collection, int minIndex = 0, int maxIndex = -1) =>
+        collection[UnityEngine.Random.Range(minIndex, maxIndex == -1 ? collection.Count : maxIndex)];
 }
 }

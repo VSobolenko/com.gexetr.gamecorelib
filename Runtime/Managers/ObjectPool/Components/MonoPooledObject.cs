@@ -9,10 +9,12 @@ public class MonoPooledObject : BasePooledObject
     public override string Key => key;
 
     [ContextMenu("Force start auto validate")]
-    private void OnValidate()
+    private void OnValidate() => ValidatePoolKey(ref key);
+
+    protected virtual void ValidatePoolKey(ref string poolKey)
     {
-        if (string.IsNullOrEmpty(key))
-            key = $"{GetType().Name}.{name}";
+        if (string.IsNullOrEmpty(poolKey))
+            poolKey = $"{GetType().Name}.{name}";
     }
 }
 }
