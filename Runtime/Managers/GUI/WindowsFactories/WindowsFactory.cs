@@ -108,7 +108,8 @@ internal class WindowsFactory : IWindowFactory
             return false;
         }
 
-        window = _factory.InstantiatePrefab(prefab, root.position, root.rotation, root).GetComponent<WindowUI>();
+        window = _factory.InstantiatePrefab(prefab, root).GetComponent<WindowUI>();
+
         mediator = _container.Instantiate<TMediator>(window);
 
         return mediator != null;
