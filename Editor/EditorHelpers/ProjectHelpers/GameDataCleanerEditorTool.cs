@@ -14,11 +14,11 @@ namespace GameEditor.ProjectTools
 /// <para>to quickly create a data clearing window, just inherit from this class and add the following code.</para>
 /// <code>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowDataCleanerWindow{YOUR_WINDOW_CLASS}();
+/// private static void ShowWindow() => ShowWindow<EditorActionsWindow>();
 ///
 /// <para>with setup.</para>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowDataCleanerWindow{YOUR_WINDOW_CLASS}(startupConfigure: window =>
+/// private static void ShowWindow() => ShowWindow<EditorActionsWindow>(startupConfigure: window =>
 /// {
 ///     window.confirm = true;
 ///     window.showHeader = false;
@@ -29,16 +29,16 @@ namespace GameEditor.ProjectTools
 /// </code>
 /// </example>
 
-public class GameDataCleaner : EditorWindow
+public class EditorActionsWindow : EditorWindow
 {
-    protected const string DefaultHeader = GameData.EditorName + EditorToolsSubfolder.Project + "/Turbo data";
+    protected const string DefaultHeader = GameData.EditorName + EditorToolsSubfolder.Project + "/Turbo Actions";
     private readonly HashSet<ButtonData> _buttons = new(2);
     private readonly HashSet<string> _labels = new(2);
     public bool confirm = false;
     public bool showHeader = true;
 
-    protected static T ShowDataCleanerWindow<T>(string title = "Data manager", Action<T> startupConfigure = null)
-        where T : GameDataCleaner
+    protected static T ShowWindow<T>(string title = "Turbo Actions", Action<T> startupConfigure = null)
+        where T : EditorActionsWindow
     {
         var window = GetWindow<T>();
         window.titleContent = new GUIContent(title);
@@ -48,95 +48,96 @@ public class GameDataCleaner : EditorWindow
         return GetWindow<T>();
     }
 
-    private void OnEnable()
-    {
-        SetupPlayerPrefs(this);
-        AddSetups();
-    }
-
-    protected static void SetupPlayerPrefs<T>(T window) where T : GameDataCleaner
-    {
-        window.AddButton(new ButtonData
-        {
-            description = "Clear PlayerPrefs",
-            action = PlayerPrefs.DeleteAll,
-        }).AddLabel($@"PlayerPrefs: HKCU\Software\{PlayerSettings.companyName}\{Application.productName}");
-    }
+    private void OnEnable() => AddSetups();
 
     protected virtual void AddSetups() { }
-    
+
     private void OnGUI()
     {
         GUILayout.BeginHorizontal();
-        if (showHeader && GUILayout.Button("Clear Game Data (Optional)"))
-            ProcessClearGameData();
+        if (showHeader && GUILayout.Button("Execute All Actions (Optional)"))
+            ProcessEditorActions();
         confirm = GUILayout.Toggle(confirm, "Confirm", GUILayout.Width(65));
         GUILayout.EndHorizontal();
         GUILayout.Space(showHeader ? 15 : 0);
 
-        DrawCleaningPoint();
-        DrawCustomCleaningPoint();
+        DrawEditorActionButtons();
+        DrawCustomEditorActions();
 
-        DrawCleaningPointsLabels();
+        DrawLabels();
         DrawCustomCleaningPointsLabels();
     }
 
-    private void DrawCleaningPoint()
+    private void DrawEditorActionButtons()
     {
         foreach (var buttonData in _buttons)
         {
             if (GUILayout.Button(buttonData.description))
-                ProcessClearButtonData(buttonData);
+                ProcessEditorAction(buttonData);
             GUILayout.Space(5);
         }
     }
 
-    private void DrawCleaningPointsLabels()
+    private void DrawLabels()
     {
         foreach (var label in _labels)
             EditorGUILayout.SelectableLabel(label, GUILayout.Height(13));
             // EditorGUILayout.SelectableLabel(label, EditorStyles.textField); - custom type
     }
 
-    public GameDataCleaner AddButton(ButtonData button)
+    public EditorActionsWindow AddButton(ButtonData button)
     {
         _buttons.Add(button);
 
         return this;
     }
 
-    public GameDataCleaner AddLabel(string label)
+    public EditorActionsWindow AddLabel(string label)
     {
         _labels.Add(label);
 
         return this;
     }
 
-    private GameDataCleaner ProcessClearGameData()
+    protected EditorActionsWindow ProcessEditorActions()
     {
-        if (confirm && ConfirmAction("Game Data", "Clear Game data?") == false)
+        if (Application.isPlaying)
+        {
+            Log.Warning("Unable to execute action in Play Mode");
+            return this;
+        }
+        
+        if (confirm && ConfirmAction("Turbo Actions", "Execute?") == false)
             return this;
 
         foreach (var button in _buttons)
-            ProcessClearButtonData(button, considerConfirm: false);
-        OnClearGameData();
-        Log.Info("Game data cleared!");
+            ProcessEditorAction(button, independentAction: false);
+        OnEditorActions();
+        Log.Info("Execute Actions Success!");
         return this;
     }
 
-    private void ProcessClearButtonData(ButtonData button, bool considerConfirm = true)
+    private void ProcessEditorAction(ButtonData button, bool independentAction = true)
     {
-        if (considerConfirm && confirm && ConfirmAction("Confirm action", button.description + "?") == false)
+        if (Application.isPlaying)
+        {
+            Log.Warning("Unable to execute action in Play Mode");
+            return;
+        }
+        
+        if (independentAction && confirm && ConfirmAction("Confirm action", button.description + "?") == false)
             return;
         button.action?.Invoke();
-        OnClearData(button);
+        if (independentAction)
+            Log.Info($"\"{button.description}\" - Execute Success!");
+        OnEditorAction(button);
     }
 
-    protected virtual void OnClearGameData() { }
-    
-    protected virtual void OnClearData(ButtonData data) { }
+    protected virtual void OnEditorActions() { }
 
-    protected virtual void DrawCustomCleaningPoint() { }
+    protected virtual void OnEditorAction(ButtonData data) { }
+
+    protected virtual void DrawCustomEditorActions() { }
 
     protected virtual void DrawCustomCleaningPointsLabels() { }
 
@@ -146,6 +147,26 @@ public class GameDataCleaner : EditorWindow
         return EditorUtility.DisplayDialog(title, message, okLabel, cancelLabel);
     }
 
+    public EditorActionsWindow AddClearPlayerPrefsSetup()
+    {
+        AddButton(new ButtonData
+        {
+            description = "Clear PlayerPrefs",
+            action = PlayerPrefs.DeleteAll,
+        }).AddLabel($@"PlayerPrefs: HKCU\Software\{PlayerSettings.companyName}\{Application.productName}");
+        return this;
+    }
+
+    public EditorActionsWindow AddPlaySetup()
+    {
+        AddButton(new ButtonData
+        {
+            description = "Play",
+            action = () => EditorApplication.isPlaying = true,
+        });
+        return this;
+    }
+    
     public bool DeleteFolder(string path, bool log = true)
     {
         if (Directory.Exists(path) == false) 
@@ -155,7 +176,7 @@ public class GameDataCleaner : EditorWindow
             Log.Info($"Directory Success Delete: {path}");
         return true;
     }
-    
+
     public bool DeleteFile(string filePath, bool log = true)
     {
         if (File.Exists(filePath) == false) 
