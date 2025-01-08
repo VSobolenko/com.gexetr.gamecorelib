@@ -3,13 +3,9 @@
     "rootNamespace": "Game",
     "references": [
         "Unity.TextMeshPro",
-        "Unity.Services.Core",
-        "Unity.Services.Core.Environments",
         "Unity.Addressables",
         "Unity.ResourceManager",
-        "UniTask",
-        "UnityEngine.Purchasing",
-        "UnityEngine.Purchasing.Stores"
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

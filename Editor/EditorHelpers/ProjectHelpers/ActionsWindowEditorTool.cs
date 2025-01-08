@@ -14,11 +14,11 @@ namespace GameEditor.ProjectTools
 /// <para>to quickly create a data clearing window, just inherit from this class and add the following code.</para>
 /// <code>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowWindow<EditorActionsWindow>();
+/// private static void ShowWindow() => ShowWindow<ActionsWindowEditorTool>();
 ///
 /// <para>with setup.</para>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowWindow<EditorActionsWindow>(startupConfigure: window =>
+/// private static void ShowWindow() => ShowWindow<ActionsWindowEditorTool>(startupConfigure: window =>
 /// {
 ///     window.confirm = true;
 ///     window.showHeader = false;
@@ -29,7 +29,7 @@ namespace GameEditor.ProjectTools
 /// </code>
 /// </example>
 
-public class EditorActionsWindow : EditorWindow
+public class ActionsWindowEditorTool : EditorWindow
 {
     protected const string DefaultHeader = GameData.EditorName + EditorToolsSubfolder.Project + "/Turbo Actions";
     private readonly HashSet<ButtonData> _buttons = new(2);
@@ -38,7 +38,7 @@ public class EditorActionsWindow : EditorWindow
     public bool showHeader = true;
 
     protected static T ShowWindow<T>(string title = "Turbo Actions", Action<T> startupConfigure = null)
-        where T : EditorActionsWindow
+        where T : ActionsWindowEditorTool
     {
         var window = GetWindow<T>();
         window.titleContent = new GUIContent(title);
@@ -85,21 +85,21 @@ public class EditorActionsWindow : EditorWindow
             // EditorGUILayout.SelectableLabel(label, EditorStyles.textField); - custom type
     }
 
-    public EditorActionsWindow AddButton(ButtonData button)
+    public ActionsWindowEditorTool AddButton(ButtonData button)
     {
         _buttons.Add(button);
 
         return this;
     }
 
-    public EditorActionsWindow AddLabel(string label)
+    public ActionsWindowEditorTool AddLabel(string label)
     {
         _labels.Add(label);
 
         return this;
     }
 
-    protected EditorActionsWindow ProcessEditorActions()
+    protected ActionsWindowEditorTool ProcessEditorActions()
     {
         if (Application.isPlaying)
         {
@@ -147,7 +147,7 @@ public class EditorActionsWindow : EditorWindow
         return EditorUtility.DisplayDialog(title, message, okLabel, cancelLabel);
     }
 
-    public EditorActionsWindow AddClearPlayerPrefsSetup()
+    public ActionsWindowEditorTool AddClearPlayerPrefsSetup()
     {
         AddButton(new ButtonData
         {
@@ -157,7 +157,7 @@ public class EditorActionsWindow : EditorWindow
         return this;
     }
 
-    public EditorActionsWindow AddPlaySetup()
+    public ActionsWindowEditorTool AddPlaySetup()
     {
         AddButton(new ButtonData
         {
