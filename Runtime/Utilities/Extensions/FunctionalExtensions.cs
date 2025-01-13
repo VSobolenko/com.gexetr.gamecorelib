@@ -18,5 +18,13 @@ public static class FunctionalExtensions
 
         return self;
     }
+    
+    public static T With<T>(this T self, Action<T> apply, Func<bool> condition)
+    {
+        if (condition())
+            apply?.Invoke(self);
+
+        return self;
+    }
 }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
+[System.Diagnostics.DebuggerNonUserCode]
 public static class Log
 {
     public static bool enable = true;
@@ -18,57 +19,64 @@ public static class Log
     private static string AnalyticsType => "[analytics]";
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void Write(string text, Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         InternalLog(text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void Info(string text, Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         InternalLog($"{ColoredLogType(InfoType, Green)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void Warning(string text, Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         InternalLog($"{ColoredLogType(WarningType, Orange)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void Error(string text, Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         InternalLog($"{ColoredLogType(ErrorType, Red)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void Exception(string text, Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         InternalLog($"{ColoredLogType(ExceptionType, Pink)} " + text, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void InternalError(Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         InternalLog($"{ColoredLogType(CriticalType, Blue)} " + "Internal error", context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     public static void Analytics(object action, Object context = null)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         if (enableAnalyticsEvents == false)
             return;
         InternalLog($"{ColoredLogType(AnalyticsType, Yellow)} " +
@@ -79,9 +87,10 @@ public static class Log
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     private static void InternalLog(string text, Object context)
     {
-#if ENABLE_LOG
+#if !DISABLE_LOG
         if (enable == false)
             return;
         Debug.Log(text, context);
@@ -89,6 +98,7 @@ public static class Log
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     private static string ColoredLogType(string type, string color)
     {
         return Application.isEditor ? string.Format(color, type) : string.Concat($"[{GameData.Identifier}]", type);

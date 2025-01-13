@@ -7,26 +7,26 @@ namespace GameEditor.BuildTools
 {
 internal class DefineConfiguration
 {
-    private const string LogDefine = "ENABLE_LOG";
+    private const string LogDisableDefine = "DISABLE_LOG";
     private const string DevBuildDefine = "DEVELOPMENT_BUILD";
     private const string ReleaseBuildDefine = "RELEASE_BUILD";
 
     [MenuItem(GameData.EditorName + "/Prepare build/Full Debug"),]
     public static void FullDebug()
     {
-        SetDefine(LogDefine, DevBuildDefine);
-        RemoveDefine(ReleaseBuildDefine);
+        SetDefine(DevBuildDefine);
+        RemoveDefine(ReleaseBuildDefine, LogDisableDefine);
     }
     
     [MenuItem(GameData.EditorName + "/Prepare build/Full Release"),]
     public static void FullRelease()
     {
-        SetDefine(ReleaseBuildDefine);
-        RemoveDefine(LogDefine, DevBuildDefine);
+        SetDefine(ReleaseBuildDefine, LogDisableDefine);
+        RemoveDefine(DevBuildDefine);
     }
 
     [MenuItem(GameData.EditorName + "/Prepare build/Add/Log"),]
-    public static void LogEnable() => SetDefine(LogDefine);
+    public static void LogEnable() => RemoveDefine(LogDisableDefine);
 
     [MenuItem(GameData.EditorName + "/Prepare build/Add/Release"),]
     public static void ReleaseEnable() => SetDefine(ReleaseBuildDefine);
@@ -35,14 +35,14 @@ internal class DefineConfiguration
     public static void DebugEnable() => SetDefine(DevBuildDefine);
 
     [MenuItem(GameData.EditorName + "/Prepare build/Add/Build And Log"),]
-    public static void DebugAndLogEnable() => SetDefine(DevBuildDefine, LogDefine);
+    public static void DebugAndLogEnable() => SetAndRemoveDefine(DevBuildDefine, LogDisableDefine);
 
     [MenuItem(GameData.EditorName + "/Prepare build/Add/Release And Log"),]
-    public static void ReleaseAndLogEnable() => SetDefine(ReleaseBuildDefine, LogDefine);
+    public static void ReleaseAndLogEnable() => SetAndRemoveDefine(ReleaseBuildDefine, LogDisableDefine);
     
 
     [MenuItem(GameData.EditorName + "/Prepare build/Remove/Log"),]
-    public static void LogDisable() => RemoveDefine(LogDefine);
+    public static void LogDisable() => SetDefine(LogDisableDefine);
 
     [MenuItem(GameData.EditorName + "/Prepare build/Remove/Release"),]
     public static void ReleaseDisable() => RemoveDefine(ReleaseBuildDefine);
@@ -51,11 +51,23 @@ internal class DefineConfiguration
     public static void DebugDisable() => RemoveDefine(DevBuildDefine);
 
     [MenuItem(GameData.EditorName + "/Prepare build/Remove/Build And Log"),]
-    public static void DebugAndLogDisable() => RemoveDefine(DevBuildDefine, LogDefine);
+    public static void DebugAndLogDisable() => RemoveAndSetDefine(DevBuildDefine, LogDisableDefine);
 
     [MenuItem(GameData.EditorName + "/Prepare build/Remove/Release And Log"),]
-    public static void ReleaseAndLogDisable() => RemoveDefine(ReleaseBuildDefine, LogDefine);
+    public static void ReleaseAndLogDisable() => RemoveAndSetDefine(ReleaseBuildDefine, LogDisableDefine);
 
+    private static void SetAndRemoveDefine(string set, string remove)
+    {
+        SetDefine(set);
+        RemoveDefine(remove);
+    }
+    
+    private static void RemoveAndSetDefine(string remove, string set)
+    {
+        SetDefine(set);
+        RemoveDefine(remove);
+    }
+    
     private static void SetDefine(params string[] defines)
     {
         var activeDefines = GenerateDefineList(EditorUserBuildSettings.selectedBuildTargetGroup);
