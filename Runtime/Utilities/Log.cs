@@ -109,7 +109,7 @@ public static class Log
     private static string NonColor => "{0}";
     private static string Green => "<color=#00FF00>{0}</color>";
     private static string Orange => "<color=#FF8000>{0}</color>";
-    private static string Red => "<color=#FF5151>{0}</color>";
+    private static string Red => "<color=#EF4E4E>{0}</color>";
     private static string Blue => "<color=#0000FF>{0}</color>";
     private static string Cyan => "<color=#00FFFF>{0}</color>";
     private static string Yellow => "<color=#FFFF00>{0}</color>";

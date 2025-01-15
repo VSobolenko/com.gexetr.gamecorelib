@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game;
 using Game.Pools;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -17,7 +18,7 @@ internal class SeparateTypeManagerProfiler : IPoolProfiler
         _poolType = poolType;
         _pool = pool as  Dictionary<Type, ObjectPool<IPoolable>>;
         if (_pool == null)
-            Debug.LogError($"Can't unboxing pool dictionary for {GetType().Name} profiler");
+            Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
     }
 
     public void DrawStatus(VisualElement root)

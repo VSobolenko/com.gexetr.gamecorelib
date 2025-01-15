@@ -84,5 +84,15 @@ public static class VectorExtensions
 
         return v;
     }
+    
+    public static Vector2 Multiply(this Vector2 a, Vector2 b)
+    {
+        return new Vector2(a.x * b.x, a.y * b.y);
+    }
+    
+    public static Vector3 Multiply(this Vector3 a, Vector3 b)
+    {
+        return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
+    }
 }
 }

@@ -38,8 +38,15 @@ internal class ObjectPoolProfilerEditorTools : Editor
         var profilers = FindObjectsByType<ObjectPoolProfiler>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var profiler in profilers)
             Log.Info($"{profiler.PoolManager.GetType().Name} Wake Up! I'm here!", profiler);
-        if (profilers.Length == 0)
-            Log.Info($"{nameof(ObjectPoolProfiler)} not found!");
+        switch (profilers.Length)
+        {
+            case 0:
+                Log.Info($"{nameof(ObjectPoolProfiler)} not found!");
+                break;
+            case > 0:
+                Selection.activeGameObject = profilers[0].gameObject;
+                break;
+        }
     }
     
     public override void OnInspectorGUI()
@@ -76,14 +83,14 @@ internal class ObjectPoolProfilerEditorTools : Editor
     {
         if (poolProfiler == null || poolProfiler.PoolManager == null || poolProfiler.PoolContainer == null)
         {
-            Debug.LogError("Trying assign null pool entity");
+            Log.Error("Trying assign null pool entity");
             return;
         }
         
         var managerType = poolProfiler.PoolManager.GetType();
         if (_poolProfilerTypes.TryGetValue(managerType, out var profilerType) == false)
         {
-            Debug.LogError($"For {managerType.Name} type profiler not found");
+            Log.Error($"For {managerType.Name} type profiler not found");
             return;
         }
         

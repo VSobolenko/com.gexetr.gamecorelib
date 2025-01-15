@@ -37,6 +37,9 @@ public class ActionsWindowEditorTool : EditorWindow
     public bool confirm = false;
     public bool showHeader = true;
 
+    public virtual bool CanExecuteInEditMode => !Application.isPlaying;
+    public virtual string HeaderDescription => "Execute All Actions (Optional)";
+
     protected static T ShowWindow<T>(string title = "Turbo Actions", Action<T> startupConfigure = null)
         where T : ActionsWindowEditorTool
     {
@@ -55,7 +58,7 @@ public class ActionsWindowEditorTool : EditorWindow
     private void OnGUI()
     {
         GUILayout.BeginHorizontal();
-        if (showHeader && GUILayout.Button("Execute All Actions (Optional)"))
+        if (showHeader && GUILayout.Button(HeaderDescription))
             ProcessEditorActions();
         confirm = GUILayout.Toggle(confirm, "Confirm", GUILayout.Width(65));
         GUILayout.EndHorizontal();
@@ -101,7 +104,7 @@ public class ActionsWindowEditorTool : EditorWindow
 
     protected ActionsWindowEditorTool ProcessEditorActions()
     {
-        if (Application.isPlaying)
+        if (CanExecuteInEditMode == false)
         {
             Log.Warning("Unable to execute action in Play Mode");
             return this;

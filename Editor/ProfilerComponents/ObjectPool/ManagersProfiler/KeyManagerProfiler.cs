@@ -22,7 +22,7 @@ internal class KeyManagerProfiler : IPoolProfiler
         _pool = pool as Dictionary<string, Stack<IPoolable>>;
         if (_pool == null)
         {
-            Debug.LogError($"Can't unboxing pool dictionary for {GetType().Name} profiler");
+            Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
 
             return;
         }
