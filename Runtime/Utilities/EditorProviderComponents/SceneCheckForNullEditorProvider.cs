@@ -42,7 +42,7 @@ public class SceneCheckForNullEditorProvider : MonoBehaviour
     public static IEnumerable<MonoBehaviour> GetScripts(List<string> accessibleAssembly) => accessibleAssembly.Count > 0
         ? FindObjectsOfType<MonoBehaviour>()
             .Where(x => x != null && accessibleAssembly.Contains(x.GetType().Assembly.GetName().Name))
-        : FindObjectsOfType<MonoBehaviour>();
+        : FindObjectsOfType<MonoBehaviour>(); //ToDo: Working on prefabs ????
 
     public static bool CheckField<T1>(T1 monoBehaviour, ICollection<object> ignored, GameObject parent, string parentField,
                                       bool enableClassPath, List<string> accessibleAssembly)

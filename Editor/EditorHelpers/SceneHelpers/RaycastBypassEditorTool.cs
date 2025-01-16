@@ -2,6 +2,7 @@
 using Game;
 using Game.Components.Utilities;
 using Game.DynamicData;
+using GameEditor.Internal;
 using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -17,27 +18,15 @@ internal class RaycastBypassEditorTool : Editor
     private readonly List<GameObject> _lasModifyGameObjects = new();
     private ReorderableList _reorderableList;
 
-    [MenuItem(GameData.EditorName + EditorToolsSubfolder.Scene + "/Create RaycastUI Handler")]
+    [MenuItem(GameData.EditorName + EditorSubfolder.Scene + "/Create RaycastUI Handler")]
     public static void CreateSceneRaycastBypassObject()
     {
         var go = new GameObject("Raycast UI Handler", typeof(RaycastBypassEditorUI));
-        if (IsPrefabStage(out var prefabRoot))
+        if (InternalTools.IsPrefabStage(out var prefabRoot))
             go.transform.SetParent(prefabRoot, false);
 
         Undo.RegisterCreatedObjectUndo(go, "Create GameObject");
         Selection.activeGameObject = go;
-    }
-
-    private static bool IsPrefabStage(out Transform root)
-    {
-        root = null;
-        var prefabContext = PrefabStageUtility.GetCurrentPrefabStage()?.prefabContentsRoot;
-
-        if (prefabContext == null)
-            return false;
-        root = prefabContext.transform;
-
-        return true;
     }
 
     private void OnEnable() => InitializeReorderableList();
@@ -58,7 +47,7 @@ internal class RaycastBypassEditorTool : Editor
     public override void OnInspectorGUI()
     {
         var buttonStyle = GUILayout.Height(30);
-        
+
         if (GUILayout.Button("Disable graphic raycast", buttonStyle))
             SetRaycastsFoundedByType<Graphic>(false);
 
@@ -67,18 +56,18 @@ internal class RaycastBypassEditorTool : Editor
 
         if (GUILayout.Button("Disable TextMeshProUGUI raycast", buttonStyle))
             SetRaycastsFoundedByType<TextMeshProUGUI>(false);
-        
+
         if (GUILayout.Button("Enable graphic raycast", buttonStyle))
             SetRaycastsFoundedByType<TextMeshProUGUI>(true);
-        
+
         // Not working vertical scroll
         // GUILayout.Label("Last Modified GameObjects:");
         // DrawReadonlyReorderableList(); 
     }
-    
+
     private void SetRaycastsFoundedByType<T>(bool isRaycastTargets) where T : Graphic
     {
-        var raycastComponents = IsPrefabStage(out var prefabRoot)
+        var raycastComponents = InternalTools.IsPrefabStage(out var prefabRoot)
             ? prefabRoot.GetComponentsInChildren<T>(true)
             : FindObjectsOfType<T>(true);
         SetRaycastTargetComponents(raycastComponents, isRaycastTargets);
@@ -90,7 +79,8 @@ internal class RaycastBypassEditorTool : Editor
         SetRaycastTargetComponents(raycastComponents, isRaycastTargets);
     }
 
-    private void SetRaycastTargetComponents<T>(IReadOnlyCollection<T> raycastComponents, bool isRaycastTargets) where T : Graphic
+    private void SetRaycastTargetComponents<T>(IReadOnlyCollection<T> raycastComponents, bool isRaycastTargets)
+        where T : Graphic
     {
         _lasModifyGameObjects.Clear();
         foreach (var component in raycastComponents)
@@ -104,10 +94,11 @@ internal class RaycastBypassEditorTool : Editor
             component.raycastTarget = isRaycastTargets;
         }
 
-        Log.Info($"[Raycast Handler] Count Raycast Targets={raycastComponents.Count}; Count Disabled={_lasModifyGameObjects.Count}");
+        Log.Info($"[Raycast Handler] Count Raycast Targets={raycastComponents.Count}; " +
+                 $"Count Disabled={_lasModifyGameObjects.Count}");
         EditorUtility.SetDirty(this);
     }
-    
+
     private void DrawReadonlyReorderableList() => _reorderableList.DoList(EditorGUILayout.GetControlRect());
 }
 }

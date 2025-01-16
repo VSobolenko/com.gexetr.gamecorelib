@@ -32,7 +32,7 @@ internal class ObjectPoolProfilerEditorTools : Editor
         {typeof(ObjectPoolTypeEditorSeparateManager), typeof(TypeManagerProfiler)},
     };
 
-    [MenuItem(GameData.EditorName + EditorToolsSubfolder.Scene + "/Wake Up Pool Profilers")]
+    [MenuItem(GameData.EditorName + EditorSubfolder.Scene + "/Wake Up Pool Profilers")]
     private static void WakeUpProfilers()
     {
         var profilers = FindObjectsByType<ObjectPoolProfiler>(FindObjectsInactive.Include, FindObjectsSortMode.None);

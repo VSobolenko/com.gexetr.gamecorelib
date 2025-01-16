@@ -28,10 +28,9 @@ namespace GameEditor.ProjectTools
 /// public override void AddSetups() { AddButton(new ButtonData() { } ).AddLabel("..."); }
 /// </code>
 /// </example>
-
 public class ActionsWindowEditorTool : EditorWindow
 {
-    protected const string DefaultHeader = GameData.EditorName + EditorToolsSubfolder.Project + "/Turbo Actions";
+    protected const string DefaultHeader = GameData.EditorName + EditorSubfolder.Project + "/Turbo Actions";
     private readonly HashSet<ButtonData> _buttons = new(2);
     private readonly HashSet<string> _labels = new(2);
     public bool confirm = false;
@@ -53,7 +52,9 @@ public class ActionsWindowEditorTool : EditorWindow
 
     private void OnEnable() => AddSetups();
 
-    protected virtual void AddSetups() { }
+    protected virtual void AddSetups()
+    {
+    }
 
     private void OnGUI()
     {
@@ -85,7 +86,7 @@ public class ActionsWindowEditorTool : EditorWindow
     {
         foreach (var label in _labels)
             EditorGUILayout.SelectableLabel(label, GUILayout.Height(13));
-            // EditorGUILayout.SelectableLabel(label, EditorStyles.textField); - custom type
+        // EditorGUILayout.SelectableLabel(label, EditorStyles.textField); - custom type
     }
 
     public ActionsWindowEditorTool AddButton(ButtonData button)
@@ -107,9 +108,10 @@ public class ActionsWindowEditorTool : EditorWindow
         if (CanExecuteInEditMode == false)
         {
             Log.Warning("Unable to execute action in Play Mode");
+
             return this;
         }
-        
+
         if (confirm && ConfirmAction("Turbo Actions", "Execute?") == false)
             return this;
 
@@ -117,6 +119,7 @@ public class ActionsWindowEditorTool : EditorWindow
             ProcessEditorAction(button, independentAction: false);
         OnEditorActions();
         Log.Info("Execute Actions Success!");
+
         return this;
     }
 
@@ -125,9 +128,10 @@ public class ActionsWindowEditorTool : EditorWindow
         if (Application.isPlaying)
         {
             Log.Warning("Unable to execute action in Play Mode");
+
             return;
         }
-        
+
         if (independentAction && confirm && ConfirmAction("Confirm action", button.description + "?") == false)
             return;
         button.action?.Invoke();
@@ -136,13 +140,21 @@ public class ActionsWindowEditorTool : EditorWindow
         OnEditorAction(button);
     }
 
-    protected virtual void OnEditorActions() { }
+    protected virtual void OnEditorActions()
+    {
+    }
 
-    protected virtual void OnEditorAction(ButtonData data) { }
+    protected virtual void OnEditorAction(ButtonData data)
+    {
+    }
 
-    protected virtual void DrawCustomEditorActions() { }
+    protected virtual void DrawCustomEditorActions()
+    {
+    }
 
-    protected virtual void DrawCustomCleaningPointsLabels() { }
+    protected virtual void DrawCustomCleaningPointsLabels()
+    {
+    }
 
     protected static bool ConfirmAction(string title, string message, string okLabel = "OK",
                                         string cancelLabel = "Cancel")
@@ -157,6 +169,7 @@ public class ActionsWindowEditorTool : EditorWindow
             description = "Clear PlayerPrefs",
             action = PlayerPrefs.DeleteAll,
         }).AddLabel($@"PlayerPrefs: HKCU\Software\{PlayerSettings.companyName}\{Application.productName}");
+
         return this;
     }
 
@@ -167,29 +180,32 @@ public class ActionsWindowEditorTool : EditorWindow
             description = "Play",
             action = () => EditorApplication.isPlaying = true,
         });
+
         return this;
     }
-    
+
     public bool DeleteFolder(string path, bool log = true)
     {
-        if (Directory.Exists(path) == false) 
+        if (Directory.Exists(path) == false)
             return false;
         Directory.Delete(path, true);
         if (log)
             Log.Info($"Directory Success Delete: {path}");
+
         return true;
     }
 
     public bool DeleteFile(string filePath, bool log = true)
     {
-        if (File.Exists(filePath) == false) 
+        if (File.Exists(filePath) == false)
             return false;
         File.Delete(filePath);
         if (log)
             Log.Info($"File Success Delete: {filePath}");
+
         return true;
     }
-    
+
     public struct ButtonData
     {
         public string description;

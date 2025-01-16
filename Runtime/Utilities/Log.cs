@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Runtime.CompilerServices;
-using Game.DynamicData;
 using UnityEngine;
 
 namespace Game
@@ -82,7 +81,7 @@ public static class Log
         InternalLog($"{ColoredLogType(AnalyticsType, Yellow)} " +
                     $"Event={action.GetType().Name};" +
                     $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}",
-            context);
+                    context);
 #endif
     }
 
@@ -101,7 +100,9 @@ public static class Log
     [HideInCallstack]
     private static string ColoredLogType(string type, string color)
     {
-        return Application.isEditor ? string.Format(color, type) : string.Concat($"[{GameData.Identifier}]", type);
+        return !Application.isEditor || Application.isBatchMode
+            ? string.Concat($"[{DynamicData.GameData.Identifier}]", type)
+            : string.Format(color, type);
     }
 
     #region Colors
