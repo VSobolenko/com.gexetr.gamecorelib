@@ -9,60 +9,26 @@ internal static class DefineConfiguration
 {
     private const string LogDisableDefine = "DISABLE_LOG";
     private const string DevBuildDefine = "DEVELOPMENT_BUILD";
-    private const string ReleaseBuildDefine = "RELEASE_BUILD";
 
     [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Full Debug"),]
-    public static void FullDebug()
-    {
-        SetDefine(DevBuildDefine);
-        RemoveDefine(ReleaseBuildDefine, LogDisableDefine);
-    }
-    
+    public static void FullDebug() => SetAndRemoveDefine(DevBuildDefine, LogDisableDefine);
+
     [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Full Release"),]
-    public static void FullRelease()
-    {
-        SetDefine(ReleaseBuildDefine, LogDisableDefine);
-        RemoveDefine(DevBuildDefine);
-    }
+    public static void FullRelease() => SetAndRemoveDefine(LogDisableDefine, DevBuildDefine);
 
     [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Add/Log"),]
     public static void LogEnable() => RemoveDefine(LogDisableDefine);
 
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Add/Release"),]
-    public static void ReleaseEnable() => SetDefine(ReleaseBuildDefine);
-
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Add/Build"),]
+    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Add/Debug"),]
     public static void DebugEnable() => SetDefine(DevBuildDefine);
-
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Add/Build And Log"),]
-    public static void DebugAndLogEnable() => SetAndRemoveDefine(DevBuildDefine, LogDisableDefine);
-
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Add/Release And Log"),]
-    public static void ReleaseAndLogEnable() => SetAndRemoveDefine(ReleaseBuildDefine, LogDisableDefine);
-    
 
     [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Remove/Log"),]
     public static void LogDisable() => SetDefine(LogDisableDefine);
 
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Remove/Release"),]
-    public static void ReleaseDisable() => RemoveDefine(ReleaseBuildDefine);
-
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Remove/Build"),]
+    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Remove/Debug"),]
     public static void DebugDisable() => RemoveDefine(DevBuildDefine);
 
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Remove/Build And Log"),]
-    public static void DebugAndLogDisable() => RemoveAndSetDefine(DevBuildDefine, LogDisableDefine);
-
-    [MenuItem(GameData.EditorName + EditorSubfolder.Build + "/Prepare/Remove/Release And Log"),]
-    public static void ReleaseAndLogDisable() => RemoveAndSetDefine(ReleaseBuildDefine, LogDisableDefine);
-
     private static void SetAndRemoveDefine(string set, string remove)
-    {
-        SetDefine(set);
-        RemoveDefine(remove);
-    }
-    
-    private static void RemoveAndSetDefine(string remove, string set)
     {
         SetDefine(set);
         RemoveDefine(remove);
