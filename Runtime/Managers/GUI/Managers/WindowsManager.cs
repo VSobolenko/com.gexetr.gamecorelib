@@ -7,19 +7,19 @@ namespace Game.GUI.Windows.Managers
 {
 internal class WindowsManager : IWindowsManager
 {
-    protected readonly WindowBuilder windowBuilder;
+    protected readonly WindowConstructor WindowConstructor;
 
     public WindowsManager(IWindowFactory windowFactory, Transform rootUi)
     {
         if (windowFactory.TryCreateWindowsRoot(rootUi, out var root) == false)
             Log.Warning($"In {GetType().Name} empty root");
 
-        windowBuilder = new WindowBuilder(windowFactory, root);
+        WindowConstructor = new WindowConstructor(windowFactory, root);
     }
 
     public void Dispose()
     {
-        windowBuilder.Dispose();
+        WindowConstructor.Dispose();
     }
 
     #region Container
@@ -27,7 +27,7 @@ internal class WindowsManager : IWindowsManager
     public bool TryGetActiveWindows<TMediator>(out TMediator[] mediator) where TMediator : class, IMediator
     {
         var mediators = new List<TMediator>();
-        foreach (WindowProperties window in windowBuilder)
+        foreach (WindowProperties window in WindowConstructor)
         {
             if (window.mediator is TMediator == false)
                 continue;
@@ -42,7 +42,7 @@ internal class WindowsManager : IWindowsManager
     public bool TryGetActiveWindow<TMediator>(out TMediator mediator) where TMediator : class, IMediator
     {
         mediator = null;
-        foreach (WindowProperties window in windowBuilder)
+        foreach (WindowProperties window in WindowConstructor)
         {
             if (window.mediator is TMediator == false)
                 continue;
@@ -61,27 +61,27 @@ internal class WindowsManager : IWindowsManager
     public TMediator OpenWindowOnTop<TMediator>(Action<TMediator> initWindow = null)
         where TMediator : class, IMediator
     {
-        windowBuilder.HideWindow(windowBuilder.Count - 1, false);
+        WindowConstructor.HideWindow(WindowConstructor.Count - 1, false);
 
-        return windowBuilder.OpenWindowSilently(initWindow).mediator as TMediator;
+        return WindowConstructor.OpenWindowSilently(initWindow).mediator as TMediator;
     }
 
     public TMediator OpenWindowOver<TMediator>(Action<TMediator> initWindow = null)
         where TMediator : class, IMediator
     {
-        windowBuilder.HideWindow(windowBuilder.Count - 1, true);
+        WindowConstructor.HideWindow(WindowConstructor.Count - 1, true);
 
-        return windowBuilder.OpenWindowSilently(initWindow).mediator as TMediator;
+        return WindowConstructor.OpenWindowSilently(initWindow).mediator as TMediator;
     }
 
     public bool CloseWindow<TMediator>() where TMediator : class, IMediator
     {
-        for (var i = 0; i < windowBuilder.Count; i++)
+        for (var i = 0; i < WindowConstructor.Count; i++)
         {
-            if (windowBuilder[i].mediator.GetType() != typeof(TMediator))
+            if (WindowConstructor[i].mediator.GetType() != typeof(TMediator))
                 continue;
 
-            windowBuilder.CloseWindow(i);
+            WindowConstructor.CloseWindow(i);
 
             return true;
         }
@@ -94,12 +94,12 @@ internal class WindowsManager : IWindowsManager
         if (mediator == null)
             throw new ArgumentNullException($"Close {typeof(TMediator)} null mediator");
 
-        for (var i = 0; i < windowBuilder.Count; i++)
+        for (var i = 0; i < WindowConstructor.Count; i++)
         {
-            if (windowBuilder[i].mediator != mediator)
+            if (WindowConstructor[i].mediator != mediator)
                 continue;
 
-            windowBuilder.CloseWindow(i);
+            WindowConstructor.CloseWindow(i);
 
             return true;
         }
@@ -109,10 +109,10 @@ internal class WindowsManager : IWindowsManager
 
     public void CloseWindows()
     {
-        var countWindows = windowBuilder.Count;
+        var countWindows = WindowConstructor.Count;
         for (var i = countWindows - 1; i >= 0; i--)
         {
-            windowBuilder.CloseWindow(i);
+            WindowConstructor.CloseWindow(i);
         }
     }
 

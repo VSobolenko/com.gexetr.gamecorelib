@@ -36,8 +36,8 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
                                                              Action<TMediator> initWindow)
         where TMediator : class, IMediator
     {
-        var closingWindow = windowBuilder.Count > 0 ? windowBuilder[^1] : default;
-        var openingWindow = windowBuilder.OpenWindowSilently(initWindow);
+        var closingWindow = WindowConstructor.Count > 0 ? WindowConstructor[^1] : default;
+        var openingWindow = WindowConstructor.OpenWindowSilently(initWindow);
         
         var closeTask = closingWindow?.mediator != null ? transition.Close(closingWindow) : Task.CompletedTask;
         var openTask = transition.Open(openingWindow);
@@ -57,15 +57,15 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
 
     public async Task<bool> CloseWindowAsync<TMediator>(IWindowTransition transition) where TMediator : class, IMediator
     {
-        for (var i = 0; i < windowBuilder.Count; i++)
+        for (var i = 0; i < WindowConstructor.Count; i++)
         {
-            if (windowBuilder[i].mediator.GetType() != typeof(TMediator))
+            if (WindowConstructor[i].mediator.GetType() != typeof(TMediator))
                 continue;
 
-            var closingWindows = windowBuilder[i];
+            var closingWindows = WindowConstructor[i];
             WindowProperties openingWindow = null;
-            if (i == windowBuilder.Count - 1 && i != 0)
-                openingWindow = windowBuilder[i - 1];
+            if (i == WindowConstructor.Count - 1 && i != 0)
+                openingWindow = WindowConstructor[i - 1];
             
             var result = await CloseWindowAsync(closingWindows, openingWindow, i, transition);
 
@@ -82,13 +82,13 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
     public async Task<bool> CloseWindowAsync<TMediator>(IWindowTransition transition, TMediator mediator)
         where TMediator : class, IMediator
     {
-        for (var i = 0; i < windowBuilder.Count; i++)
+        for (var i = 0; i < WindowConstructor.Count; i++)
         {
-            if (windowBuilder[i].mediator != mediator)
+            if (WindowConstructor[i].mediator != mediator)
                 continue;
 
-            var closingWindows = windowBuilder[i];
-            var openingWindow = windowBuilder.Count == 1 ? default : windowBuilder[i - 1];
+            var closingWindows = WindowConstructor[i];
+            var openingWindow = WindowConstructor.Count == 1 ? default : WindowConstructor[i - 1];
             var result = await CloseWindowAsync(closingWindows, openingWindow, i, transition);
 
             return result;
@@ -110,7 +110,7 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
         
         openingWindow.mediator?.SetInteraction(true);
 
-        windowBuilder.CloseWindow(closingWindowIndex);
+        WindowConstructor.CloseWindow(closingWindowIndex);
 
         return true;
     }

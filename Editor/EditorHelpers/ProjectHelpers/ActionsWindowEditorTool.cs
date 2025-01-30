@@ -95,6 +95,17 @@ public class ActionsWindowEditorTool : EditorWindow
 
         return this;
     }
+    
+    public ActionsWindowEditorTool AddButton(string description, Action action)
+    {
+        _buttons.Add(new ButtonData
+        {
+            description = description,
+            action = action,
+        });
+
+        return this;
+    }
 
     public ActionsWindowEditorTool AddLabel(string label)
     {

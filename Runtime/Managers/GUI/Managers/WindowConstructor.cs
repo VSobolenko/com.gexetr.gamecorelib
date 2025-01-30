@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
+internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
 {
     public int Count => _windows.Count;
 
@@ -15,7 +15,7 @@ internal class WindowBuilder : IDisposable, IEnumerable<WindowProperties>
     private readonly IWindowFactory _windowFactory;
     private readonly Transform _root;
 
-    public WindowBuilder(IWindowFactory windowFactory, Transform root)
+    public WindowConstructor(IWindowFactory windowFactory, Transform root)
     {
         _windowFactory = windowFactory;
         _root = root;
