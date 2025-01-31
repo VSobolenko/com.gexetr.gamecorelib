@@ -3,13 +3,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
-using Game;
 using Game.IO;
 using Game.IO.Managers;
-using GameTests.TestingElements;
+using Game.Tests.Runtime.TestingElements;
 using NUnit.Framework;
 
-namespace GameTests.Repository
+namespace Game.Tests.Runtime.RepositoriesTests
 {
 [TestFixture]
 internal class BinaryFileRepositorySystemTests

@@ -3,7 +3,7 @@ using Game.Extensions;
 using Game.Pools;
 using NUnit.Framework;
 
-namespace GameTests.Tests.Runtime.ObjectPoolTests
+namespace Game.Tests.Editor.ObjectPoolTests
 {
 [TestFixture]
 public class PoolableObjectPoolTests
@@ -20,7 +20,7 @@ public class PoolableObjectPoolTests
         pool.Get();
 
         // Assert
-        Assert.AreNotEqual(pool.Count, prepareCount - 1);
+        Assert.AreEqual(pool.Count, prepareCount - 1);
     }
 
     [Test]
@@ -34,7 +34,7 @@ public class PoolableObjectPoolTests
 
         // Assert
         Assert.IsNotNull(element);
-        Assert.AreEqual(element.IsUiElement, "Key");
+        Assert.AreEqual(element.Key, "Key");
         Assert.AreEqual(pool.Count, 0);
     }
 
@@ -50,8 +50,7 @@ public class PoolableObjectPoolTests
         var returnedFromPool = pool.Get();
 
         // Assert
-        Assert.AreEqual(testElement, returnedFromPool);
-        Assert.ReferenceEquals(testElement, returnedFromPool);
+        Assert.AreSame(testElement, returnedFromPool);
     }
 
     [Test]

@@ -11,7 +11,7 @@ namespace GameEditor.Pools
 internal class TypeManagerProfiler : IPoolProfiler
 {
     private readonly Type _poolType;
-    private readonly Dictionary<Type, UnityEngine.Pool.IObjectPool<IPoolable>> _pool;
+    private readonly Dictionary<Type, IObjectPool<IPoolable>> _pool;
     private static int _maxPoolCapacity;
     private static int _maxPoolStackCapacity;
 
@@ -20,7 +20,7 @@ internal class TypeManagerProfiler : IPoolProfiler
     public TypeManagerProfiler(object pool, Type poolType)
     {
         _poolType = poolType;
-        _pool = pool as Dictionary<Type, UnityEngine.Pool.IObjectPool<IPoolable>>;
+        _pool = pool as Dictionary<Type, IObjectPool<IPoolable>>;
         if (_pool == null)
         {
             Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
@@ -40,7 +40,7 @@ internal class TypeManagerProfiler : IPoolProfiler
 
         OnPoolDataUpdated();
 
-        var stackCapacity = _pool.Values.Sum(stackValue => stackValue.CountInactive);
+        var stackCapacity = _pool.Values.Sum(stackValue => stackValue.Count);
 
         if (GUILayout.Button("Clear pool"))
             ClearPool();
@@ -60,7 +60,7 @@ internal class TypeManagerProfiler : IPoolProfiler
         if (_pool.Keys.Count > _maxPoolCapacity)
             _maxPoolCapacity = _pool.Keys.Count;
 
-        var stackCapacity = _pool.Values.Sum(stackValue => stackValue.CountInactive);
+        var stackCapacity = _pool.Values.Sum(stackValue => stackValue.Count);
         if (stackCapacity > _maxPoolStackCapacity)
             _maxPoolStackCapacity = stackCapacity;
         RecalculateData();
@@ -88,14 +88,14 @@ internal class TypeManagerProfiler : IPoolProfiler
 
             var maxElements = _poolData.ContainsKey(key) ? _poolData[key].maxElemets.ToString() : "-";
 
-            var data = $"{Verify(key, value)}Count/Max: {value.CountInactive}/{maxElements} \tType: {key.Name}";
+            var data = $"{Verify(key, value)}Count/Max: {value.Count}/{maxElements} \tType: {key.Name}";
 
             var style = containerStyles[i % containerStyles.Count];
             GUILayout.Label(data, style);
         }
     }
 
-    private string Verify(Type key, UnityEngine.Pool.IObjectPool<IPoolable> stack)
+    private string Verify(Type key, IObjectPool<IPoolable> stack)
     {
         return "✓";
     }
@@ -120,14 +120,14 @@ internal class TypeManagerProfiler : IPoolProfiler
         {
             var poolData = new PoolableData
             {
-                maxElemets = stack.CountInactive,
+                maxElemets = stack.Count,
             };
 
             newPoolData.Add(key, poolData);
 
             if (_poolData.ContainsKey(key))
             {
-                poolData.maxElemets = Mathf.Max(_poolData[key].maxElemets, stack.CountInactive);
+                poolData.maxElemets = Mathf.Max(_poolData[key].maxElemets, stack.Count);
             }
 
             newPoolData[key] = poolData;

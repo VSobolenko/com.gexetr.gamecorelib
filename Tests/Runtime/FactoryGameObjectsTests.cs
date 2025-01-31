@@ -3,7 +3,7 @@ using Game.Factories.Managers;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace GameTests
+namespace Game.Tests.Runtime
 {
 [TestFixture]
 internal class FactoryGameObjectsTests

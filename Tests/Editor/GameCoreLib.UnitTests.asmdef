@@ -1,6 +1,6 @@
 {
     "name": "GameCoreLib.UnitTests",
-    "rootNamespace": "GameTests",
+    "rootNamespace": "Game",
     "references": [
         "UnityEditor.TestRunner",
         "UnityEngine.TestRunner",
@@ -18,7 +18,8 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "Newtonsoft.Json.dll",
-        "FluentAssertions.dll"
+        "FluentAssertions.dll",
+        "Moq.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [

@@ -5,7 +5,7 @@ using Moq;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace GameTests.Tests.Runtime.ObjectPoolTests
+namespace Game.Tests.Editor.ObjectPoolTests
 { 
 [TestFixture]
 public class PoolableObjectPoolCallSequenceTests
@@ -14,22 +14,22 @@ public class PoolableObjectPoolCallSequenceTests
     public void Get_GetElementFromPoolInWorldSpace_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        var mockObject = new Mock<PoolableTestObject>();
-        var factory = new Func<PoolableTestObject>(() => mockObject.Object);
-        IPoolableObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, factory);
+        var mockObject = new Mock<IPoolable>();
+        var factory = new Func<IPoolable>(() => mockObject.Object);
+        IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, factory);
         var callLog = new List<string>
         {
-            nameof(PoolableTestObject.SetPositionAndRotation),
-            nameof(PoolableTestObject.SetParent),
-            nameof(PoolableTestObject.SetActive),
-            nameof(PoolableTestObject.OnUse),
+            nameof(IPoolable.SetPositionAndRotation),
+            nameof(IPoolable.SetParent),
+            nameof(IPoolable.SetActive),
+            nameof(IPoolable.OnUse),
         };
         var callOrder = new List<string>();
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetPositionAndRotation), callOrder, It.IsAny<Vector3>(), It.IsAny<Quaternion>());
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetParent), callOrder, It.IsAny<Transform>());
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetActive), callOrder);
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.OnUse), callOrder);
-
+        SetupMethodCall(mockObject, nameof(IPoolable.SetPositionAndRotation), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.SetParent), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.SetActive), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.OnUse), callOrder);
+        
         // Act
         pool.Get();
 
@@ -45,21 +45,21 @@ public class PoolableObjectPoolCallSequenceTests
     public void Get_GetElementFromPoolInLocalSpace_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        var mockObject = new Mock<PoolableTestObject>();
-        var factory = new Func<PoolableTestObject>(() => mockObject.Object);
-        IPoolableObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, factory);
+        var mockObject = new Mock<IPoolable>();
+        var factory = new Func<IPoolable>(() => mockObject.Object);
+        IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, factory);
         var callLog = new List<string>
         {
-            nameof(PoolableTestObject.SetParent),
-            nameof(PoolableTestObject.SetPositionAndRotation),
-            nameof(PoolableTestObject.SetActive),
-            nameof(PoolableTestObject.OnUse),
+            nameof(IPoolable.SetParent),
+            nameof(IPoolable.SetPositionAndRotation),
+            nameof(IPoolable.SetActive),
+            nameof(IPoolable.OnUse),
         };
         var callOrder = new List<string>();
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetParent), callOrder, It.IsAny<Transform>());
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetPositionAndRotation), callOrder, It.IsAny<Vector3>(), It.IsAny<Quaternion>());
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetActive), callOrder);
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.OnUse), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.SetParent), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.SetPositionAndRotation), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.SetActive), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.OnUse), callOrder);
 
         // Act
         pool.Get(null, false);
@@ -76,18 +76,18 @@ public class PoolableObjectPoolCallSequenceTests
     public void Release_AddElementToPool_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        IPoolableObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, GetTestElement);
+        IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, GetTestElement);
         var callLog = new List<string>
         {
-            nameof(PoolableTestObject.SetActive),
-            nameof(PoolableTestObject.SetParent),
-            nameof(PoolableTestObject.OnRelease),
+            nameof(IPoolable.SetActive),
+            nameof(IPoolable.SetParent),
+            nameof(IPoolable.OnRelease),
         };
         var callOrder = new List<string>();
-        var mockObject = new Mock<PoolableTestObject>();
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetActive), callOrder, It.IsAny<bool>());
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.SetParent), callOrder, It.IsAny<Transform>());
-        SetupMethodCall(mockObject, nameof(PoolableTestObject.OnRelease), callOrder);
+        var mockObject = new Mock<IPoolable>();
+        SetupMethodCall(mockObject, nameof(IPoolable.SetActive), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.SetParent), callOrder);
+        SetupMethodCall(mockObject, nameof(IPoolable.OnRelease), callOrder);
 
         // Act
         pool.Release(mockObject.Object);
@@ -98,14 +98,37 @@ public class PoolableObjectPoolCallSequenceTests
         mockObject.Verify(x => x.OnRelease(), Times.Once);
         Assert.AreEqual(callLog, callOrder);
     }
-    
-    private static void SetupMethodCall<T>(Mock<T> mockService, string methodName, List<string> callOrder, params object[] parameters) where T : class
+
+    private static void SetupMethodCall(Mock<IPoolable> mockObject, string methodName, ICollection<string> callOrder)
     {
-        mockService.Setup(service => service.GetType().GetMethod(methodName).Invoke(service, parameters))
-            .Callback(() => callOrder.Add(methodName));
+        switch (methodName)
+        {
+            case nameof(IPoolable.SetPositionAndRotation):
+                mockObject.Setup(x => x.SetPositionAndRotation(It.IsAny<Vector3>(), It.IsAny<Quaternion>()))
+                          .Callback(() => callOrder.Add(nameof(IPoolable.SetPositionAndRotation)));
+                break;
+            case nameof(IPoolable.SetParent):
+                mockObject.Setup(x => x.SetParent(It.IsAny<Transform>()))
+                          .Callback(() => callOrder.Add(nameof(IPoolable.SetParent)));
+                break;
+            case nameof(IPoolable.SetActive):
+                mockObject.Setup(x => x.SetActive(It.IsAny<bool>()))
+                          .Callback(() => callOrder.Add(nameof(IPoolable.SetActive)));
+                break;
+            case nameof(IPoolable.OnUse):
+                mockObject.Setup(x => x.OnUse())
+                          .Callback(() => callOrder.Add(nameof(IPoolable.OnUse)));
+                break;
+            case nameof(IPoolable.OnRelease):
+                mockObject.Setup(x => x.OnRelease())
+                          .Callback(() => callOrder.Add(nameof(IPoolable.OnRelease)));
+                break;
+            default:
+                throw new ArgumentException("Unknown method");
+        }
     }
 
-    private static PoolableTestObject GetTestElement()
+    private static IPoolable GetTestElement()
     {
         return new PoolableTestObject("Key", false);
     }

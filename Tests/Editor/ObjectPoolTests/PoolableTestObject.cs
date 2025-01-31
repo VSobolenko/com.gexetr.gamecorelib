@@ -1,7 +1,7 @@
 ﻿using Game.Pools;
 using UnityEngine;
 
-namespace GameTests.Tests.Runtime.ObjectPoolTests
+namespace Game.Tests.Editor.ObjectPoolTests
 {
 internal class PoolableTestObject : IPoolable
 {

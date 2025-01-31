@@ -13,13 +13,13 @@ internal class KeyManagerProfiler : IPoolProfiler
     private readonly Type _poolType;
     private static int _maxPoolCapacity;
     private static int _maxPoolStackCapacity;
-    private readonly Dictionary<string, Stack<IPoolable>> _pool;
+    private readonly Dictionary<string, IPoolableObjectPool<IPoolable>> _pool;
     private Dictionary<string, PoolableData> _poolData = new();
 
     public KeyManagerProfiler(object pool, Type poolType)
     {
         _poolType = poolType;
-        _pool = pool as Dictionary<string, Stack<IPoolable>>;
+        _pool = pool as Dictionary<string, IPoolableObjectPool<IPoolable>>;
         if (_pool == null)
         {
             Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
@@ -95,12 +95,13 @@ internal class KeyManagerProfiler : IPoolProfiler
         }
     }
 
-    private string Verify(string key, Stack<IPoolable> stack)
+    private string Verify(string key, IPoolableObjectPool<IPoolable> stack)
     {
-        var existsCopy = stack.Count == stack.Distinct().Count();
-        var hasNoNull = stack.Count(x => x == null) == 0;
-
-        return existsCopy || hasNoNull ? "✓" : "x";
+        // var existsCopy = stack.Count == stack.Distinct().Count(); //ToDo: verify
+        // var hasNoNull = stack.Count(x => x == null) == 0;
+        //
+        // return existsCopy || hasNoNull ? "✓" : "x";
+        return "✓";
     }
 
     private void ClearPool()

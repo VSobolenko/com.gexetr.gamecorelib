@@ -4,7 +4,7 @@ using Game.Pools;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace GameTests.Tests.Runtime.ObjectPoolTests
+namespace Game.Tests.Runtime.ObjectPoolTests
 {
 [TestFixture]
 public class GameObjectObjectPoolTests
@@ -23,7 +23,7 @@ public class GameObjectObjectPoolTests
         pool.Get();
 
         // Assert
-        Assert.AreNotEqual(pool.Count, prepareCount - 1);
+        Assert.AreEqual(pool.Count, prepareCount - 1);
     }
 
     [Test]
@@ -53,8 +53,7 @@ public class GameObjectObjectPoolTests
         var returnedFromPool = pool.Get();
 
         // Assert
-        Assert.AreEqual(testElement, returnedFromPool);
-        Assert.ReferenceEquals(testElement, returnedFromPool);
+        Assert.AreSame(testElement, returnedFromPool);
     }
 
     [Test]

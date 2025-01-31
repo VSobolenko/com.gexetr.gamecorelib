@@ -21,16 +21,16 @@ internal class ObjectPoolTypeEditorSeparateManager : ObjectPoolTypeManager
     
     protected override IPoolableObjectPool<IPoolable> Warn<T>(T prefab, int expectedCountNewElements)
     {
-        var pool = base.Warn(prefab, expectedCountNewElements);
-
-        if (_pool.ContainsKey(prefab.Key))
-            return pool;
+        if (_pool.ContainsKey(prefab.Key)) 
+            return base.Warn(prefab, expectedCountNewElements);
+        
         var root = base.GetPoolRoot(prefab);
         var parent = prefab.IsUiElement ? CreateAndSetupUIObjectPoolRoot(root) : CreateObjectPoolRoot(root);
         if (Application.isEditor)
             parent.name = $"[{_pool.Count}] {prefab.GetType().Name}";
         _pool.Add(prefab.Key, parent);
-        return pool;
+
+        return base.Warn(prefab, expectedCountNewElements);
     }
 
     protected override Transform GetPoolRoot(IPoolable poolableObject) => _pool[poolableObject.Key];

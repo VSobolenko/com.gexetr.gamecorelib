@@ -4,7 +4,7 @@ using Game.AssetContent.Managers;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace GameTests.AssetContent
+namespace Game.Tests.Runtime
 {
 [TestFixture]
 internal class AddressableManagerTests

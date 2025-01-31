@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GameTests.TestingElements
+namespace Game.Tests.Runtime.TestingElements
 {
 internal class NewMonoBehavior : MonoBehaviour
 {

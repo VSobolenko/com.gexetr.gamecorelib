@@ -3,15 +3,14 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using FluentAssertions;
-using Game;
 using Game.IO;
 using Game.IO.Managers;
-using GameTests.TestingElements;
+using Game.Tests.Runtime.TestingElements;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace GameTests.Repository
+namespace Game.Tests.Runtime.RepositoriesTests
 {
 internal class JsonNewtonsoftRepositoryTests
 {
