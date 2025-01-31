@@ -6,49 +6,26 @@ using Cysharp.Threading.Tasks;
 using Game.DynamicData;
 using Game.Factories;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityObject = UnityEngine.Object;
 
 namespace Game.Pools.Managers
 {
-/// <summary>
-/// Object pool by object type
-/// If the object type is already present, other prefabs but with the same type are ignored
-/// </summary>
-internal class ObjectPoolTypeManager : IObjectPoolManager
+internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
 {
     private readonly IFactoryGameObjects _factoryGameObjects;
-    private readonly Dictionary<Type, IPoolableObjectPool<IPoolable>> _pool;
+    private readonly Dictionary<GameObject, IGameObjectObjectPool<Component>> _pool;
     private readonly Transform _root;
-    private readonly Transform _rootUi;
     private readonly ObjectPoolProfilerProvider _poolProfiler;
     protected int DefaultCapacity;
 
-    public ObjectPoolTypeManager(IFactoryGameObjects objectFactoryGameObjects, Transform poolRoot, int capacity)
+    public ObjectPoolGameObjectManager(IFactoryGameObjects objectFactoryGameObjects, Transform poolRoot,
+        int capacity)
     {
         _factoryGameObjects = objectFactoryGameObjects;
         DefaultCapacity = Mathf.Max(0, capacity);
-        _pool = new Dictionary<Type, IPoolableObjectPool<IPoolable>>(DefaultCapacity);
+        _pool = new Dictionary<GameObject, IGameObjectObjectPool<Component>>(DefaultCapacity);
 
-        _root = CreateObjectPoolRoot(poolRoot);
-        _rootUi = CreateAndSetupUIObjectPoolRoot(poolRoot);
+        _root = poolRoot;
         _poolProfiler = SetupEditorHierarchyStructureAndCreatePoolProfiler(poolRoot);
-    }
-
-    protected Transform CreateObjectPoolRoot(Transform poolRoot) =>
-        _factoryGameObjects.InstantiateEmpty(poolRoot).transform;
-
-    protected Transform CreateAndSetupUIObjectPoolRoot(Transform poolRoot)
-    {
-        var rootUI = _factoryGameObjects
-                     .InstantiateEmpty(poolRoot, typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler),
-                                       typeof(GraphicRaycaster)).transform;
-
-        var canvas = rootUI.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.vertexColorAlwaysGammaSpace = true;
-
-        return rootUI;
     }
 
     private ObjectPoolProfilerProvider SetupEditorHierarchyStructureAndCreatePoolProfiler(Transform poolRoot)
@@ -56,26 +33,24 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         if (Application.isEditor == false)
             return null;
 
-        poolRoot.name = $"{GameData.Identifier}.Pool";
         _root.name = $"{GameData.Identifier}.Root";
-        _rootUi.name = $"{GameData.Identifier}.RootUI";
 
         if (poolRoot.TryGetComponent<ObjectPoolProfiler>(out var profilerView))
             return new ObjectPoolProfilerProvider(poolRoot)
-                   .AssignProfilerView(profilerView)
-                   .Initialize(this, _pool);
+                .AssignProfilerView(profilerView)
+                .Initialize(this, _pool);
 
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public IPoolableObjectPool<IPoolable> Prepare<T>(T prefab, int count, bool force = false) where T : Component, IPoolable
+    public IGameObjectObjectPool<Component> Prepare<T>(T prefab, int count, bool force = false) where T : Component
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
 
         var pool = Warn(prefab, count);
         var countExists = pool.Count;
-        
+
         count = force ? count : count - countExists;
         for (var i = 0; i < count; i++)
             CreateOrReturnElementToPool(prefab, pool, false);
@@ -83,8 +58,8 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         return pool;
     }
 
-    public async Task<IPoolableObjectPool<IPoolable>> PrepareAsync<T>(T prefab, int count, bool force = false,
-        CancellationToken token = default) where T : Component, IPoolable
+    public async Task<IGameObjectObjectPool<Component>> PrepareAsync<T>(T prefab, int count, bool force = false,
+        CancellationToken token = default) where T : Component
     {
         var pool = Warn(prefab, count);
 
@@ -99,27 +74,29 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
                 return pool;
             await UniTask.DelayFrame(1, cancellationToken: token);
         }
+
         return pool;
     }
 
-    public T Get<T>(T prefab) where T : Component, IPoolable =>
+    public T Get<T>(T prefab) where T : Component =>
         InternalGet(prefab, Vector3.zero, Quaternion.identity, null);
 
-    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable =>
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component =>
         InternalGet(prefab, position, rotation, null);
 
-    public T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable =>
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true)
+        where T : Component =>
         InternalGet(prefab, position, rotation, parent);
 
-    public T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component, IPoolable =>
+    public T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component =>
         InternalGet(prefab, Vector3.zero, Quaternion.identity, parent);
 
-    public void Release<T>(T prefabInstance) where T : Component, IPoolable
+    public void Release<T>(T prefabInstance) where T : Component
     {
         if (prefabInstance == null)
             throw new ArgumentException($"Can't release null prefab");
 
-        if (_pool.TryGetValue(prefabInstance.GetType(), out var pool) == false)
+        if (_pool.TryGetValue(prefabInstance.gameObject, out var pool) == false)
             throw new ArgumentException(
                 $"Return unknown prefab to pool. Use {nameof(Prepare)} first. PrefabType={prefabInstance.GetType()}");
 
@@ -128,12 +105,12 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
     }
 
     private T InternalGet<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent)
-        where T : UnityObject, IPoolable
+        where T : Component
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
 
-        if (_pool.TryGetValue(prefab.GetType(), out var pool) == false)
+        if (_pool.TryGetValue(prefab.gameObject, out var pool) == false)
             throw new ArgumentException($"An unknown object was requested. Use {nameof(Prepare)} first");
 
         var pooledObject = pool.Get(position, rotation, parent);
@@ -142,37 +119,36 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         return pooledObject as T;
     }
 
-    protected virtual IPoolableObjectPool<IPoolable> Warn<T>(T prefab, int expectedCountNewElements) where T : Component, IPoolable
+    protected virtual IGameObjectObjectPool<Component> Warn<T>(T prefab, int expectedCountNewElements)
+        where T : Component
     {
-        if (_pool.TryGetValue(prefab.GetType(), out var existPool))
+        if (_pool.TryGetValue(prefab.gameObject, out var existPool))
             return existPool;
 
         var root = GetPoolRoot(prefab);
-        var pool = new PoolableObjectPool<IPoolable>(expectedCountNewElements, root,
+        var pool = new GameObjectObjectPool<Component>(expectedCountNewElements, root,
             () => _factoryGameObjects.Instantiate(prefab, root));
-
+        
         if (_pool.Count > DefaultCapacity)
         {
             Log.Warning("Pool capacity exceeded. Use an increased size of the original container");
             DefaultCapacity = _pool.Count;
         }
 
-        _pool.Add(prefab.GetType(), pool);
+        _pool.Add(prefab.gameObject, pool);
         _poolProfiler?.Update();
         return pool;
     }
 
-    private void CreateOrReturnElementToPool<T>(T prefab, IPoolableObjectPool<IPoolable> pool, bool isInstance)
-        where T : Component, IPoolable
+    private void CreateOrReturnElementToPool<T>(T prefab, IGameObjectObjectPool<Component> pool, bool isInstance)
+        where T : Component
     {
         var pooledObject = isInstance ? prefab : pool.CreateInstance();
-
         pool.Release(pooledObject);
-        pooledObject.Pool = this;
 
         _poolProfiler?.Update();
     }
-    
-    protected virtual Transform GetPoolRoot(IPoolable poolableObject) => poolableObject.IsUiElement ? _rootUi : _root;
+
+    protected virtual Transform GetPoolRoot(Component component) => _root;
 }
 }

@@ -13,9 +13,10 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     ///  <param name="count">Expected quantity to add</param>
     ///  <param name="force">force add so much even if already there</param>
     ///  <typeparam name="T">Object type</typeparam>
-    void Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component, IPoolable;
+    IPoolableObjectPool<IPoolable> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component, IPoolable;
 
-    Task PrepareAsync<T>(T prefab, int count = 0, bool force = false, CancellationToken token = default) where T : Component, IPoolable;
+    Task<IPoolableObjectPool<IPoolable>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
+        CancellationToken token = default) where T : Component, IPoolable;
 
     /// <summary>
     /// Get object instance from pool
@@ -36,12 +37,21 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable;
 }
 
-internal interface IPrefabObjectPool<T> where T : Component, IPoolable //WIP
+public interface IGameObjectObjectPoolManager
 {
-    T Get();
-    T Get(Vector3 position, Quaternion rotation);
-    T Get(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true);
-    T Get(Transform parent, bool inWorldSpace = true);
-    void Release(T prefabInstance);
+    IGameObjectObjectPool<Component> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component;
+
+    Task<IGameObjectObjectPool<Component>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
+        CancellationToken token = default) where T : Component;
+
+    T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component;
+
+    T Get<T>(T prefab) where T : Component;
+
+    T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component;
+
+    T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component;
+    
+    void Release<T>(T prefabInstance) where T : Component;
 }
 }

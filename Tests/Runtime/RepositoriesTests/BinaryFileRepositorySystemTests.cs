@@ -6,20 +6,22 @@ using FluentAssertions;
 using Game;
 using Game.IO;
 using Game.IO.Managers;
+using GameTests.TestingElements;
 using NUnit.Framework;
-using UnityEngine;
-using WarehouseKeeper.Test.TestingElements;
 
 namespace GameTests.Repository
 {
 [TestFixture]
-internal class BinaryRepositoryWithJsonSystemTests
+internal class BinaryFileRepositorySystemTests
 {
-    private const string FileFormat = ".bat";
+#if UNITY_EDITOR
+    private const string FileFormat = ".txt";
+#else
+    private const string FileFormat = ".txt";
+#endif
 
-    private TestClassWithUnityVectorAndQuaternion ReadableClass => new TestClassWithUnityVectorAndQuaternion
-        {id = 7, name = "Player", position = Vector3.up, rotation = Quaternion.identity};
-    
+    private static SimpleTestClass ReadableClass => new SimpleTestClass {id = 7, name = "Player", };
+
     private string _testFolderPath;
     private bool _deleteTestFolder = true;
     
@@ -76,12 +78,10 @@ internal class BinaryRepositoryWithJsonSystemTests
 
     private byte[] GetSavedData(object obj)
     {
-        var jsonString = new JsonUnitySave().Serialize(obj);
-        
         var bf = new BinaryFormatter();
         using (var stream = new MemoryStream())
         {
-            bf.Serialize(stream, jsonString);
+            bf.Serialize(stream, obj);
             return stream.ToArray();
         }
     }
@@ -90,10 +90,10 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Read_DataFromBinaryFile_ShouldReturnNewClassWithData()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
+        ISaveFile saveFile = new BinarySave();
         
         // Act
-        var data = saveFile.Read<TestClassWithUnityVectorAndQuaternion>(_pathToReadFile);
+        var data = saveFile.Read<SimpleTestClass>(_pathToReadFile);
         
         // Assert
         data.Should().BeEquivalentTo(ReadableClass);
@@ -103,9 +103,8 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Write_DataToFile_ShouldSaveNewClassDataToFile()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
-        var testData = new TestClassWithUnityVectorAndQuaternion
-            {id = 7, name = "Player", position = Vector3.up, rotation = Quaternion.identity};
+        ISaveFile saveFile = new BinarySave();
+        var testData = new SimpleTestClass {id = 7, name = "Player",};
         var savedData = GetSavedData(testData);
         
         // Act
@@ -120,11 +119,9 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Write_DataToFileWithData_ShouldSaveNewWriteData()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
-        var firstTestData = new TestClassWithUnityVectorAndQuaternion
-            {id = 7, name = "Player", position = Vector3.up, rotation = Quaternion.identity};
-        var secondTestData = new TestClassWithUnityVectorAndQuaternion
-            {id = 8, name = "Enemy", position = Vector3.one, rotation = Quaternion.identity};
+        ISaveFile saveFile = new BinarySave();
+        var firstTestData = new SimpleTestClass {id = 7, name = "Player", };
+        var secondTestData = new SimpleTestClass {id = 8, name = "Enemy", };
         var firstSaveData = GetSavedData(firstTestData);
         var secondSaveData = GetSavedData(secondTestData);
         
@@ -142,7 +139,7 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Delete_ExistFile_ShouldFolderWithoutFile()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
+        ISaveFile saveFile = new BinarySave();
         
         // Act
         saveFile.Delete(_pathToDeleteFile);
@@ -155,7 +152,7 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Exist_CheckAvailableFile_ShouldReturnTrue()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
+        ISaveFile saveFile = new BinarySave();
         
         // Act
         var fileExist = saveFile.IsFileExist(_pathToExistFile);
@@ -168,7 +165,7 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Exist_CheckNotAvailableFile_ShouldReturnFalse()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
+        ISaveFile saveFile = new BinarySave();
         
         // Act
         var fileExist = saveFile.IsFileExist(_pathToNotExistFile);
@@ -181,9 +178,8 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Serialize_ClassWithData_ShouldReturnSerializeToJsonString()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
-        var testData = new TestClassWithUnityVectorAndQuaternion
-            {id = 7, name = "Player", position = Vector3.up, rotation = Quaternion.identity};
+        ISaveFile saveFile = new BinarySave();
+        var testData = new SimpleTestClass {id = 7, name = "Player", };
         var serializeBytesData = GetSavedData(testData);
         
         // Act
@@ -197,13 +193,12 @@ internal class BinaryRepositoryWithJsonSystemTests
     public void Deserialize_JsonString_ShouldReturnNewClassWithData()
     {
         // Arrange
-        ISaveFile saveFile = new BinarySaveWithJsonSystem(new JsonUnitySave());
-        var testData = new TestClassWithUnityVectorAndQuaternion
-            {id = 7, name = "Player", position = Vector3.up, rotation = Quaternion.identity};
+        ISaveFile saveFile = new BinarySave();
+        var testData = new SimpleTestClass {id = 7, name = "Player", };
         var serializeBytesData = GetSavedData(testData);
         
         // Act
-        var deserializableClass = saveFile.Deserialize<TestClassWithUnityVectorAndQuaternion>(serializeBytesData);
+        var deserializableClass = saveFile.Deserialize<SimpleTestClass>(serializeBytesData);
     
         // Assert
         deserializableClass.Should().BeEquivalentTo(testData);

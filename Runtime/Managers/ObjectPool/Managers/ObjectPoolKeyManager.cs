@@ -7,7 +7,6 @@ using Game.DynamicData;
 using Game.Factories;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityObject = UnityEngine.Object;
 
 namespace Game.Pools.Managers
 {
@@ -17,18 +16,18 @@ namespace Game.Pools.Managers
 /// </summary>
 internal class ObjectPoolKeyManager : IObjectPoolManager
 {
-    private readonly Dictionary<string, Stack<IPoolable>> _pool;
+    private readonly Dictionary<string, IPoolableObjectPool<IPoolable>> _pool;
     private readonly Transform _root;
     private readonly Transform _rootUi;
     private readonly ObjectPoolProfilerProvider _poolProfiler;
     private readonly IFactoryGameObjects _factoryGameObjects;
-    protected int defaultCapacity;
-
+    protected int DefaultCapacity;
+    
     public ObjectPoolKeyManager(IFactoryGameObjects objectFactoryGameObjects, Transform poolRoot, int capacity)
     {
         _factoryGameObjects = objectFactoryGameObjects;
-        defaultCapacity = Mathf.Max(0, capacity);
-        _pool = new Dictionary<string, Stack<IPoolable>>(defaultCapacity);
+        DefaultCapacity = Mathf.Max(0, capacity);
+        _pool = new Dictionary<string, IPoolableObjectPool<IPoolable>>(DefaultCapacity);
 
         _root = CreateObjectPoolRoot(poolRoot);
         _rootUi = CreateAndSetupUIObjectPoolRoot(poolRoot);
@@ -68,36 +67,39 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public void Prepare<T>(T prefab, int count, bool force = false) where T : Component, IPoolable
+    public IPoolableObjectPool<IPoolable> Prepare<T>(T prefab, int count, bool force = false) where T : Component, IPoolable
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
 
-        Warn(prefab, count);
+        var pool = Warn(prefab, count);
+        var countExists = pool.Count;
         
-        var countExists = _pool[prefab.Key].Count;
         count = force ? count : count - countExists;
         for (var i = 0; i < count; i++)
-            CreateOrReturnElementToPool(prefab, false);
+            CreateOrReturnElementToPool(prefab, pool, false);
         _poolProfiler?.Update();
+        return pool;
     }
 
-    public async Task PrepareAsync<T>(T prefab, int count, bool force = false, CancellationToken token = default) where T : Component, IPoolable
+    public async Task<IPoolableObjectPool<IPoolable>> PrepareAsync<T>(T prefab, int count, bool force = false,
+        CancellationToken token = default) where T : Component, IPoolable
     {
-        Warn(prefab, count);
+        var pool = Warn(prefab, count);
 
         for (var i = 0; i < count; i++)
         {
             if (token.IsCancellationRequested)
-                return;
+                return pool;
 
             Prepare(prefab, 1, force);
             _poolProfiler?.Update();
 
             if (token.IsCancellationRequested)
-                return;
+                return pool;
             await UniTask.DelayFrame(1, cancellationToken: token);
         }
+        return pool;
     }
 
     public T Get<T>(T prefab) where T : Component, IPoolable =>
@@ -117,11 +119,11 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         if (prefabInstance == null)
             throw new ArgumentException($"Can't release null prefab");
 
-        if (_pool.ContainsKey(prefabInstance.Key) == false)
+        if (_pool.TryGetValue(prefabInstance.Key, out var pool) == false)
             throw new ArgumentException(
                 $"Return unknown prefab to pool. Use {nameof(Prepare)} first. PrefabKey={prefabInstance.Key}");
 
-        CreateOrReturnElementToPool(prefabInstance, true);
+        CreateOrReturnElementToPool(prefabInstance, pool, true);
     }
 
     private T InternalGet<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true)
@@ -130,66 +132,49 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         if (prefab == null)
             throw new ArgumentException($"Can't get null prefab");
 
-        if (_pool.ContainsKey(prefab.Key) == false)
+        if (_pool.TryGetValue(prefab.Key, out var pool) == false)
             throw new ArgumentException($"An unknown object was requested. Use {nameof(Prepare)} first");
 
-        if (_pool[prefab.Key].Count == 0)
-            CreateOrReturnElementToPool(prefab, false);
+        if (pool.Count == 0)
+            CreateOrReturnElementToPool(prefab, pool, false);
         
-        var pooledObject = _pool[prefab.Key].Pop();
-        if (inWorldSpace)
-        {
-            pooledObject.SetPositionAndRotation(position, rotation);
-            pooledObject.SetParent(parent);
-        }
-        else
-        {
-            pooledObject.SetParent(parent);
-            pooledObject.SetPositionAndRotation(position, rotation);
-        }
-        pooledObject.SetActive(true);
-        pooledObject.OnUse();
-
+        var pooledObject = _pool[prefab.Key].Get(position, rotation, parent, inWorldSpace);
         _poolProfiler?.Update();
 
         return (T) pooledObject;
     }
 
-    private void CreateOrReturnElementToPool<T>(T prefab, bool isInstance)
+    private void CreateOrReturnElementToPool<T>(T prefab, IPoolableObjectPool<IPoolable> pool, bool isInstance)
         where T : Component, IPoolable
     {
-        var parent = GetPoolRoot(prefab);
-        var pooledObject = isInstance ? prefab : _factoryGameObjects.Instantiate(prefab, parent);
+        var pooledObject = isInstance ? prefab : pool.CreateInstance();
 
-        _pool[prefab.Key].Push(pooledObject);
-        if (isInstance)
-        {
-            pooledObject.SetParent(parent);
-            pooledObject.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-        }
-
-        pooledObject.SetActive(false);
-        pooledObject.OnRelease();
+        pool.Release(pooledObject);
         pooledObject.Pool = this;
 
         _poolProfiler?.Update();
     }
 
-    protected virtual void Warn<T>(T prefab, int expectedCountNewElements) where T : UnityObject, IPoolable
+    protected virtual IPoolableObjectPool<IPoolable> Warn<T>(T prefab, int expectedCountNewElements) where T : Component, IPoolable
     {
-        if (_pool.ContainsKey(prefab.Key))
-            return;
+        if (_pool.TryGetValue(prefab.Key, out var existPool))
+            return existPool;
 
-        if (_pool.Keys.Count > defaultCapacity)
+        if (_pool.Keys.Count > DefaultCapacity)
         {
             Log.Warning("Pool capacity exceeded. Use an increased size of the original container");
-            defaultCapacity = _pool.Count;
+            DefaultCapacity = _pool.Count;
         }
         
         if (string.IsNullOrEmpty(prefab.Key))
             Log.Warning($"Added Empty key to Pool. Prefab name \"{prefab.name}\"");
 
-        _pool.Add(prefab.Key, new Stack<IPoolable>(expectedCountNewElements));
+        var root = GetPoolRoot(prefab);
+        var pool = new PoolableObjectPool<IPoolable>(expectedCountNewElements, root,
+            () => _factoryGameObjects.Instantiate(prefab, root));
+        
+        _pool.Add(prefab.Key, pool);
+        return pool;
     }
 
     protected virtual Transform GetPoolRoot(IPoolable poolableObject) => poolableObject.IsUiElement ? _rootUi : _root;

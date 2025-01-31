@@ -6,9 +6,9 @@ using FluentAssertions;
 using Game;
 using Game.IO;
 using Game.IO.Managers;
+using GameTests.TestingElements;
 using NUnit.Framework;
 using UnityEngine;
-using WarehouseKeeper.Test.TestingElements;
 
 namespace GameTests.Repository
 {

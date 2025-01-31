@@ -17,6 +17,13 @@ internal class ObjectPoolProfiler : MonoBehaviour
         OnPoolUpdate?.Invoke(this);
     }
 
+    public void AssignPool(IGameObjectObjectPoolManager poolManager, object poolContainer)
+    {
+        PoolManager = poolManager;
+        PoolContainer = poolContainer;
+        OnPoolUpdate?.Invoke(this);
+    }
+    
     public void UpdateProfiler()
     {
         OnPoolStructureUpdate?.Invoke();

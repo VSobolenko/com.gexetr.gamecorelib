@@ -4,7 +4,6 @@ using System.Linq;
 using Game;
 using Game.Pools;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UIElements;
 
 namespace GameEditor.Pools
@@ -12,7 +11,7 @@ namespace GameEditor.Pools
 internal class TypeManagerProfiler : IPoolProfiler
 {
     private readonly Type _poolType;
-    private readonly Dictionary<Type, IObjectPool<IPoolable>> _pool;
+    private readonly Dictionary<Type, UnityEngine.Pool.IObjectPool<IPoolable>> _pool;
     private static int _maxPoolCapacity;
     private static int _maxPoolStackCapacity;
 
@@ -21,7 +20,7 @@ internal class TypeManagerProfiler : IPoolProfiler
     public TypeManagerProfiler(object pool, Type poolType)
     {
         _poolType = poolType;
-        _pool = pool as Dictionary<Type, IObjectPool<IPoolable>>;
+        _pool = pool as Dictionary<Type, UnityEngine.Pool.IObjectPool<IPoolable>>;
         if (_pool == null)
         {
             Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
@@ -96,7 +95,7 @@ internal class TypeManagerProfiler : IPoolProfiler
         }
     }
 
-    private string Verify(Type key, IObjectPool<IPoolable> stack)
+    private string Verify(Type key, UnityEngine.Pool.IObjectPool<IPoolable> stack)
     {
         return "✓";
     }

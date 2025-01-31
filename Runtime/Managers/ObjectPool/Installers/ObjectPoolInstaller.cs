@@ -37,5 +37,12 @@ public static class ObjectPoolInstaller
             ? new ObjectPoolTypeEditorSeparateManager(factory, parent, poolCapacity)
             : Type(factory, parent, poolCapacity);
     }
+    
+    public static IGameObjectObjectPoolManager GameObject(IFactoryGameObjects factory, Transform parent = null, int poolCapacity = 32)
+    {
+        parent = (parent == null ? new GameObject().transform : parent);
+
+        return new ObjectPoolGameObjectManager(factory, parent, poolCapacity);
+    }
 }
 }

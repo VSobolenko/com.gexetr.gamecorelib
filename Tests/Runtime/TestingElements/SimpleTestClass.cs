@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WarehouseKeeper.Test.TestingElements
+namespace GameTests.TestingElements
 {
 [Serializable]
 internal class SimpleTestClass

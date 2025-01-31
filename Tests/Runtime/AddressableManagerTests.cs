@@ -3,7 +3,6 @@ using Game.AssetContent;
 using Game.AssetContent.Managers;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GameTests.AssetContent
 {

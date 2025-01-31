@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Game;
 using Game.Pools;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UIElements;
 
 namespace GameEditor.Pools
@@ -11,7 +10,7 @@ namespace GameEditor.Pools
 internal class SeparateTypeManagerProfiler : IPoolProfiler
 {
     private readonly Type _poolType;
-    private readonly  Dictionary<Type, ObjectPool<IPoolable>> _pool;
+    private readonly Dictionary<Type, ObjectPool<IPoolable>> _pool;
 
     public SeparateTypeManagerProfiler(object pool, Type poolType)
     {

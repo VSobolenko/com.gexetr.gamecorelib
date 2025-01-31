@@ -17,7 +17,22 @@ internal class ObjectPoolProfilerProvider
         if (_root == null)
         {
             Log.Warning("Cannot add profiler without root object");
+            return this;
+        }
 
+        if (_profiler == null)
+            _profiler = _root.gameObject.AddComponent<ObjectPoolProfiler>();
+
+        _profiler.AssignPool(poolManager, poolContainer);
+
+        return this;
+    }
+    
+    public ObjectPoolProfilerProvider Initialize(IGameObjectObjectPoolManager poolManager, object poolContainer)
+    {
+        if (_root == null)
+        {
+            Log.Warning("Cannot add profiler without root object");
             return this;
         }
 

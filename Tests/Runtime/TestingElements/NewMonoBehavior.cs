@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace WarehouseKeeper.Test.TestingElements
+namespace GameTests.TestingElements
 {
 internal class NewMonoBehavior : MonoBehaviour
 {
