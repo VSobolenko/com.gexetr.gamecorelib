@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Game.Tests.Editor.ObjectPoolTests
 { 
 [TestFixture]
-public class PoolableObjectPoolCallSequenceTests
+internal class PoolableObjectPoolCallSequenceTests
 {
     [Test]
     public void Get_GetElementFromPoolInWorldSpace_ShouldCallMethodsInCorrectOrder()

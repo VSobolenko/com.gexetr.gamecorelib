@@ -19,17 +19,17 @@ public static class FunctionalExtensions
         return self;
     }
     
-    public static T With<T>(this T self, Action<T> apply, Func<bool> condition)
+    public static T With<T>(this T self, Action<T> apply, Func<bool> when)
     {
-        if (condition())
+        if (when())
             apply?.Invoke(self);
 
         return self;
     }
     
-    public static T With<T>(this T self, Action<T> apply, Func<T, bool> condition)
+    public static T With<T>(this T self, Action<T> apply, Func<T, bool> when)
     {
-        if (condition(self))
+        if (when(self))
             apply?.Invoke(self);
 
         return self;

@@ -12,7 +12,7 @@ namespace Game.Pools.Managers
 internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
 {
     private readonly IFactoryGameObjects _factoryGameObjects;
-    private readonly Dictionary<GameObject, IGameObjectObjectPool<Component>> _pool;
+    private readonly Dictionary<GameObject, IComponentObjectPool<Component>> _pool;
     private readonly Transform _root;
     private readonly ObjectPoolProfilerProvider _poolProfiler;
     protected int DefaultCapacity;
@@ -22,7 +22,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
     {
         _factoryGameObjects = objectFactoryGameObjects;
         DefaultCapacity = Mathf.Max(0, capacity);
-        _pool = new Dictionary<GameObject, IGameObjectObjectPool<Component>>(DefaultCapacity);
+        _pool = new Dictionary<GameObject, IComponentObjectPool<Component>>(DefaultCapacity);
 
         _root = poolRoot;
         _poolProfiler = SetupEditorHierarchyStructureAndCreatePoolProfiler(poolRoot);
@@ -43,7 +43,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
         return new ObjectPoolProfilerProvider(poolRoot).Initialize(this, _pool);
     }
 
-    public IGameObjectObjectPool<Component> Prepare<T>(T prefab, int count, bool force = false) where T : Component
+    public IComponentObjectPool<Component> Prepare<T>(T prefab, int count, bool force = false) where T : Component
     {
         if (prefab == null)
             throw new ArgumentException($"Can't prepare null prefab");
@@ -58,7 +58,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
         return pool;
     }
 
-    public async Task<IGameObjectObjectPool<Component>> PrepareAsync<T>(T prefab, int count, bool force = false,
+    public async Task<IComponentObjectPool<Component>> PrepareAsync<T>(T prefab, int count, bool force = false,
         CancellationToken token = default) where T : Component
     {
         var pool = Warn(prefab, count);
@@ -119,14 +119,14 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
         return pooledObject as T;
     }
 
-    protected virtual IGameObjectObjectPool<Component> Warn<T>(T prefab, int expectedCountNewElements)
+    protected virtual IComponentObjectPool<Component> Warn<T>(T prefab, int expectedCountNewElements)
         where T : Component
     {
         if (_pool.TryGetValue(prefab.gameObject, out var existPool))
             return existPool;
 
         var root = GetPoolRoot(prefab);
-        var pool = new GameObjectObjectPool<Component>(expectedCountNewElements, root,
+        var pool = new ComponentObjectPool<Component>(expectedCountNewElements, root,
             () => _factoryGameObjects.Instantiate(prefab, root));
         
         if (_pool.Count > DefaultCapacity)
@@ -140,7 +140,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
         return pool;
     }
 
-    private void CreateOrReturnElementToPool<T>(T prefab, IGameObjectObjectPool<Component> pool, bool isInstance)
+    private void CreateOrReturnElementToPool<T>(T prefab, IComponentObjectPool<Component> pool, bool isInstance)
         where T : Component
     {
         var pooledObject = isInstance ? prefab : pool.CreateInstance();

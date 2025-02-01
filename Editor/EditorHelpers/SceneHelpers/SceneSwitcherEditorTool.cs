@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Game;
 using Game.DynamicData;
+using Game.Extensions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GameEditor.SceneTools
 {
 internal class SceneSwitcher : EditorWindow
 {
     private const string HeaderName = "Scene Loader";
-    private const float ToolButtonWidth = 20f;
 
     [MenuItem(GameData.EditorName + EditorSubfolder.Scene + "/" + HeaderName)]
     private static void OpenWindow() => ShowWindow<SceneSwitcher>();
@@ -44,30 +45,33 @@ internal class SceneSwitcher : EditorWindow
         foreach (var scene in EditorBuildSettings.scenes)
         {
             GUILayout.BeginHorizontal();
-            var sceneName = GetSceneNameWithoutExtension(scene);
-            GUI.color = !scene.enabled ? new Color(0.75f, 0.75f, 0.75f) : Color.white;
-            if (GUILayout.Button($"Load {sceneName}"))
+            var isSceneAssetExists = IsSceneExists(scene).With(x => GUI.enabled = false, x => x == false);
+            GUI.color = scene.enabled && isSceneAssetExists ? Color.white : new Color(0.75f, 0.75f, 0.75f);
+
+            if (GUILayout.Button($"\u2196", GUILayout.ExpandWidth(false))) // Select ↖
+                SelectSceneFromBuildSettings(scene);
+
+            if (GUILayout.Button($"Load {GetSceneNameWithoutExtension(scene)}"))
             {
                 OpenScene(scene);
                 GUIUtility.ExitGUI();
             }
 
-            var sceneEnableToggle = GUILayout.Toggle(scene.enabled, "", GUILayout.Width(ToolButtonWidth)); // Enable ✓
-            ToggleSceneEnabled(scene, sceneEnableToggle);
-            if (GUILayout.Button($"\u2193", GUILayout.Width(ToolButtonWidth))) // Up ↑
+            ToggleSceneEnabled(scene, GUILayout.Toggle(scene.enabled && isSceneAssetExists, "", GUILayout.ExpandWidth(false))); // Enable ✓
+            
+            GUI.enabled = true;
+            
+            if (GUILayout.Button($"\u2193", GUILayout.ExpandWidth(false)))  // Up ↑
                 MoveSceneToShiftIndex(scene, 1);
-            if (GUILayout.Button($"\u2191", GUILayout.Width(ToolButtonWidth))) // Down ↓
+            if (GUILayout.Button($"\u2191", GUILayout.ExpandWidth(false))) // Down ↓
                 MoveSceneToShiftIndex(scene, -1);
-            if (GUILayout.Button($"\u00d7", GUILayout.Width(ToolButtonWidth))) // Remove ×
+            if (GUILayout.Button($"\u00d7", GUILayout.ExpandWidth(false))) // Remove ×
                 RemoveSceneFromBuildSettings(scene);
-
+            
             GUI.color = Color.white;
             GUILayout.EndHorizontal();
         }
     }
-
-    private static string GetSceneNameWithoutExtension(EditorBuildSettingsScene scene) =>
-        System.IO.Path.GetFileNameWithoutExtension(scene.path);
 
     private static void DrawStartedSceneSelection()
     {
@@ -145,7 +149,19 @@ internal class SceneSwitcher : EditorWindow
     private static void OpenScene(EditorBuildSettingsScene scene)
     {
         if (EditorApplication.isPlaying)
+        {
+            Log.Warning($"\"Can't load \"{GetSceneNameWithoutExtension(scene)}\" in play mode!");
+
             return;
+        }
+
+        if (IsSceneExists(scene) == false)
+        {
+            Log.Warning($"\"{GetSceneNameWithoutExtension(scene)}\" not found!");
+
+            return;
+        }
+
         if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
             EditorSceneManager.OpenScene(scene.path);
     }
@@ -164,10 +180,12 @@ internal class SceneSwitcher : EditorWindow
     private static void MoveSceneToShiftIndex(EditorBuildSettingsScene scene, int n)
     {
         var index = FindIndex(scene);
+
         if (index < 0 || index >= EditorBuildSettings.scenes.Length)
             return;
 
         var newIndex = index + n;
+
         if (newIndex < 0 || newIndex >= EditorBuildSettings.scenes.Length)
             return;
 
@@ -186,6 +204,11 @@ internal class SceneSwitcher : EditorWindow
     private static void RemoveSceneFromBuildSettings(EditorBuildSettingsScene scene) => EditorBuildSettings.scenes =
         EditorBuildSettings.scenes.ToList().Where(x => x.guid != scene.guid).ToArray();
 
+    private static void SelectSceneFromBuildSettings(EditorBuildSettingsScene scene) => Selection.activeObject =
+        AssetDatabase.LoadAssetAtPath<Object>(scene.path)
+                     .With(_ => Log.Warning($"\"{GetSceneNameWithoutExtension(scene)}\" not found!"),
+                           when: x => x == null);
+
     private void CollectDragAndDropScenes()
     {
         var fullArea = new Rect(0, 0, position.width, position.height);
@@ -197,7 +220,7 @@ internal class SceneSwitcher : EditorWindow
             case EventType.DragPerform:
                 if (fullArea.Contains(evt.mousePosition))
                 {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Link;
 
                     if (evt.type == EventType.DragPerform)
                     {
@@ -232,15 +255,25 @@ internal class SceneSwitcher : EditorWindow
             EditorBuildSettings.scenes = scenesInBuildSettings.ToArray();
         }
         else
-            Log.Warning("Scene is already in Build Settings: " + scenePath);
+            Log.Warning($"\"{GetSceneNameWithoutExtension(scenePath)}\" is already in Build Settings: " + scenePath);
     }
 
-    private static int FindIndex(EditorBuildSettingsScene obj)
+    private static int FindIndex(EditorBuildSettingsScene scene)
     {
         for (var i = 0; i < EditorBuildSettings.scenes.Length; i++)
-            if (EditorBuildSettings.scenes[i].guid == obj.guid)
+            if (EditorBuildSettings.scenes[i].guid == scene.guid)
                 return i;
+
         return -1;
     }
+
+    private static string GetSceneNameWithoutExtension(EditorBuildSettingsScene scene) =>
+        System.IO.Path.GetFileNameWithoutExtension(scene.path);
+
+    private static string GetSceneNameWithoutExtension(string scenePath) =>
+        System.IO.Path.GetFileNameWithoutExtension(scenePath);
+
+    private static bool IsSceneExists(EditorBuildSettingsScene scene) =>
+        AssetDatabase.LoadAssetAtPath<Object>(scene.path) != null;
 }
 }

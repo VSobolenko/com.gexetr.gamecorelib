@@ -6,8 +6,25 @@ using NUnit.Framework;
 namespace Game.Tests.Editor.ObjectPoolTests
 {
 [TestFixture]
-public class PoolableObjectPoolTests
+internal class PoolableObjectPoolTests
 {
+    [Test]
+    public void Get_Get2UniqueElementFromPool_ShouldDecreasePoolSizeWith2NewElements()
+    {
+        // Arrange
+        IObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, GetTestElement);
+        const int prepareCount = 2;
+        pool.WithFor(prepareCount, x => x.Release(GetTestElement()));
+
+        // Act
+        var element1 = pool.Get();
+        var element2 = pool.Get();
+
+        // Assert
+        Assert.AreEqual(pool.Count, 0);
+        Assert.AreNotSame(element1, element2);
+    }
+    
     [Test]
     public void Get_GetElementFromPool_ShouldDecreasePoolSize()
     {

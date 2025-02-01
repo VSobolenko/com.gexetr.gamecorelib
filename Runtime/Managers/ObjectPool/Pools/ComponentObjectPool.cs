@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Game.Pools
 {
-    public class GameObjectObjectPool<T> : ObjectPool<T>, IGameObjectObjectPool<T> where T : Component
+    public class ComponentObjectPool<T> : ObjectPool<T>, IComponentObjectPool<T> where T : Component
     {
         private readonly Transform _root;
 
-        public GameObjectObjectPool(int capacity, Transform root, Func<T> createInstance) : base(capacity, createInstance)
+        public ComponentObjectPool(int capacity, Transform root, Func<T> createInstance) : base(capacity, createInstance)
         {
             _root = root;
         }

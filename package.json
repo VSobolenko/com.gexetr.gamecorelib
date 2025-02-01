@@ -10,7 +10,7 @@
   "dependencies": {
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.addressables": "1.22.2",
-    "com.unity.textmeshpro": "3.0.6"
+    "com.unity.textmeshpro": "3.0.9"
   },
   "keywords": [
     "magaers",

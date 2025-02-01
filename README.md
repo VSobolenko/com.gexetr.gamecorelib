@@ -1,33 +1,134 @@
-### Dependency:
-Dotween(GUI)
- 1. `https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7`
- 2. `https://dotween.demigiant.com/download.php`
-    
-Addressables (Resource Managements)
- 1. `com.unity.addressables` (Unity Registry)
- 2. `https://github.com/needle-mirror/com.unity.addressables`
+# Installation (GCL)
 
-In App Purchasing(Shop)
- 1. `com.unity.purchasing` (Unity Registry)
- 2. `https://github.com/needle-mirror/com.unity.purchasing`
+- [Shared DLL](https://github.com/VSobolenko/com.gexetr.gamecorelib-shared) (Requires updating)
+- Via a git link in the PackageManager 
+  ```
+  https://github.com/VSobolenko/com.gexetr.gamecorelib.git
+  ```
+- Editing of `Packages/manifest.json`
+  ```
+  "com.gexetr.gamecorelib": "https://github.com/VSobolenko/com.gexetr.gamecorelib-shared.git?path=.com.gexetr.gcl",
+  ```
+- Git Submodule
+  ```sh
+  git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib Packages/com.gexetr.gamecorelib
+  ```
+  
+# Dependency
 
-UniTask (ObjectPool)
- 1. `https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package`
- 2. (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
+## General 
 
-R3(General) + NuGetForUnity-FluentAssertion(Tests)
- 1. Description: `https://github.com/Cysharp/R3?tab=readme-ov-file#unity` (R3-general)
- 2. (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity` (NuGet)
-   - R3
-   - ObservableCollections
-   - ObservableCollections.R3
-   - FluentAssertions
- 3. (UPM) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity` (R3-unity)
+- Addressables
+- TextMeshPro
+- Newtonsoft Json
+- Dotween (GUI)
+- UniTask (ObjectPool)
+- R3 (General) + NuGetForUnity (Tests)
 
-GameCoreLib (GCL)
- 1. (UMP + Git) `https://github.com/VSobolenko/com.gexetr.gamecorelib`
- 2. (dll) `https://github.com/VSobolenko/com.gexetr.gamecorelib-shared`
+## Fast Setup
+#### Dotween (GUI)
+- [Asset Store](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7)
+- [Official Website](https://dotween.demigiant.com/download.php)
 
+#### UniTask (ObjectPool)
+- [GitHub](https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package)
+- (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
+
+#### R3 (General) + NuGetForUnity (Tests)
+- [Github Description](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) (R3-General)
+- (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity` (NuGet)
+    - R3
+    - ObservableCollections
+    - ObservableCollections.R3
+    - FluentAssertions
+    - Moq
+- (UPM) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity` (R3-Unity)
+
+---
+
+# Contains
+
+### FSM
+| Managers               | States                          | Transitions                     |
+|------------------------|---------------------------------|---------------------------------|
+| • Lite ST<br>• FSM<br>• Hybrid (WIP) | • DeadState `-i`<br>• QuiteState<br>• State `-io` | • Alive `-oi`<br>• Many2One `-ooi`<br>• Entry `-i`<br>• Dead `-o`<br>• Circle `-circle -i` |
+
+
+### Managers
+- Audio
+- Factories
+- FileIO
+- GoogleSheet
+- GUI
+- Inputs
+- Localizations
+- ObjectPool
+- Repositories
+- Resource Managements
+
+---
+
+# Don't Forget
+- TextMeshPro
+- Zenject / VContainer
+- `.gitignore`, `.gitattributes`, `.gitconfig`, `.editorconfig`
+- `.asmdef`
+- `AssemblyInfo`
+- NiceVibrations
+- Android Logcat
+- URP / HDRP
+- CI/CD
+- Naughty Attributes
+- Unity SerializeReferenceExtensions
+
+---
+
+# Project Structure
+```
+|-- Assets
+    |-- _GameName
+        |-- Code
+        |-- DynamicAssets
+            |-- Prefabs/Resources
+        |-- SandBox
+        |-- Scenes
+        |-- Shaders
+        |-- StaticAssets
+            |-- Animations/Sprites
+            |-- Textures/Music
+            |-- Materials/Models
+    |-- Import           // Import assets
+    |-- SandBox          // Test files
+    |-- StreamingAssets
+```
+
+---
+<!--   To myself, so as not to forget
+# Basic Optimization
+- **Enable Physics Layer if needed** (default: all disabled)
+    - `Edit -> Project Settings -> Layer Collision Matrix`
+- **Optimize Draw Calls:**
+    1. Enable Static Batching: `Edit -> Project Settings -> Player -> Other Settings -> Rendering -> Static Batching`
+    2. Enable Dynamic Batching: `Edit -> Project Settings -> Player -> Other Settings -> Rendering -> Dynamic Batching`
+    3. Enable GPU Instancing in Material: `Material -> Advanced Option -> Enable GPU Instancing`
+- **Use Linear Color Space:**
+    - `Edit -> Project Settings -> Player -> Other Settings -> Rendering -> Color Space`
+- **Use Sprite Atlas:**
+    - Enable in `Edit -> Project Settings -> Editor -> Sprite Packer -> Always Enabled`
+- **Disable UI Raycast Target** on GameObjects that don't require it
+- **Disable Pixel Perfect** in Canvas (if not needed): `Canvas -> Pixel Perfect`
+- **Enable Managed Code Stripping**
+- **Mark static GameObjects as 'Static'**
+
+---
+
+# Scenes
+- If there's only one scene, name it: **Main**
+- Test scene should be named: **Test**
+- Always use meaningful scene names!
+-->
+
+<!--   Быстрое руководство, как работать с git modules
 #### //SETUP
 - `git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib` - add submodule to folder root
 - add submodule to folder Packages (./GameCor/.git):
@@ -63,83 +164,4 @@ git submodule add https://github.com/VSobolenko/com.gexetr.gamecorelib Packages/
 - удалить .gitmodule
 - удалить .git/modules
 - удалить .git/config/submodule
-
-FSM
-1. Managers
- - Lite ST
- - FSM
-2. States
- - DeadState -i
- - QuiteState
- - State -io
-3. Transitions
- - Alive -io
- - Circle -circle -i
- - Dead -o
- - Entry -i
- - Many2One -ooi
-
-Managers
-1. Ads 
-2. Audio
-3. Factories
-4. FileIO
-5. GUI
-6. Inputs 
-7. Localizations
-8. ObjectPool
-9. Repositories
-10. Resource Managements
-11. Shops
-
-Don't forget:
-1. TextMeshPro
-2. Zenject / VContainer
-3. Addressables
-4. .gitignore, .gitattributes, .gitconfig, .editorconfig
-5. NiceVibrations
-6. Andoid Logcat
-7. URP / HDRP
-8. CI/CD
-9. Naughty Attributes
-10. .asmdef
-11. AssemblyInfo
-12. Unity SerializeReferenceExtensions
-
-# Project Structure
-    |-- Assets
-        |-- _GameName
-        	|-- Code
-            |-- DynamicAssets
-            	|-- Prefabs/Resources
-            |-- SandBox
-            |-- Scenes
-            |-- Shaders
-            |-- StaticAssets
-            	|-- Animations/Sprites
-            	|-- Textures/Music
-            	|-- Materials/Models
-        |-- Import           				//Import assets
-        |-- SandBox          				//Test files
-        |-- StreamingAssets
-
-# Optimization
- - Enable if physics layer if needed (default all disable) in `Edit -> Project Settings -> Layer Collision Matrix`
- - Optimize Draw Call: 
-    1. Enable Static Batching: `Edit -> Project Settings -> Player -> Other Settings -> Rendering -> Static Batching`
-    2. Enable Dynamic Batching: `Edit -> Project Settings -> Player -> Other Settings -> Rendering -> Dynamic Batching`
-    3. In material (if necessary) enable: `Material -> Advanced Option -> Enable GPU Instancing`
- - Use Liner gamma: `Edit -> Project Settings -> Player -> Other Settings -> Rendering -> Color Space`
- - Use Sprite Atlas and enable this in Project Settings: `Edit -> Project Settings -> Editor -> Sprite Packer -> Always Enabled`
- - Disable UI `Raycast Target` in gameObject component if he is not responsible for it
- - Disable pixel perfect (if necessary) in canvas: `Canvas - Pixel Perfect`
- - Managed code stripping
- - Check mark "Static" for static GameObjects
-
- # Scenes
-If there is only one scene, name it: **Main** <br>
-Name the scene for the test: **Test** <br>
-`Use a meaningful name!`
-
-# New Objects
- New objects from the Instantiate () should be named "_Dynamic" / "_dynamic"
+-->

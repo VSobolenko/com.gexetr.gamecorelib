@@ -12,7 +12,7 @@ namespace Game.Pools
         protected internal Func<T> CreateInstance { get; }
     }
     
-    public interface IGameObjectObjectPool<T> : IObjectPool<T> where T : Component
+    public interface IComponentObjectPool<T> : IObjectPool<T> where T : Component
     {
         T Get(Vector3 position, Quaternion rotation);
         T Get(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true);

@@ -14,7 +14,7 @@ namespace Game.Pools.Managers
             _pool = new Dictionary<GameObject, Transform>(DefaultCapacity);
         }
     
-        protected override IGameObjectObjectPool<Component> Warn<T>(T prefab, int expectedCountNewElements)
+        protected override IComponentObjectPool<Component> Warn<T>(T prefab, int expectedCountNewElements)
         {
             var pool = base.Warn(prefab, expectedCountNewElements);
 

@@ -39,9 +39,9 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
 
 public interface IGameObjectObjectPoolManager
 {
-    IGameObjectObjectPool<Component> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component;
+    IComponentObjectPool<Component> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component;
 
-    Task<IGameObjectObjectPool<Component>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
+    Task<IComponentObjectPool<Component>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
         CancellationToken token = default) where T : Component;
 
     T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component;
