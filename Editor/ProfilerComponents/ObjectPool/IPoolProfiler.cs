@@ -2,7 +2,7 @@
 
 namespace GameEditor.Pools
 {
-    internal interface IPoolProfiler
+internal interface IPoolProfiler
 {
     void DrawStatus(VisualElement root);
 

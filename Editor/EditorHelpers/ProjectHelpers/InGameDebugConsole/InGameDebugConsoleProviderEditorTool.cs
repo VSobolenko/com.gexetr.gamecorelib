@@ -1,5 +1,8 @@
 ﻿using Game;
+using Game.Components;
 using Game.DynamicData;
+using Game.Extensions;
+using GameEditor.Internal;
 using UnityEngine;
 
 namespace GameEditor.ProjectTools
@@ -14,9 +17,23 @@ internal static class InGameDebugConsoleProviderEditorTool
     private const string InspectAsset = "Inspect prefab asset";
     private const string ToResources = "Move to resource folder";
     private const string FromResources = "Move from resource folder";
+    private const string CreateSceneProvider = "Create Scene GameObject";
 
+    [UnityEditor.MenuItem(GameData.EditorName + EditorSubfolder.Project + "/" + Title + "/" + CreateSceneProvider)]
+    public static void CreateSceneGameObjectStatic()
+    {
+        if (InternalTools.IsPrefabStage(out var root)) { }
+
+        var provider = new GameObject()
+            .With(x => x.transform.SetParent(root))
+            .With(x => x.name = "In Game Console Provider")
+            .AddComponent<InGameDebugConsoleProvider>();
+        
+        UnityEditor.Selection.activeGameObject = provider.gameObject;
+    }
+    
     [UnityEditor.MenuItem(GameData.EditorName + EditorSubfolder.Project + "/" + Title + "/" + InspectAsset)]
-    private static void SelectInGamePrefabStatic()
+    public static void SelectInGamePrefabStatic()
     {
         var inGameConsole = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(InResourcesFolder);
         if (inGameConsole == null)
@@ -33,7 +50,7 @@ internal static class InGameDebugConsoleProviderEditorTool
     }
 
     [UnityEditor.MenuItem(GameData.EditorName + EditorSubfolder.Project + "/" + Title + "/" + ToResources)]
-    private static void MoveToResourcesStatic()
+    public static void MoveToResourcesStatic()
     {
         var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(OutsideResourcesFolder);
         if (asset == null)
@@ -50,7 +67,7 @@ internal static class InGameDebugConsoleProviderEditorTool
     }
 
     [UnityEditor.MenuItem(GameData.EditorName + EditorSubfolder.Project + "/" + Title + "/" + FromResources)]
-    private static void MoveFromResourcesStatic()
+    public static void MoveFromResourcesStatic()
     {
         var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(InResourcesFolder);
         if (asset == null)

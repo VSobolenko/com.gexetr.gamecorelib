@@ -4,7 +4,6 @@ using Game;
 using Game.DynamicData;
 using GameEditor.Internal;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +11,7 @@ namespace GameEditor.Common
 {
 internal static class CheckForMissingScripts
 {
-    [MenuItem(GameData.EditorName + EditorSubfolder.Scene + "/Find Missing Scripts")]
+    [MenuItem(GameData.EditorName + EditorSubfolder.Scene + "/Find Missing Scripts in Build Scenes")]
     private static void FindMissingScriptsInScene()
     {
         var isFounded = false;

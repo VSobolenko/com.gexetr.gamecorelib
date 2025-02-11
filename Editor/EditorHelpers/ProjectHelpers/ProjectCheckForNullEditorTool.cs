@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Game;
+﻿using Game;
 using Game.Components.Utilities;
 using Game.DynamicData;
+using GameEditor.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,58 +9,31 @@ namespace GameEditor.ProjectTools
 {
 internal static class ProjectCheckForNullEditorTool
 {
-    private static readonly List<string> Accessible = new() {"Assembly-CSharp", "GameCoreLib"};
+    private static readonly string[] Accessible = { "Assembly-CSharp", "GameCoreLib" };
 
-    [MenuItem(GameData.EditorName + EditorSubfolder.Project + EditorSubfolder.NullValidator +
-              "/GameObjects Default Validate (Assembly-CSharp)")]
-    private static void VerifyProjectGameObjectsToNull()
-    {
-        VerifyGameObjectsToNull(Accessible);
-    }
+    [MenuItem(GameData.EditorName + EditorSubfolder.Project + EditorSubfolder.NullValidator + "/GameObjects Default Validate (Assembly-CSharp)")]
+    private static void VerifyProjectGameObjectsToNull() => VerifyGameObjectsToNull(Accessible);
 
-    private static List<MonoBehaviour> VerifyGameObjectsToNull(List<string> accessible)
+    private static void VerifyGameObjectsToNull(string[] accessible)
     {
         var guids = AssetDatabase.FindAssets($"t:{nameof(GameObject)}");
-        var monoBehaviours = new List<MonoBehaviour>();
 
         foreach (var guid in guids)
         {
             var assetPath = AssetDatabase.GUIDToAssetPath(guid);
             var gameObject = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-            var verifyMonoBehToNull = VerifyGameObjectToNull(gameObject, accessible);
-            monoBehaviours.AddRange(verifyMonoBehToNull.Where(monoBehaviour => monoBehaviour != null));
+            var monoBehaviours = CheckForNullInspectorEditorProvider.GetScriptsInRoot(gameObject, accessible);
+            CheckForNullInspectorEditorProvider.ProcessCheckFieldForNull(monoBehaviours, accessible, false);
         }
-
-        return monoBehaviours;
     }
 
-    private static IEnumerable<MonoBehaviour> VerifyGameObjectToNull(GameObject gameObject,
-                                                                     List<string> accessibleAssembly)
-    {
-        var monoBehaviours = gameObject.GetComponentsInChildren<MonoBehaviour>()
-                                       .Where(x => x != null &&
-                                                   accessibleAssembly.Contains(x.GetType().Assembly.GetName().Name));
-        var healthy = true;
-        foreach (var monoBehaviour in monoBehaviours)
-            healthy &= SceneCheckForNullEditorProvider.CheckField(monoBehaviour, new List<object>(),
-                                                                  monoBehaviour.gameObject,
-                                                                  monoBehaviour.GetType().Name, false,
-                                                                  accessibleAssembly);
-
-        if (healthy)
-            Log.Info("All objects are healthy");
-
-        return monoBehaviours;
-    }
-
-    [MenuItem(GameData.EditorName + EditorSubfolder.Project + EditorSubfolder.NullValidator +
-              "/GameObjects Custom Assembly")]
+    [MenuItem(GameData.EditorName + EditorSubfolder.Project + EditorSubfolder.NullValidator + "/GameObjects Custom Assembly")]
     public static void VerifyProjectGameObjectsToNullInCustomAssembly()
     {
-        var provider = Object.FindFirstObjectByType<SceneCheckForNullEditorProvider>();
+        var provider = Object.FindFirstObjectByType<CheckForNullEditorProvider>();
         if (provider == null)
         {
-            var go = new GameObject("Project Null Validator", typeof(SceneCheckForNullEditorProvider));
+            var go = new GameObject("Project Null Validator", typeof(CheckForNullEditorProvider));
             Undo.RegisterCreatedObjectUndo(go, "Create GameObject");
             Selection.activeGameObject = go;
 
@@ -71,21 +43,13 @@ internal static class ProjectCheckForNullEditorTool
             return;
         }
 
-        var verifyMonoBehToNull = VerifyGameObjectsToNull(provider._accessible);
-        provider.MarkVerifiedGameObjects(verifyMonoBehToNull);
+        VerifyGameObjectsToNull(provider._accessible);
     }
 
-    [MenuItem(GameData.EditorName + EditorSubfolder.Project + EditorSubfolder.NullValidator +
-              "/Scriptable Objects")]
-    private static void VerifyProjectScriptableObjectsToNull()
-    {
-        VerifyScriptableObjectsToNull(Accessible);
-    }
-
-    private static List<ScriptableObject> VerifyScriptableObjectsToNull(List<string> accessible)
+    [MenuItem(GameData.EditorName + EditorSubfolder.Project + EditorSubfolder.NullValidator + "/Scriptable Objects")]
+    private static void VerifyScriptableObjectsToNull()
     {
         var guids = AssetDatabase.FindAssets($"t:{nameof(ScriptableObject)}");
-        var monoBehaviours = new List<ScriptableObject>();
 
         foreach (var guid in guids)
         {
@@ -95,13 +59,9 @@ internal static class ProjectCheckForNullEditorTool
             var serializedObject = new SerializedObject(scriptableObject);
             var property = serializedObject.GetIterator();
             while (property.NextVisible(true))
-                if (property.propertyType == SerializedPropertyType.ObjectReference &&
-                    property.objectReferenceValue == null)
-                    Log.Warning($"SO:{scriptableObject.name}; path:{assetPath}; Property={property.name}",
-                                scriptableObject);
+                if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null)
+                    Log.Warning($"SO:{scriptableObject.name}; path:{assetPath}; Property={property.name}", scriptableObject);
         }
-
-        return monoBehaviours;
     }
 }
 }
