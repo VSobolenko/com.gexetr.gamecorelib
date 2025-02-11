@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using FluentAssertions;
 using Game.IO;
 using Game.IO.Managers;
 using Game.Tests.Runtime.TestingElements;
@@ -93,7 +92,7 @@ internal class JsonNewtonsoftRepositoryTests
         var data = saveFile.Read<TestClassWithUnityVectorAndQuaternion>(_pathToReadFile);
 
         // Assert
-        data.Should().BeEquivalentTo(ReadableClass);
+        Assert.AreEqual(data, ReadableClass);
     }
 
     [Test]
@@ -110,7 +109,7 @@ internal class JsonNewtonsoftRepositoryTests
         var fileData = File.ReadAllText(_pathToWriteFile + FileFormat);
 
         // Assert
-        fileData.Should().BeEquivalentTo(savedData);
+        Assert.AreEqual(fileData, savedData);
     }
 
     [Test]
@@ -131,8 +130,8 @@ internal class JsonNewtonsoftRepositoryTests
         var fileData = File.ReadAllText(_pathToWriteFile + FileFormat);
 
         // Assert
-        fileData.Should().BeEquivalentTo(secondSaveData);
-        fileData.Should().NotBeEquivalentTo(firstSaveData);
+        Assert.AreEqual(fileData, secondSaveData);
+        Assert.AreNotEqual(fileData, firstSaveData);
     }
 
     [Test]
@@ -188,7 +187,7 @@ internal class JsonNewtonsoftRepositoryTests
         var serializableData = saveFile.Serialize(testData);
 
         // Assert
-        serializableData.Should().BeEquivalentTo(serializeBytesData);
+        Assert.AreEqual(serializableData, serializeBytesData);
     }
 
     [Test]
@@ -205,7 +204,7 @@ internal class JsonNewtonsoftRepositoryTests
         var deserializableClass = saveFile.Deserialize<TestClassWithUnityVectorAndQuaternion>(serializeBytesData);
 
         // Assert
-        deserializableClass.Should().BeEquivalentTo(testData);
+        Assert.AreEqual(deserializableClass, testData);
     }
 }
 }

@@ -40,7 +40,6 @@
     - R3
     - ObservableCollections
     - ObservableCollections.R3
-    - FluentAssertions
     - Moq
 - (UPM) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity` (R3-Unity)
 

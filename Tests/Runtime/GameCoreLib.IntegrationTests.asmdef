@@ -2,12 +2,10 @@
     "name": "GameCoreLib.IntegrationTests",
     "rootNamespace": "Game",
     "references": [
-        "UnityEditor.TestRunner",
         "UnityEngine.TestRunner",
         "GameCoreLib",
         "Unity.ResourceManager",
-        "Unity.Addressables",
-        "UniTask"
+        "Unity.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -16,7 +14,6 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "Newtonsoft.Json.dll",
-        "FluentAssertions.dll",
         "Moq.dll"
     ],
     "autoReferenced": true,
