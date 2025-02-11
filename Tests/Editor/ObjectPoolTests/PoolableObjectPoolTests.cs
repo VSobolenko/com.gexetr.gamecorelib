@@ -14,7 +14,7 @@ internal class PoolableObjectPoolTests
         // Arrange
         IObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, GetTestElement);
         const int prepareCount = 2;
-        pool.WithFor(prepareCount, x => x.Release(GetTestElement()));
+        pool.With(prepareCount, x => x.Release(GetTestElement()));
 
         // Act
         var element1 = pool.Get();
@@ -31,7 +31,7 @@ internal class PoolableObjectPoolTests
         // Arrange
         IObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, GetTestElement);
         const int prepareCount = 3;
-        pool.WithFor(prepareCount, x => x.Release(GetTestElement()));
+        pool.With(prepareCount, x => x.Release(GetTestElement()));
 
         // Act
         pool.Get();
@@ -96,7 +96,7 @@ internal class PoolableObjectPoolTests
         var ex = Assert.Throws<InvalidOperationException>(() => pool.Release(testElement));
 
         // Assert
-        Assert.AreEqual($"The element \"{testElement.GetType().Name}\" is already in the pool!", ex.Message);
+        Assert.AreEqual($"The element \"{testElement.GetType().Name}\" is invalid!", ex.Message);
     }
 
     private static PoolableTestObject GetTestElement() => new("Key", false);

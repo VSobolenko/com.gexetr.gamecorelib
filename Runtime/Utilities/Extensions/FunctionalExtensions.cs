@@ -35,7 +35,38 @@ public static class FunctionalExtensions
         return self;
     }
     
-    public static T WithFor<T>(this T self, int iterations, Action<T> set)
+    public static T With<T>(this T self, Action set)
+    {
+        set.Invoke();
+
+        return self;
+    }
+
+    public static T With<T>(this T self, Action apply, bool when)
+    {
+        if (when)
+            apply?.Invoke();
+
+        return self;
+    }
+    
+    public static T With<T>(this T self, Action apply, Func<bool> when)
+    {
+        if (when())
+            apply?.Invoke();
+
+        return self;
+    }
+    
+    public static T With<T>(this T self, Action apply, Func<T, bool> when)
+    {
+        if (when(self))
+            apply?.Invoke();
+
+        return self;
+    }
+    
+    public static T With<T>(this T self, int iterations, Action<T> set)
     {
         for (var i = 0; i < iterations; i++)
             set?.Invoke(self);
@@ -43,11 +74,28 @@ public static class FunctionalExtensions
         return self;
     }
     
-    public static T WithFor<T>(this T self, int iterations, Action<T> apply, bool when)
+    public static T With<T>(this T self, int iterations, Action<T> apply, bool when)
     {
         for (var i = 0; i < iterations; i++)
             if (when)
                 apply?.Invoke(self);
+
+        return self;
+    }
+    
+    public static T With<T>(this T self, int iterations, Action<int, T> set)
+    {
+        for (var i = 0; i < iterations; i++)
+            set?.Invoke(i, self);
+
+        return self;
+    }
+    
+    public static T With<T>(this T self, int iterations, Action<int,T> apply, bool when)
+    {
+        for (var i = 0; i < iterations; i++)
+            if (when)
+                apply?.Invoke(i, self);
 
         return self;
     }

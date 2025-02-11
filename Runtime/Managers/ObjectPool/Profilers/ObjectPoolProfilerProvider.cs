@@ -28,7 +28,7 @@ internal class ObjectPoolProfilerProvider
         return this;
     }
     
-    public ObjectPoolProfilerProvider Initialize(IGameObjectObjectPoolManager poolManager, object poolContainer)
+    public ObjectPoolProfilerProvider Initialize(IComponentObjectPoolManager poolManager, object poolContainer)
     {
         if (_root == null)
         {

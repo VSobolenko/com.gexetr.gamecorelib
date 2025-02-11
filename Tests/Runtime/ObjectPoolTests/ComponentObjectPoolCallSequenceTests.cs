@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Game.Tests.Runtime.ObjectPoolTests
 {
 [TestFixture]
-internal class GameObjectObjectPoolCallSequenceTests
+internal class ComponentObjectPoolCallSequenceTests
 {
     private static Vector3 NegativeOne => Vector3.one * -1;
 

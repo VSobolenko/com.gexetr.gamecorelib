@@ -38,11 +38,20 @@ public static class ObjectPoolInstaller
             : Type(factory, parent, poolCapacity);
     }
     
-    public static IGameObjectObjectPoolManager GameObject(IFactoryGameObjects factory, Transform parent = null, int poolCapacity = 32)
+    public static IComponentObjectPoolManager Component(IFactoryGameObjects factory, Transform parent = null, int poolCapacity = 32)
     {
         parent = (parent == null ? new GameObject().transform : parent);
 
-        return new ObjectPoolGameObjectManager(factory, parent, poolCapacity);
+        return new ObjectPoolComponentManager(factory, parent, poolCapacity);
+    }
+    
+    public static IComponentObjectPoolManager ComponentAutoEditor(IFactoryGameObjects factory, Transform parent = null, int poolCapacity = 32)
+    {
+        parent = (parent == null ? new GameObject().transform : parent);
+
+        return Application.isEditor
+            ? new ObjectPoolComponentManager(factory, parent, poolCapacity)
+            : new ObjectPoolComponentSeparateManager(factory, parent, poolCapacity);
     }
 }
 }

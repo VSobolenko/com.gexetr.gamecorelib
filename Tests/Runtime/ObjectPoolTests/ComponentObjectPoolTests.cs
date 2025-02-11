@@ -18,7 +18,7 @@ internal class ComponentObjectPoolTests
         // Arrange
         IComponentObjectPool<TestMonoBeh> pool = new ComponentObjectPool<TestMonoBeh>(5, null, GetTestElement);
         const int prepareCount = 2;
-        pool.WithFor(prepareCount, x => x.Release(GetTestElement()));
+        pool.With(prepareCount, x => x.Release(GetTestElement()));
 
         // Act
         var element1 = pool.Get();
@@ -35,7 +35,7 @@ internal class ComponentObjectPoolTests
         // Arrange
         IComponentObjectPool<TestMonoBeh> pool = new ComponentObjectPool<TestMonoBeh>(5, null, GetTestElement);
         const int prepareCount = 3;
-        pool.WithFor(prepareCount, x => x.Release(GetTestElement()));
+        pool.With(prepareCount, x => x.Release(GetTestElement()));
 
         // Act
         pool.Get();

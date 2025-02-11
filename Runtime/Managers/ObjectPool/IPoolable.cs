@@ -8,8 +8,6 @@ public interface IPoolable
     
     bool IsUiElement { get; }
     
-    IObjectPoolRecyclable Pool { set; }
-    
     void SetParent(Transform parent);
     
     void SetPositionAndRotation(Vector3 position, Quaternion rotation);

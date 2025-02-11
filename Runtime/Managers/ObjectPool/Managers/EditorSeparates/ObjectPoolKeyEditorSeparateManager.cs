@@ -26,7 +26,7 @@ internal class ObjectPoolKeyEditorSeparateManager : ObjectPoolKeyManager
         if (_pool.ContainsKey(prefab.Key)) 
             return base.Warn(prefab, expectedCountNewElements);
         
-        var root = base.GetPoolRoot(prefab);
+        var root = base.GetPoolRoot<T>(prefab);
         var parent = prefab.IsUiElement ? CreateAndSetupUIObjectPoolRoot(root) : CreateObjectPoolRoot(root);
         if (Application.isEditor)
             parent.name = $"[{_pool.Count}] {prefab.Key}";
@@ -36,6 +36,6 @@ internal class ObjectPoolKeyEditorSeparateManager : ObjectPoolKeyManager
 
     }
 
-    protected override Transform GetPoolRoot(IPoolable poolableObject) => _pool[poolableObject.Key];
+    protected override Transform GetPoolRoot<T>(IPoolable poolableObject) => _pool[poolableObject.Key];
 }
 }

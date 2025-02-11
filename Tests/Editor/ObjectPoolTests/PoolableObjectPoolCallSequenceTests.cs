@@ -38,6 +38,7 @@ internal class PoolableObjectPoolCallSequenceTests
         mockObject.Verify(x => x.SetParent(It.IsAny<Transform>()), Times.Once);
         mockObject.Verify(x => x.SetActive(It.IsAny<bool>()), Times.Once);
         mockObject.Verify(x => x.OnUse(), Times.Once);
+        mockObject.Verify(x => x.OnRelease(), Times.Never);
         Assert.AreEqual(callLog, callOrder);
     }
 
@@ -69,6 +70,7 @@ internal class PoolableObjectPoolCallSequenceTests
         mockObject.Verify(x => x.SetParent(It.IsAny<Transform>()), Times.Once);
         mockObject.Verify(x => x.SetActive(It.IsAny<bool>()), Times.Once);
         mockObject.Verify(x => x.OnUse(), Times.Once);
+        mockObject.Verify(x => x.OnRelease(), Times.Never);
         Assert.AreEqual(callLog, callOrder);
     }
 
@@ -96,6 +98,7 @@ internal class PoolableObjectPoolCallSequenceTests
         mockObject.Verify(x => x.SetActive(It.IsAny<bool>()), Times.Once);
         mockObject.Verify(x => x.SetParent(It.IsAny<Transform>()), Times.Once);
         mockObject.Verify(x => x.OnRelease(), Times.Once);
+        mockObject.Verify(x => x.OnUse(), Times.Never);
         Assert.AreEqual(callLog, callOrder);
     }
 

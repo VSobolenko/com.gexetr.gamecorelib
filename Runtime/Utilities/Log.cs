@@ -7,7 +7,7 @@ namespace Game
 [System.Diagnostics.DebuggerNonUserCode]
 public static class Log
 {
-    public static bool enable = true;
+    public static ILogger logger = Debug.unityLogger;
     public static bool enableAnalyticsEvents = false;
     private static string InfoType => "[info]";
     private static string WarningType => "[warning]";
@@ -90,9 +90,9 @@ public static class Log
     private static void InternalLog(string text, Object context)
     {
 #if !DISABLE_LOG
-        if (enable == false)
+        if (logger.logEnabled == false)
             return;
-        Debug.Log(text, context);
+        logger.Log(LogType.Log, (object)text, context);
 #endif
     }
 

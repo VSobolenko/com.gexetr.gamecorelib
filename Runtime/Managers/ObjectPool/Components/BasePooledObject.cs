@@ -8,7 +8,7 @@ public abstract class BasePooledObject : MonoBehaviour, IPoolable
 
     public virtual bool IsUiElement => false;
     
-    public IObjectPoolRecyclable Pool { get; set; }
+    public IObjectPoolRecyclable<BasePooledObject> Pool { get; set; }
 
     public virtual void SetParent(Transform parent) => transform.SetParent(parent);
 

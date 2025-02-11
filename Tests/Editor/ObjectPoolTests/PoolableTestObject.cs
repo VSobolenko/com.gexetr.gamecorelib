@@ -5,16 +5,18 @@ namespace Game.Tests.Editor.ObjectPoolTests
 {
 internal class PoolableTestObject : IPoolable
 {
-    public string Key { get; }
-    public bool IsUiElement { get; }
+    private string _key;
+    private bool _isUI;
+    
+    public string Key => _key;
+    public bool IsUiElement => _isUI;
 
     public PoolableTestObject(string key, bool isUiElement)
     {
-        Key = key;
-        IsUiElement = isUiElement;
+        _key = key;
+        _isUI = isUiElement;
     }
 
-    public IObjectPoolRecyclable Pool { get; set; }
     public void SetParent(Transform parent) { }
     public void SetPositionAndRotation(Vector3 position, Quaternion rotation) { }
     public void SetActive(bool status) { }

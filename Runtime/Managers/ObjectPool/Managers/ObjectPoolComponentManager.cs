@@ -9,7 +9,11 @@ using UnityEngine;
 
 namespace Game.Pools.Managers
 {
-internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
+/// <summary>
+/// Object pool by component type
+/// If the object type is already present, other prefabs but with the same type are ignored
+/// </summary>
+internal class ObjectPoolComponentManager : IComponentObjectPoolManager
 {
     private readonly IFactoryGameObjects _factoryGameObjects;
     private readonly Dictionary<GameObject, IComponentObjectPool<Component>> _pool;
@@ -17,7 +21,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
     private readonly ObjectPoolProfilerProvider _poolProfiler;
     protected int DefaultCapacity;
 
-    public ObjectPoolGameObjectManager(IFactoryGameObjects objectFactoryGameObjects, Transform poolRoot,
+    public ObjectPoolComponentManager(IFactoryGameObjects objectFactoryGameObjects, Transform poolRoot,
         int capacity)
     {
         _factoryGameObjects = objectFactoryGameObjects;
@@ -35,7 +39,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
 
         _root.name = $"{GameData.Identifier}.Root";
 
-        if (poolRoot.TryGetComponent<ObjectPoolProfiler>(out var profilerView))
+        if (poolRoot.TryGetComponent<ObjectPoolProfiler>(out var profilerView)) //ToDo: testing this and is it necessary at all? 
             return new ObjectPoolProfilerProvider(poolRoot)
                 .AssignProfilerView(profilerView)
                 .Initialize(this, _pool);
@@ -45,9 +49,6 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
 
     public IComponentObjectPool<Component> Prepare<T>(T prefab, int count, bool force = false) where T : Component
     {
-        if (prefab == null)
-            throw new ArgumentException($"Can't prepare null prefab");
-
         var pool = Warn(prefab, count);
         var countExists = pool.Count;
 
@@ -62,13 +63,15 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
         CancellationToken token = default) where T : Component
     {
         var pool = Warn(prefab, count);
-
+        var countExists = pool.Count;
+        count = force ? count : count - countExists;
+        
         for (var i = 0; i < count; i++)
         {
             if (token.IsCancellationRequested)
                 return pool;
 
-            Prepare(prefab, 1);
+            Prepare(prefab, 1, true);
 
             if (token.IsCancellationRequested)
                 return pool;
@@ -94,7 +97,8 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
     public void Release<T>(T prefabInstance) where T : Component
     {
         if (prefabInstance == null)
-            throw new ArgumentException($"Can't release null prefab");
+            throw new ArgumentNullException(nameof(prefabInstance),
+                $"Can't execute {nameof(Release)} with null {typeof(T).Name}");
 
         if (_pool.TryGetValue(prefabInstance.gameObject, out var pool) == false)
             throw new ArgumentException(
@@ -108,7 +112,7 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
         where T : Component
     {
         if (prefab == null)
-            throw new ArgumentException($"Can't prepare null prefab");
+            throw new ArgumentNullException(nameof(prefab), $"Can't execute {nameof(Get)} with null {typeof(T).Name}");
 
         if (_pool.TryGetValue(prefab.gameObject, out var pool) == false)
             throw new ArgumentException($"An unknown object was requested. Use {nameof(Prepare)} first");
@@ -122,6 +126,13 @@ internal class ObjectPoolGameObjectManager : IGameObjectObjectPoolManager
     protected virtual IComponentObjectPool<Component> Warn<T>(T prefab, int expectedCountNewElements)
         where T : Component
     {
+        if (prefab == null)
+            throw new ArgumentNullException(nameof(prefab), $"Can't execute {nameof(Prepare)} with null {typeof(T).Name}");
+        
+        if (expectedCountNewElements < 0)
+            throw new ArgumentOutOfRangeException(nameof(expectedCountNewElements),
+                $"Expected count to be prepared can't be negative for {typeof(T).Name}.");
+        
         if (_pool.TryGetValue(prefab.gameObject, out var existPool))
             return existPool;
 

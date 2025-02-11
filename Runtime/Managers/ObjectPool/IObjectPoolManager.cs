@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Pools
 {
-public interface IObjectPoolManager : IObjectPoolRecyclable
+public interface IObjectPoolManager
 {
     ///  <summary>
     ///  Notify about availability, without preparation or addition
@@ -17,6 +17,13 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
 
     Task<IPoolableObjectPool<IPoolable>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
         CancellationToken token = default) where T : Component, IPoolable;
+
+    /// <summary>
+    /// Return object to pool
+    /// </summary>
+    /// <param name="prefabInstance">Object instance</param>
+    /// <typeparam name="T">Object type</typeparam>
+    void Release<T>(T prefabInstance) where T : Component, IPoolable;
 
     /// <summary>
     /// Get object instance from pool
@@ -37,13 +44,15 @@ public interface IObjectPoolManager : IObjectPoolRecyclable
     T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component, IPoolable;
 }
 
-public interface IGameObjectObjectPoolManager
+public interface IComponentObjectPoolManager
 {
     IComponentObjectPool<Component> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component;
 
     Task<IComponentObjectPool<Component>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
         CancellationToken token = default) where T : Component;
 
+    void Release<T>(T prefabInstance) where T : Component;
+    
     T Get<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) where T : Component;
 
     T Get<T>(T prefab) where T : Component;
@@ -51,7 +60,5 @@ public interface IGameObjectObjectPoolManager
     T Get<T>(T prefab, Transform parent, bool inWorldSpace = true) where T : Component;
 
     T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component;
-    
-    void Release<T>(T prefabInstance) where T : Component;
 }
 }

@@ -7,7 +7,6 @@ using Game.DynamicData;
 using Game.Factories;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityObject = UnityEngine.Object;
 
 namespace Game.Pools.Managers
 {
@@ -70,9 +69,6 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
 
     public IPoolableObjectPool<IPoolable> Prepare<T>(T prefab, int count, bool force = false) where T : Component, IPoolable
     {
-        if (prefab == null)
-            throw new ArgumentException($"Can't prepare null prefab");
-
         var pool = Warn(prefab, count);
         var countExists = pool.Count;
         
@@ -87,13 +83,15 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         CancellationToken token = default) where T : Component, IPoolable
     {
         var pool = Warn(prefab, count);
-
+        var countExists = pool.Count;
+        count = force ? count : count - countExists;
+        
         for (var i = 0; i < count; i++)
         {
             if (token.IsCancellationRequested)
                 return pool;
 
-            Prepare(prefab, 1);
+            Prepare(prefab, 1, true);
 
             if (token.IsCancellationRequested)
                 return pool;
@@ -117,33 +115,41 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
     public void Release<T>(T prefabInstance) where T : Component, IPoolable
     {
         if (prefabInstance == null)
-            throw new ArgumentException($"Can't release null prefab");
-
+            throw new ArgumentNullException(nameof(prefabInstance),
+                $"Can't execute {nameof(Release)} with null {typeof(T).Name}");
+        
         if (_pool.TryGetValue(prefabInstance.GetType(), out var pool) == false)
             throw new ArgumentException(
-                $"Return unknown prefab to pool. Use {nameof(Prepare)} first. PrefabType={prefabInstance.GetType()}");
+                $"Return unknown prefab to pool. Use {nameof(Prepare)} first. Prefab={prefabInstance.GetType().Name}");
 
         pool.Release(prefabInstance);
         _poolProfiler?.Update();
     }
 
     private T InternalGet<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent)
-        where T : UnityObject, IPoolable
+        where T : IPoolable
     {
         if (prefab == null)
-            throw new ArgumentException($"Can't prepare null prefab");
+            throw new ArgumentNullException(nameof(prefab), $"Can't execute {nameof(Get)} with null {typeof(T).Name}");
 
         if (_pool.TryGetValue(prefab.GetType(), out var pool) == false)
             throw new ArgumentException($"An unknown object was requested. Use {nameof(Prepare)} first");
-
+        
         var pooledObject = pool.Get(position, rotation, parent);
         _poolProfiler?.Update();
 
-        return pooledObject as T;
+        return (T) pooledObject;
     }
 
     protected virtual IPoolableObjectPool<IPoolable> Warn<T>(T prefab, int expectedCountNewElements) where T : Component, IPoolable
     {
+        if (prefab == null)
+            throw new ArgumentNullException(nameof(prefab), $"Can't execute {nameof(Prepare)} with null {typeof(T).Name}");
+
+        if (expectedCountNewElements < 0)
+            throw new ArgumentOutOfRangeException(nameof(expectedCountNewElements),
+                $"Expected count to be prepared can't be negative for {typeof(T).Name}.");
+        
         if (_pool.TryGetValue(prefab.GetType(), out var existPool))
             return existPool;
 
@@ -162,13 +168,12 @@ internal class ObjectPoolTypeManager : IObjectPoolManager
         return pool;
     }
 
-    private void CreateOrReturnElementToPool<T>(T prefab, IPoolableObjectPool<IPoolable> pool, bool isInstance)
-        where T : Component, IPoolable
+    private void CreateOrReturnElementToPool<T>(T prefab, IPoolableObjectPool<T> pool, bool isInstance)
+        where T : class, IPoolable
     {
         var pooledObject = isInstance ? prefab : pool.CreateInstance();
 
         pool.Release(pooledObject);
-        pooledObject.Pool = this;
 
         _poolProfiler?.Update();
     }
