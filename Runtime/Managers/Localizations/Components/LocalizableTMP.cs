@@ -60,7 +60,7 @@ public class LocalizableTMP : LocalizableBehaviour
 
     private void UpdateWithManager(Action<ILocalizationManager> actionWithManager)
     {
-        var settings = LocalizationInstaller.Settings;
+        var settings = LocalizationInstaller.settings;
         if (settings == null)
         {
             Log.Error($"Can't find settings for manager");

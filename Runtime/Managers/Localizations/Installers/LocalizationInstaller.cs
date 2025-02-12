@@ -1,4 +1,5 @@
-﻿using Game.Localizations.Components;
+﻿using System;
+using Game.Localizations.Components;
 using Game.Localizations.Managers;
 using UnityEngine;
 
@@ -7,26 +8,24 @@ namespace Game.Localizations.Installers
 public static class LocalizationInstaller
 {
     private const string ResourcesSettingsPath = "Localization/LocalizationSettings";
+    internal static LocalizationSettings settings;
 
-    internal static readonly LocalizationSettings Settings;
-
-    static LocalizationInstaller()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticValues()
     {
-        Settings = LoadSettingsFromResources();
+        settings = null;
     }
-
-    public static ILocalizationManager Manager() => new LocalizationManager(Settings);
     
-    private static LocalizationSettings LoadSettingsFromResources()
+    public static ILocalizationManager Manager() => new LocalizationManager(settings);
+    
+    public static void LoadDefaultSettingsFromResources()
     {
         var so = Resources.Load<LocalizationSettings>(ResourcesSettingsPath);
-
-        if (so != null) 
-            return so;
-        Log.Error($"Can't load localization so settings. Path to so: {ResourcesSettingsPath}");
-
-        return default;
-
+        
+        if (so == null)
+            throw new ArgumentNullException(ResourcesSettingsPath, $"Can't load SO settings. Path to so: {ResourcesSettingsPath}");
+        
+        settings = so;
     }
 }
 }

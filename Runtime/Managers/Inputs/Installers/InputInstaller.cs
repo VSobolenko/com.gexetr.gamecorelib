@@ -1,4 +1,6 @@
-﻿using Game.Inputs.Managers;
+﻿using System;
+using Game.AssetContent.Managers;
+using Game.Inputs.Managers;
 using UnityEngine;
 
 namespace Game.Inputs.Installers
@@ -6,29 +8,28 @@ namespace Game.Inputs.Installers
 public static class InputInstaller
 {
     private const string ResourcesSettingsPath = "InputSettings";
-
     private static InputSettings _settings;
 
-    static InputInstaller()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatic()
     {
-        _settings = LoadSettingsFromResources();
+        _settings = null;
     }
     
     public static IInputManager Manager() => new InputManager();
     
     public static SwipeDetector Swipe(IInputManager manager) => new SwipeDetector(manager, _settings);
     
-    private static InputSettings LoadSettingsFromResources()
+    public static InputSettings LoadDefaultSettingsFromResources()
     {
-        var so = Resources.Load<InputSettingsSo>(ResourcesSettingsPath);
+        var resourceManager = new ResourceManager();
+        var so = resourceManager.LoadAsset<InputSettingsSo>(ResourcesSettingsPath);
 
-        if (so != null) 
-            return so.inputSettings;
+        if (so == null) 
+            throw new ArgumentNullException(ResourcesSettingsPath, $"Can't load SO settings. Path to so: {ResourcesSettingsPath}");
         
-        Log.Error($"Can't load input so settings. Path to so: {ResourcesSettingsPath}");
-
-        return default;
-
+        _settings = so.inputSettings;
+        return so.inputSettings;
     }
 }
 }

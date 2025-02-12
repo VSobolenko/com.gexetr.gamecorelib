@@ -14,11 +14,11 @@ namespace GameEditor.ProjectTools
 /// <para>to quickly create a data clearing window, just inherit from this class and add the following code.</para>
 /// <code>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowWindow<ActionsWindowEditorTool>();
+/// private static void ShowWindow() => ShowWindow<YOUR_WINDOW_CLASS>();
 ///
 /// <para>with setup.</para>
 /// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowWindow<ActionsWindowEditorTool>(startupConfigure: window =>
+/// private static void ShowWindow() => ShowWindow<YOUR_WINDOW_CLASS>(startupConfigure: window =>
 /// {
 ///     window.confirm = true;
 ///     window.showHeader = false;
@@ -151,29 +151,19 @@ public class ActionsWindowEditorTool : EditorWindow
         OnEditorAction(button);
     }
 
-    protected virtual void OnEditorActions()
-    {
-    }
+    protected virtual void OnEditorActions() { }
 
-    protected virtual void OnEditorAction(ButtonData data)
-    {
-    }
+    protected virtual void OnEditorAction(ButtonData data) { }
 
-    protected virtual void DrawCustomEditorActions()
-    {
-    }
+    protected virtual void DrawCustomEditorActions() { }
 
-    protected virtual void DrawCustomCleaningPointsLabels()
-    {
-    }
+    protected virtual void DrawCustomCleaningPointsLabels() { }
 
     protected static bool ConfirmAction(string title, string message, string okLabel = "OK",
-                                        string cancelLabel = "Cancel")
-    {
-        return EditorUtility.DisplayDialog(title, message, okLabel, cancelLabel);
-    }
+                                        string cancelLabel = "Cancel") =>
+        EditorUtility.DisplayDialog(title, message, okLabel, cancelLabel);
 
-    public ActionsWindowEditorTool AddClearPlayerPrefsSetup()
+    public ActionsWindowEditorTool AddClearPlayerPrefsButton()
     {
         AddButton(new ButtonData
         {
@@ -184,7 +174,7 @@ public class ActionsWindowEditorTool : EditorWindow
         return this;
     }
 
-    public ActionsWindowEditorTool AddPlaySetup()
+    public ActionsWindowEditorTool AddAutoPlayButton()
     {
         AddButton(new ButtonData
         {
@@ -195,11 +185,11 @@ public class ActionsWindowEditorTool : EditorWindow
         return this;
     }
 
-    public bool DeleteFolder(string path, bool log = true)
+    public bool DeleteFolder(string path, bool log = true, bool recursive = true)
     {
         if (Directory.Exists(path) == false)
             return false;
-        Directory.Delete(path, true);
+        Directory.Delete(path, recursive);
         if (log)
             Log.Info($"Directory Success Delete: {path}");
 
