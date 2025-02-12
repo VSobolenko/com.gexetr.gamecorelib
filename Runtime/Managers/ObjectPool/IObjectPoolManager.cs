@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Pools
 {
@@ -14,9 +12,6 @@ public interface IObjectPoolManager
     ///  <param name="force">force add so much even if already there</param>
     ///  <typeparam name="T">Object type</typeparam>
     IPoolableObjectPool<IPoolable> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component, IPoolable;
-
-    Task<IPoolableObjectPool<IPoolable>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
-        CancellationToken token = default) where T : Component, IPoolable;
 
     /// <summary>
     /// Return object to pool
@@ -47,9 +42,6 @@ public interface IObjectPoolManager
 public interface IComponentObjectPoolManager
 {
     IComponentObjectPool<Component> Prepare<T>(T prefab, int count = 0, bool force = false) where T : Component;
-
-    Task<IComponentObjectPool<Component>> PrepareAsync<T>(T prefab, int count = 0, bool force = false,
-        CancellationToken token = default) where T : Component;
 
     void Release<T>(T prefabInstance) where T : Component;
     

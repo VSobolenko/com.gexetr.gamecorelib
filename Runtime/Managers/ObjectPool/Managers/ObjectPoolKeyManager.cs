@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using Game.DynamicData;
 using Game.Factories;
 using UnityEngine;
@@ -78,29 +75,6 @@ internal class ObjectPoolKeyManager : IObjectPoolManager
         for (var i = 0; i < count; i++)
             CreateOrReturnElementToPool(prefab, pool, false);
         _poolProfiler?.Update();
-        return pool;
-    }
-
-    //ToDo: use fluent interface design and return (out) IPoolableObjectPool<IPoolable> as input parametr
-    public async Task<IPoolableObjectPool<IPoolable>> PrepareAsync<T>(T prefab, int count, bool force = false,
-        CancellationToken token = default) where T : Component, IPoolable
-    {
-        var pool = Warn(prefab, count);
-        var countExists = pool.Count;
-        count = force ? count : count - countExists;
-        
-        for (var i = 0; i < count; i++)
-        {
-            if (token.IsCancellationRequested)
-                return pool;
-
-            Prepare(prefab, 1, true);
-            _poolProfiler?.Update();
-
-            if (token.IsCancellationRequested)
-                return pool;
-            await UniTask.DelayFrame(1, cancellationToken: token);
-        }
         return pool;
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Game.Extensions;
 using Game.Factories;
 using Game.Pools;
@@ -180,38 +179,6 @@ internal class ObjectPoolComponentManagerTests
         StringAssert.StartsWith(
             $"Can't execute {nameof(ObjectPoolKeyManager.Prepare)} with null {nameof(MonoPoolableTestObject)}",
             ex.Message);
-    }
-
-    [Test]
-    public async Task PrepareAsync_PreparePrefabsForce_ShouldBeCreateNewElementInsideManager()
-    {
-        // Arrange
-        var mockFactory = CreateMockFactory();
-        var prefab = CreateUniqueMonoPooled();
-        var poolManager = CreatePoolManager(mockFactory.Object, CreateEmpty().transform, 1);
-
-        // Act
-        var pool = await poolManager.PrepareAsync(prefab, 3, true);
-        await poolManager.PrepareAsync(prefab, 4, true);
-
-        // Assert
-        Assert.AreEqual(7, pool.Count);
-    }
-
-    [Test]
-    public async Task PrepareAsync_PreparePrefabsNotForce_ShouldBeCreateNewElementInsideManager()
-    {
-        // Arrange
-        var mockFactory = CreateMockFactory();
-        var prefab = CreateUniqueMonoPooled();
-        var poolManager = CreatePoolManager(mockFactory.Object, CreateEmpty().transform, 1);
-
-        // Act
-        var pool = await poolManager.PrepareAsync(prefab, 3);
-        await poolManager.PrepareAsync(prefab, 4);
-
-        // Assert
-        Assert.AreEqual(4, pool.Count);
     }
 
     [Test]

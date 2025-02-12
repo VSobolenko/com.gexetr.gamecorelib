@@ -18,30 +18,26 @@
 
 ## General 
 
-- Addressables
-- TextMeshPro
-- Newtonsoft Json
+- Addressables (Resource Managements)
+- TextMeshPro (Localizations/Editor)
+- Newtonsoft Json (FileIO)
 - Dotween (GUI)
-- UniTask (ObjectPool)
-- R3 (General) + NuGetForUnity (Tests)
+- NuGetForUnity (Tests)
 
 ## Fast Setup
 #### Dotween (GUI)
 - [Asset Store](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOooq1yDxnwheWQR_-8s6nq6kAAt4eTU0B3ty3MN30Cj5MoE4V6T7)
 - [Official Website](https://dotween.demigiant.com/download.php)
 
+<!--
 #### UniTask (ObjectPool)
 - [GitHub](https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package#:~:text=UPM%20Package)
 - (UPM) `https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask`
+-->
 
-#### R3 (General) + NuGetForUnity (Tests)
-- [Github Description](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) (R3-General)
-- (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity` (NuGet)
-    - R3
-    - ObservableCollections
-    - ObservableCollections.R3
+#### NuGetForUnity (Tests)
+- (UPM) `https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity`
     - Moq
-- (UPM) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity` (R3-Unity)
 
 ---
 
@@ -69,16 +65,18 @@
 
 # Don't Forget
 - TextMeshPro
-- Zenject / VContainer
+- [Zenject](https://github.com/modesttree/Zenject) / [VContainer](https://vcontainer.hadashikick.jp/)
 - `.gitignore`, `.gitattributes`, `.gitconfig`, `.editorconfig`
 - `.asmdef`
 - `AssemblyInfo`
-- NiceVibrations
+- [NiceVibrations](https://nice-vibrations.moremountains.com/)
 - Android Logcat
 - URP / HDRP
-- CI/CD
-- Naughty Attributes
-- Unity SerializeReferenceExtensions
+- [CI / CD](https://serverspace.by/)
+- [Naughty Attributes](https://github.com/dbrizov/NaughtyAttributes?tab=readme-ov-file#Installation)
+- [Unity SerializeReferenceExtensions](https://github.com/mackysoft/Unity-SerializeReferenceExtensions)
+- [UniTask](https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package)
+- [R3-General](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity`, [NuGet](https://github.com/GlitchEnzo/NuGetForUnity.git) (R3, ObservableCollections, ObservableCollections.R3)
 
 ---
 

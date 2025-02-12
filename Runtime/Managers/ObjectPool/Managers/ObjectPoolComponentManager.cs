@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using Game.DynamicData;
 using Game.Factories;
 using UnityEngine;
@@ -56,28 +53,6 @@ internal class ObjectPoolComponentManager : IComponentObjectPoolManager
         for (var i = 0; i < count; i++)
             CreateOrReturnElementToPool(prefab, pool, false);
         _poolProfiler?.Update();
-        return pool;
-    }
-
-    public async Task<IComponentObjectPool<Component>> PrepareAsync<T>(T prefab, int count, bool force = false,
-        CancellationToken token = default) where T : Component
-    {
-        var pool = Warn(prefab, count);
-        var countExists = pool.Count;
-        count = force ? count : count - countExists;
-        
-        for (var i = 0; i < count; i++)
-        {
-            if (token.IsCancellationRequested)
-                return pool;
-
-            Prepare(prefab, 1, true);
-
-            if (token.IsCancellationRequested)
-                return pool;
-            await UniTask.DelayFrame(1, cancellationToken: token);
-        }
-
         return pool;
     }
 
