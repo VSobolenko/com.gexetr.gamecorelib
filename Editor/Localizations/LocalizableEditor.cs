@@ -12,15 +12,18 @@ internal class LocalizableEditor : Editor
     {
         base.OnInspectorGUI();
         if (GUILayout.Button("Editor localize"))
+            Localize();
+    }
+
+    private void Localize()
+    {
+        var localizableBehaviour = (LocalizableTMP) target;
+        if (localizableBehaviour == null)
         {
-            var localizableBehaviour = (LocalizableTMP) target;
-            if (localizableBehaviour == null)
-            {
-                Log.InternalError();
-                return;
-            }
-            localizableBehaviour.EditorLocalize();
+            Log.InternalError();
+            return;
         }
+        localizableBehaviour.EditorLocalize();
     }
 }
 }

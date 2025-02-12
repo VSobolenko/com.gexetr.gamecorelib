@@ -56,6 +56,7 @@ internal static class DefineConfiguration
     {
         var activeDefines = GenerateDefineList(EditorUserBuildSettings.selectedBuildTargetGroup);
         var startedLength = activeDefines.Count;
+        
         foreach (var define in defines)
             activeDefines.Remove(define);
 

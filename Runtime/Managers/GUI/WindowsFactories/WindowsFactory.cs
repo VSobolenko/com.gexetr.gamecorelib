@@ -47,7 +47,8 @@ internal class WindowsFactory : IWindowFactory
                                         .FirstOrDefault(p => p.ParameterType.IsSubclassOf(typeof(WindowUI)))
                                         ?.ParameterType;
 
-                if (windowType != null) break;
+                if (windowType != null) 
+                    break;
             }
 
             if (windowType != null)
@@ -95,6 +96,7 @@ internal class WindowsFactory : IWindowFactory
 
         if (Application.isEditor && prefab == null)
             throw new ArgumentNullException(prefabKey, $"Can't load Prefab by path: {prefabKey}");
+        
         if (prefab == null)
             return false;
 

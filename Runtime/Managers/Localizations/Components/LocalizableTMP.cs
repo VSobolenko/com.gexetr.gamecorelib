@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Extensions;
 using Game.Localizations.Installers;
 using TMPro;
 using UnityEngine;
@@ -51,18 +52,12 @@ public class LocalizableTMP : LocalizableBehaviour
         targetText.text = manager.Localize(key, fallback);
     }
 
-    private void OnValidate()
-    {
-        if (targetText == null)
-            targetText = GetComponent<TextMeshProUGUI>();
-    }
+    [ContextMenu("Force Reset")]
+    private void Reset() => this.With(x => x.targetText = GetComponent<TextMeshProUGUI>(), targetText == null);
 
     [ContextMenu("Editor localize")]
-    public void EditorLocalize()
-    {
-        UpdateWithManager(InternalLocalize);
-    }
-    
+    public void EditorLocalize() => UpdateWithManager(InternalLocalize);
+
     private void UpdateWithManager(Action<ILocalizationManager> actionWithManager)
     {
         var settings = LocalizationInstaller.Settings;
@@ -78,6 +73,7 @@ public class LocalizableTMP : LocalizableBehaviour
             LocalizationManagerType.LocalizationManager => new Managers.LocalizationManager(settings),
             _ => null,
         };
+        
         manager?.SetLanguage(languageForTranslate);
         actionWithManager?.Invoke(manager);
     }

@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 
 namespace GameEditor.FSMVisualizers
 {
-    internal class FSMNode : Node
+internal class FSMNode : Node
 {
     public IState sourceState;
     public Port inputPort;

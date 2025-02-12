@@ -20,39 +20,39 @@ internal class BouncedTransition : IWindowTransition
         _height = Screen.height;
     }
 
-    public Task Open(WindowProperties windowProperties)
+    public Task Open(WindowData windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
-        var transform = windowProperties.motor;
+        var transform = windowData.Motor;
 
-        windowProperties.mediator.SetActive(false);
+        windowData.Mediator.SetActive(false);
         transform.localScale = _openStartedScale;
 
-        BounceWindow(transform, Vector3.one, _settings.bouncedOpen.duration / 2f,
-                     _settings.bouncedOpen.duration / 2f / _settings.Synchronicity,
-                     _settings.bouncedOpen.ease,
-                     () => { windowProperties.mediator.SetActive(true); }, () => { completionSource.SetResult(true); });
+        BounceWindow(transform, Vector3.one, _settings._bouncedOpen._duration / 2f,
+                     _settings._bouncedOpen._duration / 2f / _settings.Synchronicity,
+                     _settings._bouncedOpen._ease,
+                     () => { windowData.Mediator.SetActive(true); }, () => { completionSource.SetResult(true); });
 
         return completionSource.Task;
     }
 
-    public Task Close(WindowProperties windowProperties)
+    public Task Close(WindowData windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
-        var transform = windowProperties.motor;
+        var transform = windowData.Motor;
 
-        BounceWindow(transform, _closeEndScale, _settings.bouncedClose.duration / 2f, 0, _settings.bouncedClose.ease,
+        BounceWindow(transform, _closeEndScale, _settings._bouncedClose._duration / 2f, 0, _settings._bouncedClose._ease,
                      null,
                      () =>
                      {
-                         windowProperties.mediator.SetActive(false);
+                         windowData.Mediator.SetActive(false);
                          completionSource.SetResult(true);
                      });
 
         return completionSource.Task;
     }
 
-    private void BounceWindow(Transform transform, Vector3 to, float duration, float startDelay, Ease ease,
+    private static void BounceWindow(Transform transform, Vector3 to, float duration, float startDelay, Ease ease,
                               TweenCallback actionAfterDelay, TweenCallback completeAction)
     {
         var seq = DOTween.Sequence();

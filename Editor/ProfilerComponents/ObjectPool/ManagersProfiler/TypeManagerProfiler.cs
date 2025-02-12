@@ -75,10 +75,10 @@ internal class TypeManagerProfiler : IPoolProfiler
 
         var containerStyles = new List<GUIStyle>
         {
-            new GUIStyle {normal = {textColor = Color.white}},
-            new GUIStyle {normal = {textColor = Color.yellow}},
-            new GUIStyle {normal = {textColor = Color.cyan}},
-            new GUIStyle {normal = {textColor = Color.magenta}},
+            new() {normal = {textColor = Color.white}},
+            new() {normal = {textColor = Color.yellow}},
+            new() {normal = {textColor = Color.cyan}},
+            new() {normal = {textColor = Color.magenta}},
         };
 
         GUILayout.Label("Pool container", redStyle);
@@ -125,10 +125,8 @@ internal class TypeManagerProfiler : IPoolProfiler
 
             newPoolData.Add(key, poolData);
 
-            if (_poolData.ContainsKey(key))
-            {
-                poolData.maxElemets = Mathf.Max(_poolData[key].maxElemets, stack.Count);
-            }
+            if (_poolData.TryGetValue(key, out var data))
+                poolData.maxElemets = Mathf.Max(data.maxElemets, stack.Count);
 
             newPoolData[key] = poolData;
         }

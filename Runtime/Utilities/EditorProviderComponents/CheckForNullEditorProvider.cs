@@ -14,6 +14,6 @@ public class CheckForNullEditorProvider : MonoBehaviour
     [SerializeField] internal bool _enableClassPath;
     [SerializeField] internal MonoBehaviour[] _monoBehaviour;
 
-    private void Start() => throw new ArgumentException($"\"{name}\" has editor only \"{GetType().Name}\" component.");
+    private void Awake() => throw new ArgumentException($"\"{name}\" has editor only \"{GetType().Name}\" component.");
 }
 }

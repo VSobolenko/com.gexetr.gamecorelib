@@ -80,6 +80,7 @@ internal class SceneSwitcher : EditorWindow
         {
             richText = true,
         };
+        
         var text = $"<color=#00FF00>Loading Start Scene</color>: {GetLoadingStartSceneName(defaultSceneLoadMode)}";
         if (GUILayout.Button(new GUIContent(text), buttonStyle))
         {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Extensions;
+using UnityEngine;
 
 namespace Game.Components
 {
@@ -26,6 +27,7 @@ internal class SafeScreenArea : MonoBehaviour
         rectTransformComponent.anchorMax = anchorMax;
     }
      
-    private void Reset() => rectTransformComponent ??= GetComponent<RectTransform>();
+    [ContextMenu("Force Reset")]
+    private void Reset() => this.With(x => x.rectTransformComponent = GetComponent<RectTransform>(), rectTransformComponent == null);
 }
 }

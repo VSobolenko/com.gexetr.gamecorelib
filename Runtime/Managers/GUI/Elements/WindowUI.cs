@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Extensions;
+using UnityEngine;
 
 namespace Game.GUI.Windows
 {
@@ -9,10 +10,6 @@ public class WindowUI : MonoBehaviour
     [SerializeField] protected internal RectTransform overrideTransition;
 
     [ContextMenu("Validate")]
-    private void Reset()
-    {
-        if (canvasGroup == null)
-            canvasGroup = GetComponent<CanvasGroup>();
-    }
+    private void Reset() => this.With(x => x.canvasGroup = GetComponent<CanvasGroup>(), canvasGroup == null);
 }
 }

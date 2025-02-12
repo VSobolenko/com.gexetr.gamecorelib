@@ -19,12 +19,12 @@ internal class HorizontalTransition : IWindowTransition
         _height = Screen.height;
     }
 
-    public Task Open(WindowProperties windowProperties)
+    public Task Open(WindowData windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
 
-        var transform = windowProperties.motor;
-        var startedPos = GetStartedPointX(windowProperties.rectTransform);
+        var transform = windowData.Motor;
+        var startedPos = GetStartedPointX(windowData.RectTransform);
 
         transform.SetLocalX(startedPos);
         MoveWindow(transform, 0, _settings.OpenType, () =>
@@ -35,12 +35,12 @@ internal class HorizontalTransition : IWindowTransition
         return completionSource.Task;
     }
 
-    public Task Close(WindowProperties windowProperties)
+    public Task Close(WindowData windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
 
-        var transform = windowProperties.motor;
-        var targetPosition = GetEndPointX(windowProperties.rectTransform);
+        var transform = windowData.Motor;
+        var targetPosition = GetEndPointX(windowData.RectTransform);
 
         MoveWindow(transform, targetPosition, _settings.CloseType, () =>
         {

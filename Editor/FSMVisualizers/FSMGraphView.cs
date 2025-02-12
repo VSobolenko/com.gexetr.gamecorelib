@@ -10,7 +10,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GameEditor.FSMVisualizers
 {
-    internal class FSMGraphView : GraphView
+internal class FSMGraphView : GraphView
 {
     public readonly List<FSMNode> states = new();
     private readonly Vector2 _defaultNodeSize = new(150, 200);
@@ -110,11 +110,10 @@ namespace GameEditor.FSMVisualizers
         ConnectNodesOutput(fakeNode, originalNode);
     }
 
-    private static object GetPrivateValue<T>(T instance, string field)
-    {
-        return typeof(T).GetField(field, BindingFlags.NonPublic | BindingFlags.Instance)
-                        ?.GetValue(instance);
-    }
+    private static object GetPrivateValue<T>(T instance, string field) =>
+        typeof(T)
+            .GetField(field, BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.GetValue(instance);
 
     private void ConnectStates(IState sourceState, IState targetState)
     {
@@ -128,7 +127,7 @@ namespace GameEditor.FSMVisualizers
 
     private static void ConnectNodes(FSMNode sourceNode, FSMNode targetNode)
     {
-        var edge = new Edge()
+        var edge = new Edge
         {
             output = sourceNode.outputPort,
             input = targetNode.inputPort,
@@ -138,7 +137,7 @@ namespace GameEditor.FSMVisualizers
 
     private static void ConnectNodesOutput(FSMNode sourceNode, FSMNode targetNode)
     {
-        var edge = new Edge()
+        var edge = new Edge
         {
             output = sourceNode.outputPort,
             input = targetNode.outputPort,
@@ -149,7 +148,7 @@ namespace GameEditor.FSMVisualizers
 
     private static void ConnectNodesInput(FSMNode sourceNode, FSMNode targetNode)
     {
-        var edge = new Edge()
+        var edge = new Edge
         {
             output = sourceNode.inputPort,
             input = targetNode.inputPort,

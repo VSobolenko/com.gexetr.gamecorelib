@@ -25,9 +25,9 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
         if (string.IsNullOrEmpty(key))
             throw new ArgumentException("Unable to load null or empty key");
 
-        if (_loadedHandlers.ContainsKey(key))
+        if (_loadedHandlers.TryGetValue(key, out var handler))
         {
-            var existHandle = _loadedHandlers[key].Convert<T>();
+            var existHandle = handler.Convert<T>();
 
             return existHandle.IsDone == false ? existHandle.WaitForCompletion() : existHandle.Result;
         }

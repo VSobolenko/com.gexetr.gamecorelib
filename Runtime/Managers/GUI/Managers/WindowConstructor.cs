@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
+internal class WindowConstructor : IDisposable, IEnumerable<WindowData>
 {
     public int Count => _windows.Count;
 
-    private readonly List<WindowProperties> _windows = new(8);
+    private readonly List<WindowData> _windows = new(8);
     private readonly IWindowFactory _windowFactory;
     private readonly Transform _root;
 
@@ -24,22 +24,16 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
     public void Dispose()
     {
         for (var i = _windows.Count - 1; i >= 0; i--)
-        {
             CloseWindow(i);
-        }
 
         _windows.Clear();
     }
 
-    public WindowProperties OpenWindowSilently<TMediator>(Action<TMediator> initWindow = null)
+    public WindowData OpenWindowSilently<TMediator>(Action<TMediator> initWindow = null)
         where TMediator : class, IMediator
     {
         if (_windowFactory.TryCreateWindow<TMediator>(_root, out var mediator, out var window) == false)
-        {
-            if (Application.isEditor)
-                throw new ArgumentNullException(typeof(TMediator).Name, $"Can't create mediator {typeof(TMediator)}");
-            return default;
-        }
+            throw new ArgumentNullException(typeof(TMediator).Name, $"Can't create mediator {typeof(TMediator)}");
 
         mediator.SetActive(true);
         mediator.SetInteraction(true);
@@ -47,23 +41,23 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
         mediator.OnFocus();
         initWindow?.Invoke(mediator);
 
-        var windowData = new WindowProperties
+        var windowData = new WindowData
         {
-            mediator = mediator,
-            rectTransform = window.overrideTransition != null ? window.overrideTransition : (RectTransform) window.transform,
-            canvasGroup = window.canvasGroup,
-            mode = OpenMode.Silently,
+            Mediator = mediator,
+            RectTransform = window.overrideTransition != null ? window.overrideTransition : (RectTransform) window.transform,
+            CanvasGroup = window.canvasGroup,
+            Mode = OpenMode.Silently,
         };
-        windowData.motor = window.overrideTransition != null ? window.overrideTransition : windowData.rectTransform;
+        windowData.Motor = window.overrideTransition != null ? window.overrideTransition : windowData.RectTransform;
         
         var lastWindowData = _windows.Count > 0 ? _windows[^1] : windowData;
         _windows.Add(windowData);
 
         if (lastWindowData != windowData)
         {
-            lastWindowData.mediator.OnUnfocused();
-            lastWindowData.mediator.SetInteraction(false);
-            lastWindowData.mediator.SetActive(windowData.mode == OpenMode.Silently);
+            lastWindowData.Mediator.OnUnfocused();
+            lastWindowData.Mediator.SetInteraction(false);
+            lastWindowData.Mediator.SetActive(windowData.Mode == OpenMode.Silently);
         }
 
         return windowData;
@@ -74,9 +68,9 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
         if (_windows.ElementAtOrDefault(index) == null)
             return;
 
-        _windows[index].mediator.OnUnfocused();
-        _windows[index].mediator.OnDestroy();
-        _windows[index].mediator.Destroy();
+        _windows[index].Mediator.OnUnfocused();
+        _windows[index].Mediator.OnDestroy();
+        _windows[index].Mediator.Destroy();
 
         _windows.RemoveAt(index);
 
@@ -84,10 +78,10 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
             return;
 
         //Имеется общее
-        _windows[index - 1].mediator.SetActive(true);
-        _windows[index - 1].mediator.SetInteraction(true);
-        _windows[index - 1].mediator.OnFocus();
-        _windows[index - 1].mediator.SetPosition(Vector3.zero);
+        _windows[index - 1].Mediator.SetActive(true);
+        _windows[index - 1].Mediator.SetInteraction(true);
+        _windows[index - 1].Mediator.OnFocus();
+        _windows[index - 1].Mediator.SetPosition(Vector3.zero);
         RestoreVisibilityMode();
     }
 
@@ -95,29 +89,30 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowProperties>
     {
         if (_windows.Count == 1)
             return;
+        
         for (var i = _windows.Count - 2; i >= 0; i--)
         {
             var parentWindowData = _windows[i + 1];
 
-            _windows[i].mediator.SetActive(parentWindowData.mode == OpenMode.Silently);
-            if (parentWindowData.mode == OpenMode.Overlay)
+            _windows[i].Mediator.SetActive(parentWindowData.Mode == OpenMode.Silently);
+            if (parentWindowData.Mode == OpenMode.Overlay)
                 break;
         }
     }
     
     public void HideWindow(int index, bool deactivateLastWindow)
     {
-        if (_windows.ElementAtOrDefault(index)?.mediator == null)
+        if (_windows.ElementAtOrDefault(index)?.Mediator == null)
             return;
 
-        _windows[index].mediator.OnUnfocused();
+        _windows[index].Mediator.OnUnfocused();
         if (deactivateLastWindow)
-            _windows[index].mediator.SetActive(false);
+            _windows[index].Mediator.SetActive(false);
     }
 
-    public WindowProperties this[int i] => _windows[i];
+    public WindowData this[int i] => _windows[i];
 
-    IEnumerator<WindowProperties> IEnumerable<WindowProperties>.GetEnumerator() => _windows.GetEnumerator();
+    IEnumerator<WindowData> IEnumerable<WindowData>.GetEnumerator() => _windows.GetEnumerator();
 
     public IEnumerator GetEnumerator() => _windows.GetEnumerator();
 }

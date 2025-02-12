@@ -22,7 +22,7 @@ public static partial class GuiInstaller
         var so = ResourceManager.LoadAsset<WindowSettingsSo>(ResourcesWindowSettingsPath);
 
         if (so != null)
-            return so.defaultSettings;
+            return so._defaultSettings;
 
         throw new ArgumentNullException(ResourcesWindowSettingsPath, $"Can't load SO settings. Path to so: {ResourcesWindowSettingsPath}");
     }

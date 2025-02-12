@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Game.IO;
+using UnityEngine;
 
 namespace Game.Repositories.Managers
 {
@@ -167,13 +168,17 @@ internal class FileRepositoryManager<T> : BaseRepositoryManager<T>, IRepository<
             {
                 if (file.Name.Contains(typeof(T).ToString()))
                     continue;
-#if UNITY_EDITOR
-                Log.Warning($"The file repository contains the file {file.Name}. Folder must be empty. " +
-                                 $"This file will be deleted. File path: {_path}");
-#else
-                Log.Warning($"Delete file {file.Name}. Folder must be empty. Path: {_path}");
-                file.Delete();
-#endif
+                
+                if (Application.isEditor)
+                {
+                    Log.Warning($"The file repository contains the file {file.Name}. Folder must be empty. " +
+                                $"This file will be deleted. File path: {_path}");
+                }
+                else
+                {
+                    Log.Warning($"Delete file {file.Name}. Folder must be empty. Path: {_path}");
+                    file.Delete();
+                }
             }
             catch (Exception e)
             {

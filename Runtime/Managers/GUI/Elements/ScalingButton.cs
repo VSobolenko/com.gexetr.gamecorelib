@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Extensions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,11 +11,17 @@ public class ScalingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     [SerializeField] private float normalScale = 1f;
     [SerializeField] private float downScale = 0.96f;
     [SerializeField] private float upScale = 1.04f;
+    [SerializeField] private bool resaveOnDown;
+
+    public bool ResaveOnDown { get => resaveOnDown; set => resaveOnDown = value; }
 
     private Tween _scaleTween;
-        
+
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (resaveOnDown)
+            RewriteScaleValue().With(x => x.resaveOnDown = false);
+
         _scaleTween?.Kill();
         _scaleTween = transform.DOScale(downScale, 0.04f).SetEase(Ease.InOutCubic);
     }
@@ -29,6 +36,18 @@ public class ScalingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         });
     }
 
+    private ScalingButton RewriteScaleValue()
+    {
+        var scale = transform.localScale;
+        var downDelta = normalScale - downScale;
+        var upDelta = upScale - normalScale;
+
+        normalScale = scale.magnitude;
+        downScale = normalScale - downDelta;
+        upScale = normalScale + upDelta;
+        return this;
+    }
+    
     private void OnDestroy() => _scaleTween?.Kill();
 }
 }

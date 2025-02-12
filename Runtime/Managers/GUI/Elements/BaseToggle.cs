@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,9 +33,7 @@ internal class ToggleConfiguration<T> where T : struct, Enum
    
     public void ObserveToggle() => _toggle.onValueChanged.AddListener(ToggleClick);
 
-    public void ValidateToggle(Transform root)
-    {
-        if (_toggle == null) _toggle = root.GetComponent<Toggle>();
-    }
+    public void ValidateToggle(Transform root) =>
+        this.With(x => x._toggle = root.GetComponent<Toggle>(), _toggle == null);
 }
 }

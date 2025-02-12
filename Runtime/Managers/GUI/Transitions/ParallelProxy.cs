@@ -14,10 +14,10 @@ public class ParallelProxy : IWindowTransition
         _transitions = transitions.ToList();
     }
 
-    public Task Open(WindowProperties windowProperties) =>
-        Task.WhenAll(_transitions.Select(x => x.Open(windowProperties)));
+    public Task Open(WindowData windowData) =>
+        Task.WhenAll(_transitions.Select(x => x.Open(windowData)));
 
-    public Task Close(WindowProperties windowProperties) =>
-        Task.WhenAll(_transitions.Select(x => x.Close(windowProperties)));
+    public Task Close(WindowData windowData) =>
+        Task.WhenAll(_transitions.Select(x => x.Close(windowData)));
 }
 }

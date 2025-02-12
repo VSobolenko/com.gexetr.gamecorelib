@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 namespace GameEditor.FSMVisualizers
 {
-    internal class FSMVisualizer : EditorWindow
+internal class FSMVisualizer : EditorWindow
 {
     private FSMGraphView _graph;
     private FSMProfilerProvider[] _fsmLinkers = Array.Empty<FSMProfilerProvider>();

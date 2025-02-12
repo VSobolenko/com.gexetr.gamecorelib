@@ -20,26 +20,26 @@ internal class ConfigurableTransition : IWindowTransition
         _closeNormalize = closeNormalize;
     }
 
-    public Task Open(WindowProperties windowProperties)
+    public Task Open(WindowData windowData)
     {
         if (_openNormalize)
-            NormalizeWindow(windowProperties);
+            NormalizeWindow(windowData);
 
-        return _open?.Open(windowProperties);
+        return _open?.Open(windowData);
     }
 
-    public Task Close(WindowProperties windowProperties)
+    public Task Close(WindowData windowData)
     {
         if (_closeNormalize)
-            NormalizeWindow(windowProperties);
+            NormalizeWindow(windowData);
 
-        return _close?.Close(windowProperties);
+        return _close?.Close(windowData);
     }
 
-    private void NormalizeWindow(WindowProperties windowProperties)
+    private void NormalizeWindow(WindowData windowData)
     {
-        windowProperties.mediator.SetPosition(WindowTransitionStatic.startPoint);
-        windowProperties.motor.localScale = Vector3.one;
+        windowData.Mediator.SetPosition(WindowTransitionStatic.startPoint);
+        windowData.Motor.localScale = Vector3.one;
     }
 }
 }

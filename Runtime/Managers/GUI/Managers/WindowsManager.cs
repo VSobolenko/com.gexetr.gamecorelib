@@ -27,11 +27,11 @@ internal class WindowsManager : IWindowsManager
     public bool TryGetActiveWindows<TMediator>(out TMediator[] mediator) where TMediator : class, IMediator
     {
         var mediators = new List<TMediator>();
-        foreach (WindowProperties window in WindowConstructor)
+        foreach (WindowData window in WindowConstructor)
         {
-            if (window.mediator is TMediator == false)
+            if (window.Mediator is TMediator == false)
                 continue;
-            mediators.Add((TMediator) window.mediator);
+            mediators.Add((TMediator) window.Mediator);
         }
 
         mediator = mediators.ToArray();
@@ -42,11 +42,11 @@ internal class WindowsManager : IWindowsManager
     public bool TryGetActiveWindow<TMediator>(out TMediator mediator) where TMediator : class, IMediator
     {
         mediator = null;
-        foreach (WindowProperties window in WindowConstructor)
+        foreach (WindowData window in WindowConstructor)
         {
-            if (window.mediator is TMediator == false)
+            if (window.Mediator is TMediator == false)
                 continue;
-            mediator = (TMediator) window.mediator;
+            mediator = (TMediator) window.Mediator;
 
             break;
         }
@@ -63,7 +63,7 @@ internal class WindowsManager : IWindowsManager
     {
         WindowConstructor.HideWindow(WindowConstructor.Count - 1, false);
 
-        return WindowConstructor.OpenWindowSilently(initWindow).mediator as TMediator;
+        return WindowConstructor.OpenWindowSilently(initWindow).Mediator as TMediator;
     }
 
     public TMediator OpenWindowOver<TMediator>(Action<TMediator> initWindow = null)
@@ -71,14 +71,14 @@ internal class WindowsManager : IWindowsManager
     {
         WindowConstructor.HideWindow(WindowConstructor.Count - 1, true);
 
-        return WindowConstructor.OpenWindowSilently(initWindow).mediator as TMediator;
+        return WindowConstructor.OpenWindowSilently(initWindow).Mediator as TMediator;
     }
 
     public bool CloseWindow<TMediator>() where TMediator : class, IMediator
     {
         for (var i = 0; i < WindowConstructor.Count; i++)
         {
-            if (WindowConstructor[i].mediator.GetType() != typeof(TMediator))
+            if (WindowConstructor[i].Mediator.GetType() != typeof(TMediator))
                 continue;
 
             WindowConstructor.CloseWindow(i);
@@ -96,7 +96,7 @@ internal class WindowsManager : IWindowsManager
 
         for (var i = 0; i < WindowConstructor.Count; i++)
         {
-            if (WindowConstructor[i].mediator != mediator)
+            if (WindowConstructor[i].Mediator != mediator)
                 continue;
 
             WindowConstructor.CloseWindow(i);

@@ -20,8 +20,10 @@ internal class CheckForNullInspectorEditorProvider : Editor
     {
         if (GUILayout.Button("Collect scripts"))
             Self._monoBehaviour = GetScripts(Self._accessible).ToArray();
+        
         if (GUILayout.Button("Check collected scripts"))
             ProcessCheckFieldForNull(Self._monoBehaviour, Self._accessible, Self._enableClassPath);
+        
         base.OnInspectorGUI();
     }
 

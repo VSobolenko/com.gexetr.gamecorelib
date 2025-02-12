@@ -15,6 +15,7 @@ public static class InputInstaller
     }
     
     public static IInputManager Manager() => new InputManager();
+    
     public static SwipeDetector Swipe(IInputManager manager) => new SwipeDetector(manager, _settings);
     
     private static InputSettings LoadSettingsFromResources()

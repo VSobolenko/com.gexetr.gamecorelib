@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,11 +50,9 @@ public class ButtonConfiguration<T> where T : struct, Enum
     
     private void ButtonClick() => OnClickButton?.Invoke(action);
 
-    public void ValidateButton(Transform root)
-    {
-        if (button == null) button = root.GetComponent<Button>();
-    }
-    
+    public void ValidateButton(Transform root) =>
+        this.With(x => x.button = root.GetComponent<Button>(), button == null);
+
     public void SimulateClick()
     {
         Log.Info($"Invoke editor simulation action: {action}");

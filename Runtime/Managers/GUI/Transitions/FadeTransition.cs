@@ -16,10 +16,10 @@ internal class FadeTransition : IWindowTransition
         _settings = settings;
     }
 
-    public Task Open(WindowProperties windowProperties)
+    public Task Open(WindowData windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
-        var canvasGroup = windowProperties.canvasGroup;
+        var canvasGroup = windowData.CanvasGroup;
 
         canvasGroup.alpha = 0;
 
@@ -29,10 +29,10 @@ internal class FadeTransition : IWindowTransition
         return completionSource.Task;
     }
 
-    public Task Close(WindowProperties windowProperties)
+    public Task Close(WindowData windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
-        var canvasGroup = windowProperties.canvasGroup;
+        var canvasGroup = windowData.CanvasGroup;
 
         FadeWindow(canvasGroup, 0, 0, _settings.OpenType, null,
             () => { completionSource.SetResult(true); });

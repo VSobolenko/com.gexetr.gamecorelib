@@ -31,21 +31,10 @@ public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
         this.window = window;
     }
 
-    public virtual void OnInitialize()
-    {
-    }
-
-    public virtual void OnFocus()
-    {
-    }
-
-    public virtual void OnUnfocused()
-    {
-    }
-
-    public virtual void OnDestroy()
-    {
-    }
+    public virtual void OnInitialize() { }
+    public virtual void OnFocus() { }
+    public virtual void OnUnfocused() { }
+    public virtual void OnDestroy() { }
 
     public virtual void SetActive(bool value) => window.gameObject.SetActive(value);
     public virtual void SetPosition(Vector3 value) => window.transform.localPosition = value;

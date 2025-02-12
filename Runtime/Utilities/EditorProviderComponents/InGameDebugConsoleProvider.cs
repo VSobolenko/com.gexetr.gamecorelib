@@ -17,7 +17,7 @@ public class InGameDebugConsoleProvider : MonoBehaviour
 
     private GameObject _cachedConsole;
 
-    private void Start()
+    private void Awake()
     {
         if (_enableSelfDestruct)
             Destroy(gameObject);

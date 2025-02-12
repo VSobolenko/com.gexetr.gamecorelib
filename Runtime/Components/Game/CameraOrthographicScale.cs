@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Extensions;
+using UnityEngine;
 
 namespace Game.Components
 {
@@ -56,6 +57,7 @@ public class CameraOrthographicScale : MonoBehaviour
         cameraComponent.orthographicSize = Mathf.Lerp(constantWidthSize, size, widthOrHeight);
     }
 
-    private void Reset() => cameraComponent ??= GetComponent<Camera>();
+    [ContextMenu("Force Reset")]
+    private void Reset() => this.With(x => x.cameraComponent = GetComponent<Camera>(), cameraComponent == null);
 }
 }

@@ -6,17 +6,17 @@ namespace Game.GUI.Windows.Transitions
 {
 public class EmptyTransition : IWindowTransition
 {
-    public Task Open(WindowProperties windowProperties)
+    public Task Open(WindowData windowData)
     {
-        windowProperties.motor.localPosition = WindowTransitionStatic.startPoint;
-        windowProperties.motor.localScale = Vector3.one;
+        windowData.Motor.localPosition = WindowTransitionStatic.startPoint;
+        windowData.Motor.localScale = Vector3.one;
         return Task.CompletedTask;
     }
 
-    public Task Close(WindowProperties windowProperties)
+    public Task Close(WindowData windowData)
     {
-        windowProperties.motor.localPosition = WindowTransitionStatic.startPoint;
-        windowProperties.motor.localScale = Vector3.one;
+        windowData.Motor.localPosition = WindowTransitionStatic.startPoint;
+        windowData.Motor.localScale = Vector3.one;
         return Task.CompletedTask;
     }
 }

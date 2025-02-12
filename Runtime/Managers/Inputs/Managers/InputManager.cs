@@ -21,6 +21,7 @@ internal class InputManager : IInputManager
     public void Update()
     {
         const int buttonId = 0;
+        
         if (Input.GetMouseButtonDown(buttonId))
         {
             OnStartInput?.Invoke(Input.mousePosition, IsGuiClick(Input.mousePosition));

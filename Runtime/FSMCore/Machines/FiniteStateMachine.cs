@@ -93,10 +93,12 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
 
         return this;
     }
+    
     private void LogDebugIfEnable(IState state)
     {
         if (_enableLogger == false)
             return;
+        
         BaseState.stateCounter++;
         var stateName = state == null ? "Null_Or_Empty" : state.GetType().Name;
         Log.Info($"[{BaseState.stateCounter}] Active state: {stateName}");

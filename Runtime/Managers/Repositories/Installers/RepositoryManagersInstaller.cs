@@ -14,7 +14,9 @@ public static class RepositoryInstaller
         new StaticResourcesRepositoryManager<T>(path, fileSaver);
     
     public static BoolSavableValue Bool(string key, bool defaultValue) => new BoolSavableValue(key, defaultValue);
+    
     public static FloatSavableValue Float(string key, float defaultValue) => new FloatSavableValue(key, defaultValue);
+    
     public static IntSavableValue Float(string key, int defaultValue) => new IntSavableValue(key, defaultValue);
 
     public static StringSavableValue String(string key, string defaultValue) =>

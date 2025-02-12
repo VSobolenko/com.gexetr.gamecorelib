@@ -93,6 +93,7 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
     {
         if (_enableLogger == false)
             return;
+        
         BaseState.stateCounter++;
         var stateName = state == null ? "Null_Or_Empty" : state.GetType().Name;
         Log.Info($"[{BaseState.stateCounter}] Active state: {stateName}");
