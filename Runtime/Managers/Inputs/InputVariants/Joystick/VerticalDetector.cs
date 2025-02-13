@@ -7,9 +7,9 @@ namespace Game.Inputs
 public class VerticalDetector : IAxisDetector, IDisposable
 {
     private readonly InputEventHandler _eventHandler;
-    private readonly RectTransform _lerpArea;
+    private readonly Func<Vector2> _getLimit;
 
-    private float Limit => _lerpArea.sizeDelta.y / 2;
+    private float Limit => _getLimit().y / 2;
     private Vector2 _start;
     private Vector2 _end;
 
@@ -17,10 +17,10 @@ public class VerticalDetector : IAxisDetector, IDisposable
     public float AxisNormalized => Mathf.Lerp(-1, 1, (_end - _start).normalized.y / Limit);
     public bool HasAxisInput => _end != _start;
 
-    public VerticalDetector(InputEventHandler eventHandler, RectTransform lerpArea)
+    public VerticalDetector(InputEventHandler eventHandler, Func<Vector2> getLerpArea)
     {
         _eventHandler = eventHandler;
-        _lerpArea = lerpArea;
+        _getLimit = getLerpArea;
         SubscribeEvents();
     }
 

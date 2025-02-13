@@ -2,7 +2,7 @@
 
 namespace Game.Tests.Runtime.TestingElements
 {
-public class TestMonoBeh : MonoBehaviour
+internal class TestMonoBeh : MonoBehaviour
 {
     
 }

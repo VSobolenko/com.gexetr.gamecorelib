@@ -7,31 +7,29 @@ namespace Game.Inputs
 public class HorizontalDetector : IAxisDetector, IDisposable
 {
     private readonly InputEventHandler _eventHandler;
-    private readonly RectTransform _lerpArea;
+    private readonly Func<Vector2> _getLimit;
 
-    private float Limit => _lerpArea.sizeDelta.x;
     private Vector2 _start = Vector2.zero;
     private Vector2 _end = Vector2.zero;
 
     //public float Axis => Mathf.Lerp(0, 1, (_end - _start).x / Limit) * Mathf.Sign((_end - _start).normalized.x);
     public float Axis => throw new NotImplementedException();
-    public float AxisNormalized => Mathf.Lerp(-1, 1, ((_end - _start).x / Limit) + 0.5f);
+    public float AxisNormalized => Mathf.Lerp(-1, 1, ((_end - _start).x / _getLimit.Invoke().x) + 0.5f);
 
     public bool HasAxisInput => _end != _start;
 
-    public HorizontalDetector(InputEventHandler eventHandler, RectTransform lerpArea)
+    public HorizontalDetector(InputEventHandler eventHandler, Func<Vector2> getLerpArea)
     {
         _eventHandler = eventHandler;
-        _lerpArea = lerpArea;
+        _getLimit = getLerpArea;
         SubscribeEvents();
     }
 
-    public HorizontalDetector(InputEventHandler eventHandler, RectTransform lerpArea, PointerEventData pointerDown)
+    public HorizontalDetector Intercept(PointerEventData pointerDown)
     {
-        _eventHandler = eventHandler;
-        _lerpArea = lerpArea;
-        SubscribeEvents();
         OnPointerDown(pointerDown);
+
+        return this;
     }
 
     private void OnPointerDown(PointerEventData eventData)

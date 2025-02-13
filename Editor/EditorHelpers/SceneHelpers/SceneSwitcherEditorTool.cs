@@ -51,7 +51,11 @@ internal class SceneSwitcher : EditorWindow
             if (GUILayout.Button($"\u2196", GUILayout.ExpandWidth(false))) // Select ↖
                 SelectSceneFromBuildSettings(scene);
 
-            if (GUILayout.Button($"Load {GetSceneNameWithoutExtension(scene)}"))
+            var buttonText = isSceneAssetExists
+                ? $"Load {GetSceneNameWithoutExtension(scene)}"
+                : $"{GetSceneNameWithoutExtension(scene)} is Missing! :(";
+                
+            if (GUILayout.Button(buttonText))
             {
                 OpenScene(scene);
                 GUIUtility.ExitGUI();
