@@ -74,6 +74,13 @@ public class ActionsWindowEditorTool : EditorWindow
 
     private void DrawEditorActionButtons()
     {
+        if (_buttons == null)
+        {
+            Debug.Log("Error setting up window. Please restart the window and fix the error!");
+
+            return;
+        } 
+        
         foreach (var buttonData in _buttons)
         {
             if (GUILayout.Button(buttonData.description))
@@ -84,6 +91,12 @@ public class ActionsWindowEditorTool : EditorWindow
 
     private void DrawLabels()
     {
+        if (_labels == null)
+        {
+            Debug.Log("Error setting up window. Please restart the window and fix the error!");
+            return;
+        }
+        
         foreach (var label in _labels)
             EditorGUILayout.SelectableLabel(label, GUILayout.Height(13));
         // EditorGUILayout.SelectableLabel(label, EditorStyles.textField); - custom type
