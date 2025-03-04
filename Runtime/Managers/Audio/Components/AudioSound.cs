@@ -45,8 +45,10 @@ public class AudioSound
     {
         Source.StopSource();
         _audioManager.Stop(this);
-        if (Source.Pool != null)
-            Source.Release();
+        // if (Source.Pool != null)
+        //     Source.Release();
+
+        throw new System.NotImplementedException("Source.Release comments!");
     }
 }
 }

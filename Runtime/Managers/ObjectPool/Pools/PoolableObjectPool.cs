@@ -6,12 +6,12 @@ namespace Game.Pools
 public class PoolableObjectPool<T> : ObjectPool<T>, IPoolableObjectPool<T> where T : class, IPoolable
 {
     private readonly Transform _root;
-    
+
     public PoolableObjectPool(int capacity, Transform root, Func<T> createInstance) : base(capacity, createInstance)
     {
         _root = root;
     }
-    
+
     public override void Release(T instance) => InternalRelease(instance);
 
     public override T Get() => InternalGet(Vector3.zero, Quaternion.identity, null);
@@ -47,9 +47,10 @@ public class PoolableObjectPool<T> : ObjectPool<T>, IPoolableObjectPool<T> where
 
     private void InternalRelease(T instance)
     {
-        if (instance == null || Pool.Contains(instance))
-            throw new InvalidOperationException(
-                $"The element \"{typeof(T).Name}\" is invalid!");
+        if (instance == null)
+            throw new InvalidOperationException($"The element \"{typeof(T).Name}\" is null!");
+        if (Pool.Contains(instance))
+            throw new InvalidOperationException($"The element \"{instance.GetType().Name}\" is already in the pool!");
 
         Pool.Enqueue(instance);
         instance.SetActive(false);

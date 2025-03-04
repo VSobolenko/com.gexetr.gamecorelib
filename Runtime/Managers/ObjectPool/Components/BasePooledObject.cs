@@ -8,8 +8,6 @@ public abstract class BasePooledObject : MonoBehaviour, IPoolable
 
     public virtual bool IsUiElement => false;
     
-    public IObjectPoolRecyclable<BasePooledObject> Pool { get; set; }
-
     public virtual void SetParent(Transform parent) => transform.SetParent(parent);
 
     public virtual void SetPositionAndRotation(Vector3 position, Quaternion rotation)
@@ -23,7 +21,5 @@ public abstract class BasePooledObject : MonoBehaviour, IPoolable
     public virtual void OnUse() { }
 
     public virtual void OnRelease() { }
-
-    public void Release() => Pool?.Release(this);
 }
 }

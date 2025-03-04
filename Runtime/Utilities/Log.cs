@@ -16,7 +16,20 @@ public static class Log
     private static string DebugType => "[debug]";
     private static string CriticalType => "[critical]";
     private static string AnalyticsType => "[analytics]";
+    private static string MethodType => "[method]";
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Method(int shift = 1, Object context = null)
+    {
+#if !DISABLE_LOG
+        var stackTrace = new System.Diagnostics.StackTrace();
+        var frame = stackTrace.GetFrame(shift);
+        var methodName = frame.GetMethod().Name;
+        InternalLog($"{ColoredLogType(MethodType, Violet)} " + methodName, context);
+#endif
+    }
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
     public static void Write(string text, Object context = null)

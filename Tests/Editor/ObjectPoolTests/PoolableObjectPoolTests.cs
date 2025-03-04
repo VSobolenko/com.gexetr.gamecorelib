@@ -96,7 +96,7 @@ internal class PoolableObjectPoolTests
         var ex = Assert.Throws<InvalidOperationException>(() => pool.Release(testElement));
 
         // Assert
-        Assert.AreEqual($"The element \"{testElement.GetType().Name}\" is invalid!", ex.Message);
+        Assert.AreEqual($"The element \"{testElement.GetType().Name}\" is already in the pool!", ex.Message);
     }
 
     private static PoolableTestObject GetTestElement() => new("Key", false);

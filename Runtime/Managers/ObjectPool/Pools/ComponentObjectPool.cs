@@ -48,6 +48,8 @@ public class ComponentObjectPool<T> : ObjectPool<T>, IComponentObjectPool<T> whe
 
     private void InternalRelease(T instance)
     {
+        if (instance == null)
+            throw new InvalidOperationException($"The element \"{typeof(T).Name}\" is null!");
         if (Pool.Contains(instance))
             throw new InvalidOperationException($"The element \"{instance.GetType().Name}\" is already in the pool!");
 
