@@ -6,7 +6,7 @@ using Game.GUI.Windows.Managers;
 using Game.GUI.Windows.Transitions;
 using UnityEngine;
 
-namespace Game.GUI.Installers
+namespace Game.GUI
 {
 public static partial class GuiInstaller
 {

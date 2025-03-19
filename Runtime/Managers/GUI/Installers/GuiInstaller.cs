@@ -4,7 +4,7 @@ using Game.AssetContent.Managers;
 using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Installers
+namespace Game.GUI
 {
 public static partial class GuiInstaller
 {

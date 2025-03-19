@@ -4,7 +4,7 @@ using Game.Audio.Managers;
 using Game.Factories;
 using UnityEngine;
 
-namespace Game.Audio.Installers
+namespace Game.Audio
 {
 public static class AudioInstaller
 {

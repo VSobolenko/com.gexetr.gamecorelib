@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Pools;
-using Moq;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ internal class PoolableObjectPoolCallSequenceTests
     public void Get_GetElementFromPoolInWorldSpace_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        var mockObject = new Mock<IPoolable>();
+        var mockObject = new Moq.Mock<IPoolable>();
         var factory = new Func<IPoolable>(() => mockObject.Object);
         IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, factory);
         var callLog = new List<string>
@@ -34,11 +33,11 @@ internal class PoolableObjectPoolCallSequenceTests
         pool.Get();
 
         // Assert
-        mockObject.Verify(x => x.SetPositionAndRotation(It.IsAny<Vector3>(), It.IsAny<Quaternion>()), Times.Once);
-        mockObject.Verify(x => x.SetParent(It.IsAny<Transform>()), Times.Once);
-        mockObject.Verify(x => x.SetActive(It.IsAny<bool>()), Times.Once);
-        mockObject.Verify(x => x.OnUse(), Times.Once);
-        mockObject.Verify(x => x.OnRelease(), Times.Never);
+        mockObject.Verify(x => x.SetPositionAndRotation(Moq.It.IsAny<Vector3>(), Moq.It.IsAny<Quaternion>()), Moq.Times.Once);
+        mockObject.Verify(x => x.SetParent(Moq.It.IsAny<Transform>()), Moq.Times.Once);
+        mockObject.Verify(x => x.SetActive(Moq.It.IsAny<bool>()), Moq.Times.Once);
+        mockObject.Verify(x => x.OnUse(), Moq.Times.Once);
+        mockObject.Verify(x => x.OnRelease(), Moq.Times.Never);
         Assert.AreEqual(callLog, callOrder);
     }
 
@@ -46,7 +45,7 @@ internal class PoolableObjectPoolCallSequenceTests
     public void Get_GetElementFromPoolInLocalSpace_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        var mockObject = new Mock<IPoolable>();
+        var mockObject = new Moq.Mock<IPoolable>();
         var factory = new Func<IPoolable>(() => mockObject.Object);
         IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, factory);
         var callLog = new List<string>
@@ -66,11 +65,11 @@ internal class PoolableObjectPoolCallSequenceTests
         pool.Get(null, false);
 
         // Assert
-        mockObject.Verify(x => x.SetPositionAndRotation(It.IsAny<Vector3>(), It.IsAny<Quaternion>()), Times.Once);
-        mockObject.Verify(x => x.SetParent(It.IsAny<Transform>()), Times.Once);
-        mockObject.Verify(x => x.SetActive(It.IsAny<bool>()), Times.Once);
-        mockObject.Verify(x => x.OnUse(), Times.Once);
-        mockObject.Verify(x => x.OnRelease(), Times.Never);
+        mockObject.Verify(x => x.SetPositionAndRotation(Moq.It.IsAny<Vector3>(), Moq.It.IsAny<Quaternion>()), Moq.Times.Once);
+        mockObject.Verify(x => x.SetParent(Moq.It.IsAny<Transform>()), Moq.Times.Once);
+        mockObject.Verify(x => x.SetActive(Moq.It.IsAny<bool>()), Moq.Times.Once);
+        mockObject.Verify(x => x.OnUse(), Moq.Times.Once);
+        mockObject.Verify(x => x.OnRelease(), Moq.Times.Never);
         Assert.AreEqual(callLog, callOrder);
     }
 
@@ -86,7 +85,7 @@ internal class PoolableObjectPoolCallSequenceTests
             nameof(IPoolable.OnRelease),
         };
         var callOrder = new List<string>();
-        var mockObject = new Mock<IPoolable>();
+        var mockObject = new Moq.Mock<IPoolable>();
         SetupMethodCall(mockObject, nameof(IPoolable.SetActive), callOrder);
         SetupMethodCall(mockObject, nameof(IPoolable.SetParent), callOrder);
         SetupMethodCall(mockObject, nameof(IPoolable.OnRelease), callOrder);
@@ -95,27 +94,27 @@ internal class PoolableObjectPoolCallSequenceTests
         pool.Release(mockObject.Object);
 
         // Assert
-        mockObject.Verify(x => x.SetActive(It.IsAny<bool>()), Times.Once);
-        mockObject.Verify(x => x.SetParent(It.IsAny<Transform>()), Times.Once);
-        mockObject.Verify(x => x.OnRelease(), Times.Once);
-        mockObject.Verify(x => x.OnUse(), Times.Never);
+        mockObject.Verify(x => x.SetActive(Moq.It.IsAny<bool>()), Moq.Times.Once);
+        mockObject.Verify(x => x.SetParent(Moq.It.IsAny<Transform>()), Moq.Times.Once);
+        mockObject.Verify(x => x.OnRelease(), Moq.Times.Once);
+        mockObject.Verify(x => x.OnUse(), Moq.Times.Never);
         Assert.AreEqual(callLog, callOrder);
     }
 
-    private static void SetupMethodCall(Mock<IPoolable> mockObject, string methodName, ICollection<string> callOrder)
+    private static void SetupMethodCall(Moq.Mock<IPoolable> mockObject, string methodName, ICollection<string> callOrder)
     {
         switch (methodName)
         {
             case nameof(IPoolable.SetPositionAndRotation):
-                mockObject.Setup(x => x.SetPositionAndRotation(It.IsAny<Vector3>(), It.IsAny<Quaternion>()))
+                mockObject.Setup(x => x.SetPositionAndRotation(Moq.It.IsAny<Vector3>(), Moq.It.IsAny<Quaternion>()))
                           .Callback(() => callOrder.Add(nameof(IPoolable.SetPositionAndRotation)));
                 break;
             case nameof(IPoolable.SetParent):
-                mockObject.Setup(x => x.SetParent(It.IsAny<Transform>()))
+                mockObject.Setup(x => x.SetParent(Moq.It.IsAny<Transform>()))
                           .Callback(() => callOrder.Add(nameof(IPoolable.SetParent)));
                 break;
             case nameof(IPoolable.SetActive):
-                mockObject.Setup(x => x.SetActive(It.IsAny<bool>()))
+                mockObject.Setup(x => x.SetActive(Moq.It.IsAny<bool>()))
                           .Callback(() => callOrder.Add(nameof(IPoolable.SetActive)));
                 break;
             case nameof(IPoolable.OnUse):

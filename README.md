@@ -65,7 +65,7 @@
 
 # Don't Forget
 - TextMeshPro
-- [Zenject](https://github.com/modesttree/Zenject?tab=readme-ov-file#installation-) / [VContainer](https://vcontainer.hadashikick.jp/)
+- [Zenject](https://github.com/modesttree/Zenject?tab=readme-ov-file#installation-) / [VContainer](https://vcontainer.hadashikick.jp/getting-started/installation)
 - `.gitignore`, `.gitattributes`, `.gitconfig`, `.editorconfig`
 - `.asmdef`
 - `AssemblyInfo`

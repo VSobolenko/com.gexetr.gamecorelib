@@ -1,6 +1,6 @@
 ﻿using Game.Factories.Managers;
 
-namespace Game.Factories.Installers
+namespace Game.Factories
 {
 public static class FactoryInstaller
 {

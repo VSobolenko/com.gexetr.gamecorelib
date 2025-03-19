@@ -2,7 +2,7 @@
 using Game.Pools.Managers;
 using UnityEngine;
 
-namespace Game.Pools.Installers
+namespace Game.Pools
 {
 public static class ObjectPoolInstaller
 {

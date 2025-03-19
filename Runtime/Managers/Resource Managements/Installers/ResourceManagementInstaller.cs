@@ -1,6 +1,6 @@
 ﻿using Game.AssetContent.Managers;
 
-namespace Game.AssetContent.Installers
+namespace Game.AssetContent
 {
 public static class ResourceManagerInstaller
 {

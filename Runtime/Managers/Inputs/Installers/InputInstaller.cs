@@ -3,7 +3,7 @@ using Game.AssetContent.Managers;
 using Game.Inputs.Managers;
 using UnityEngine;
 
-namespace Game.Inputs.Installers
+namespace Game.Inputs
 {
 public static class InputInstaller
 {

@@ -1,6 +1,6 @@
 ﻿using Game.IO.Managers;
 
-namespace Game.IO.Installers
+namespace Game.IO
 {
 public static class SaveSystemInstaller
 {

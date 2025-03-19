@@ -1,6 +1,5 @@
 ﻿using System;
 using Game.Extensions;
-using Game.Localizations.Installers;
 using TMPro;
 using UnityEngine;
 

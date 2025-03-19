@@ -3,7 +3,7 @@ using Game.IO;
 using Game.PreferencesSaveType;
 using Game.Repositories.Managers;
 
-namespace Game.Repositories.Installers
+namespace Game.Repositories
 {
 public static class RepositoryInstaller
 {

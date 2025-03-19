@@ -5,7 +5,6 @@ using Game.Factories;
 using Game.Pools;
 using Game.Pools.Managers;
 using Game.Tests.Runtime.TestingElements;
-using Moq;
 using NUnit.Framework;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -213,15 +212,15 @@ internal class ObjectPoolComponentManagerTests
         Assert.AreEqual(1, pool.Count);
     }
 
-    private static Mock<IFactoryGameObjects> CreateMockFactory()
+    private static Moq.Mock<IFactoryGameObjects> CreateMockFactory()
     {
-        var mockFactory = new Mock<IFactoryGameObjects>();
-        mockFactory.Setup(x => x.InstantiateEmpty(It.IsAny<Transform>()))
+        var mockFactory = new Moq.Mock<IFactoryGameObjects>();
+        mockFactory.Setup(x => x.InstantiateEmpty(Moq.It.IsAny<Transform>()))
             .Returns((Transform parent) =>
                 CreateEmpty()
                     .With(x => x.transform.SetParent(parent)));
 
-        mockFactory.Setup(x => x.InstantiateEmpty(It.IsAny<Transform>(), It.IsAny<Type[]>())).Returns(
+        mockFactory.Setup(x => x.InstantiateEmpty(Moq.It.IsAny<Transform>(), Moq.It.IsAny<Type[]>())).Returns(
             (Transform parent, Type[] components) =>
             {
                 return CreateEmpty()
@@ -229,11 +228,18 @@ internal class ObjectPoolComponentManagerTests
                     .With(x => x.transform.SetParent(parent));
             });
 
-        mockFactory.Setup(x => x.Instantiate(It.IsAny<MonoPoolableTestObject>(), It.IsAny<Transform>())).Returns(
+        mockFactory.Setup(x => x.Instantiate(Moq.It.IsAny<MonoPoolableTestObject>(), Moq.It.IsAny<Transform>())).Returns(
             (MonoPoolableTestObject pooled, Transform parent) => Object.Instantiate(pooled, parent));
         return mockFactory;
     }
 
+    // protected static FakeMock<IFactoryGameObjects> CreateMockFactory() => new();
+    //
+    // protected class FakeMock<T>
+    // {
+    //     public T Object => throw new System.NotImplementedException();
+    // }
+    
     private static MonoPoolableTestObject CreateUniqueMonoPooled()
     {
         return CreateEmpty()

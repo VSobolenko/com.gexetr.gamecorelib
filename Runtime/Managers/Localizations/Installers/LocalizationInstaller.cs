@@ -3,7 +3,7 @@ using Game.Localizations.Components;
 using Game.Localizations.Managers;
 using UnityEngine;
 
-namespace Game.Localizations.Installers
+namespace Game.Localizations
 {
 public static class LocalizationInstaller
 {
