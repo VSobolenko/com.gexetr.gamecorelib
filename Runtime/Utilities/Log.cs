@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -8,26 +9,25 @@ namespace Game
 public static class Log
 {
     public static ILogger logger = Debug.unityLogger;
+    public static bool enable = true;
     public static bool enableAnalyticsEvents = false;
-    private static string InfoType => "[info]";
-    private static string WarningType => "[warning]";
-    private static string ErrorType => "[error]";
-    private static string ExceptionType => "[exception]";
-    private static string DebugType => "[debug]";
-    private static string CriticalType => "[critical]";
-    private static string AnalyticsType => "[analytics]";
-    private static string MethodType => "[method]";
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void Method(int shift = 1, Object context = null)
+    
+    private static string InfoType => "info";
+    private static string WarningType => "warning";
+    private static string ErrorType => "error";
+    private static string ExceptionType => "exception";
+    private static string DebugType => "debug";
+    private static string CriticalType => "critical";
+    private static string AnalyticsType => "analytics";
+    private static string MethodType => "method";
+    private static string FieldsType => "fields";
+    
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatic()
     {
-#if !DISABLE_LOG
-        var stackTrace = new System.Diagnostics.StackTrace();
-        var frame = stackTrace.GetFrame(shift);
-        var methodName = frame.GetMethod().Name;
-        InternalLog($"{ColoredLogType(MethodType, Violet)} " + methodName, context);
-#endif
+        logger = Debug.unityLogger;
+        enable = true;
+        enableAnalyticsEvents = false;
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -44,7 +44,7 @@ public static class Log
     public static void Info(string text, Object context = null)
     {
 #if !DISABLE_LOG
-        InternalLog($"{ColoredLogType(InfoType, Green)} " + text, context);
+        Marked(InfoType, text, Color.Green, context);
 #endif
     }
 
@@ -53,7 +53,7 @@ public static class Log
     public static void Warning(string text, Object context = null)
     {
 #if !DISABLE_LOG
-        InternalLog($"{ColoredLogType(WarningType, Orange)} " + text, context);
+        Marked(WarningType, text, Color.Orange, context);
 #endif
     }
 
@@ -62,7 +62,7 @@ public static class Log
     public static void Error(string text, Object context = null)
     {
 #if !DISABLE_LOG
-        InternalLog($"{ColoredLogType(ErrorType, Red)} " + text, context);
+        Marked(ErrorType, text, Color.Red, context);
 #endif
     }
 
@@ -71,7 +71,7 @@ public static class Log
     public static void Exception(string text, Object context = null)
     {
 #if !DISABLE_LOG
-        InternalLog($"{ColoredLogType(ExceptionType, Pink)} " + text, context);
+        Marked(ExceptionType, text, Color.Pink, context);
 #endif
     }
 
@@ -80,18 +80,30 @@ public static class Log
     public static void InternalError(Object context = null)
     {
 #if !DISABLE_LOG
-        InternalLog($"{ColoredLogType(CriticalType, Blue)} " + "Internal error", context);
+        Marked(CriticalType, "Internal error", Color.DeepSkyBlue, context);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Analytics(object action, Object context = null)
+    public static void Method(int shift = 1, Object context = null)
+    {
+#if !DISABLE_LOG
+        var stackTrace = new System.Diagnostics.StackTrace();
+        var frame = stackTrace.GetFrame(shift);
+        var methodName = frame.GetMethod().Name;
+        Marked(MethodType, methodName, Color.Beige, context);
+#endif
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void AnalyticsParams(object action, Object context = null)
     {
 #if !DISABLE_LOG
         if (enableAnalyticsEvents == false)
             return;
-        InternalLog($"{ColoredLogType(AnalyticsType, Yellow)} " +
+        InternalLog($"{ColoredLogType(AnalyticsType, Color.Yellow)} " +
                     $"Event={action.GetType().Name};" +
                     $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}",
                     context);
@@ -100,10 +112,52 @@ public static class Log
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
+    public static void Analytics(object text, Object context = null)
+    {
+#if !DISABLE_LOG
+        if (enableAnalyticsEvents == false)
+            return;
+        Marked(AnalyticsType, text, Color.Yellow, context);
+
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Fields(object readableObject, object prefix = null, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance, Object context = null)
+    {
+#if !DISABLE_LOG
+        var readable = readableObject.GetType();
+        var fields = readable.GetFields(flags);
+        var text = string.Join("; ", fields.Select(f => $"{f.Name}={f.GetValue(readableObject)}"));
+        Marked(FieldsType, prefix + text, Color.Turquoise, context);
+#endif
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void MarkedType(System.Type marker, object text, Color color = Color.White, Object context = null)
+    {
+#if !DISABLE_LOG
+        Marked(marker.Name, text, color, context);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Marked(string marker, object text, Color color = Color.Cyan, Object context = null)
+    {
+#if !DISABLE_LOG
+        InternalLog($"{ColoredLogType(marker, color)} " + text, context);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     private static void InternalLog(string text, Object context)
     {
 #if !DISABLE_LOG
-        if (logger.logEnabled == false)
+        if (logger.logEnabled == false || enable == false)
             return;
         logger.Log(LogType.Log, (object)text, context);
 #endif
@@ -111,25 +165,55 @@ public static class Log
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    private static string ColoredLogType(string type, string color)
+    private static string ColoredLogType(string type, Color color)
     {
         return !Application.isEditor || Application.isBatchMode
             ? string.Concat($"[{DynamicData.GameData.Identifier}]", type)
-            : string.Format(color, type);
+            : string.Format($"<color=#{(int)color:X6}>[{{0}}]</color>", type);
     }
 
-    #region Colors
-
-    private static string NonColor => "{0}";
-    private static string Green => "<color=#00FF00>{0}</color>";
-    private static string Orange => "<color=#FF8000>{0}</color>";
-    private static string Red => "<color=#EF4E4E>{0}</color>";
-    private static string Blue => "<color=#0000FF>{0}</color>";
-    private static string Cyan => "<color=#00FFFF>{0}</color>";
-    private static string Yellow => "<color=#FFFF00>{0}</color>";
-    private static string Violet => "<color=#8F00FF>{0}</color>";
-    private static string Pink => "<color=#FFC0CB>{0}</color>";
-
-    #endregion
+    public enum Color
+    {
+        Green    = 0x00FF00,
+        Orange   = 0xFF8000,
+        Red      = 0xEF4E4E,
+        Blue     = 0x0000FF,
+        Cyan     = 0x00FFFF,
+        Yellow   = 0xFFFF00,
+        Violet   = 0x8F00FF,
+        Pink     = 0xFFC0CB,
+        
+        Brown       = 0x8B4513,
+        Gray        = 0x808080,
+        LightGray   = 0xD3D3D3,
+        White       = 0xFFFFFF,
+        Black       = 0x000000,
+        Lime        = 0x32CD32,
+        Navy        = 0x000080,
+        Teal        = 0x008080,
+        Olive       = 0x808000,
+        Gold        = 0xFFD700,
+        Silver      = 0xC0C0C0,
+        Maroon      = 0x800000,
+        Coral       = 0xFF7F50,
+        Indigo      = 0x4B0082,
+        Turquoise   = 0x40E0D0,
+        Beige       = 0xF5F5DC,
+        Salmon      = 0xFA8072,
+        Tomato      = 0xFF6347,
+        DeepSkyBlue = 0x00BFFF,
+        HotPink     = 0xFF69B4,
+        Aqua        = 0x00FFFF,
+        Chocolate   = 0xD2691E
+    }
+    
+    private static Color32 ToColor32(Color tag)
+    {
+        int hex = (int)tag;
+        byte r = (byte)((hex >> 16) & 0xFF);
+        byte g = (byte)((hex >> 8) & 0xFF);
+        byte b = (byte)(hex & 0xFF);
+        return new Color32(r, g, b, 255);
+    }
 }
 }

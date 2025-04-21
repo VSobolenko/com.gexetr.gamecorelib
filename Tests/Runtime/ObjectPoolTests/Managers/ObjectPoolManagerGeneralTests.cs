@@ -230,6 +230,8 @@ internal abstract class ObjectPoolManagerGeneralTests
         Assert.AreEqual(1, pool.Count);
     }
 
+#if GCL_ENABLE_MOQ
+
     protected static Moq.Mock<IFactoryGameObjects> CreateMockFactory()
     {
         var mockFactory = new Moq.Mock<IFactoryGameObjects>();
@@ -251,12 +253,20 @@ internal abstract class ObjectPoolManagerGeneralTests
         return mockFactory;
     }
 
-    // protected static FakeMock<IFactoryGameObjects> CreateMockFactory() => new();
-    //
-    // protected class FakeMock<T>
-    // {
-    //     public T Object => throw new System.NotImplementedException();
-    // }
+#else 
+    private const string ErrorMessage = "Install Moq package and use GCL_ENABLE_MOQ define for tests!";
+
+    protected class FakeMoq
+    {
+        public IFactoryGameObjects Object => throw new NotSupportedException(ErrorMessage);
+    }
+    
+    protected static FakeMoq CreateMockFactory()
+    {
+        throw new NotSupportedException(ErrorMessage);
+    }
+    
+#endif
     
     protected static MonoPoolableTestObject CreateUniqueMonoPooled()
     {

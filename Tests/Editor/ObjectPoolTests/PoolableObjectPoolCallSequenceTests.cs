@@ -13,7 +13,7 @@ internal class PoolableObjectPoolCallSequenceTests
     public void Get_GetElementFromPoolInWorldSpace_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        var mockObject = new Moq.Mock<IPoolable>();
+        var mockObject = GetMockObject<IPoolable>();
         var factory = new Func<IPoolable>(() => mockObject.Object);
         IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, factory);
         var callLog = new List<string>
@@ -45,7 +45,7 @@ internal class PoolableObjectPoolCallSequenceTests
     public void Get_GetElementFromPoolInLocalSpace_ShouldCallMethodsInCorrectOrder()
     {
         // Arrange
-        var mockObject = new Moq.Mock<IPoolable>();
+        var mockObject = GetMockObject<IPoolable>();
         var factory = new Func<IPoolable>(() => mockObject.Object);
         IPoolableObjectPool<IPoolable> pool = new PoolableObjectPool<IPoolable>(5, null, factory);
         var callLog = new List<string>
@@ -85,7 +85,7 @@ internal class PoolableObjectPoolCallSequenceTests
             nameof(IPoolable.OnRelease),
         };
         var callOrder = new List<string>();
-        var mockObject = new Moq.Mock<IPoolable>();
+        var mockObject = GetMockObject<IPoolable>();
         SetupMethodCall(mockObject, nameof(IPoolable.SetActive), callOrder);
         SetupMethodCall(mockObject, nameof(IPoolable.SetParent), callOrder);
         SetupMethodCall(mockObject, nameof(IPoolable.OnRelease), callOrder);
@@ -101,34 +101,76 @@ internal class PoolableObjectPoolCallSequenceTests
         Assert.AreEqual(callLog, callOrder);
     }
 
+#if GCL_ENABLE_MOQ
+    private static Moq.Mock<T> GetMockObject<T>() where T : class
+    {
+        return new Moq.Mock<T>();
+    }
+    
     private static void SetupMethodCall(Moq.Mock<IPoolable> mockObject, string methodName, ICollection<string> callOrder)
     {
         switch (methodName)
         {
             case nameof(IPoolable.SetPositionAndRotation):
                 mockObject.Setup(x => x.SetPositionAndRotation(Moq.It.IsAny<Vector3>(), Moq.It.IsAny<Quaternion>()))
-                          .Callback(() => callOrder.Add(nameof(IPoolable.SetPositionAndRotation)));
+                    .Callback(() => callOrder.Add(nameof(IPoolable.SetPositionAndRotation)));
                 break;
             case nameof(IPoolable.SetParent):
                 mockObject.Setup(x => x.SetParent(Moq.It.IsAny<Transform>()))
-                          .Callback(() => callOrder.Add(nameof(IPoolable.SetParent)));
+                    .Callback(() => callOrder.Add(nameof(IPoolable.SetParent)));
                 break;
             case nameof(IPoolable.SetActive):
                 mockObject.Setup(x => x.SetActive(Moq.It.IsAny<bool>()))
-                          .Callback(() => callOrder.Add(nameof(IPoolable.SetActive)));
+                    .Callback(() => callOrder.Add(nameof(IPoolable.SetActive)));
                 break;
             case nameof(IPoolable.OnUse):
                 mockObject.Setup(x => x.OnUse())
-                          .Callback(() => callOrder.Add(nameof(IPoolable.OnUse)));
+                    .Callback(() => callOrder.Add(nameof(IPoolable.OnUse)));
                 break;
             case nameof(IPoolable.OnRelease):
                 mockObject.Setup(x => x.OnRelease())
-                          .Callback(() => callOrder.Add(nameof(IPoolable.OnRelease)));
+                    .Callback(() => callOrder.Add(nameof(IPoolable.OnRelease)));
                 break;
             default:
                 throw new ArgumentException("Unknown method");
         }
     }
+#else
+    private static string ErrorMessage = "Install Moq package and use GCL_ENABLE_MOQ define for tests!";
+
+    private class Moq
+    {
+        internal class It
+        {
+            public static T IsAny<T>() => throw new NotSupportedException(ErrorMessage);
+        }
+
+        internal readonly struct Times
+        {
+            public static Times Once() => throw new NotSupportedException(ErrorMessage);
+            public static Times Never() => throw new NotSupportedException(ErrorMessage);
+        }
+    }
+
+    private class FakeMoq<T>
+    {
+        public IPoolable Object => throw new NotSupportedException(ErrorMessage);
+
+        public void Verify(System.Linq.Expressions.Expression<Action<T>> expression, Func<Moq.Times> times) =>
+            throw new NotSupportedException(ErrorMessage);
+    }
+
+    private static FakeMoq<T> GetMockObject<T>()
+    {
+        throw new NotSupportedException(ErrorMessage);
+    }
+
+    private static void SetupMethodCall<T>(FakeMoq<T> mockObject, string methodName, ICollection<string> callOrder)
+    {
+        throw new NotSupportedException(ErrorMessage);
+    }
+    
+#endif
 
     private static IPoolable GetTestElement()
     {

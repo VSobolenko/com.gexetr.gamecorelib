@@ -187,6 +187,31 @@ public class ActionsWindowEditorTool : EditorWindow
         return this;
     }
 
+    public ActionsWindowEditorTool AddPlayerPrefsLabel()
+    {
+        AddLabel($@"PlayerPrefs: HKCU\Software\{PlayerSettings.companyName}\{Application.productName}");
+
+        return this;
+    }
+    
+    public ActionsWindowEditorTool AddClearAllPersistentDataButton()
+    {
+        AddButton(new ButtonData
+        {
+            description = "Delete Persistent Data Content",
+            action = () => DeleteFolderContent(Application.persistentDataPath)
+        });
+
+        return this;
+    }
+    
+    public ActionsWindowEditorTool AddPersistentDataPathLabel()
+    {
+        AddLabel($@"Persistent Data Path: {Application.persistentDataPath}");
+
+        return this;
+    }
+    
     public ActionsWindowEditorTool AddAutoPlayButton()
     {
         AddButton(new ButtonData
@@ -203,8 +228,25 @@ public class ActionsWindowEditorTool : EditorWindow
         if (Directory.Exists(path) == false)
             return false;
         Directory.Delete(path, recursive);
-        if (log)
-            Log.Info($"Directory Success Delete: {path}");
+        if (log) Log.Info($"Directory Success Delete: {path}");
+
+        return true;
+    }
+    
+    public bool DeleteFolderContent(string path, bool log = true, bool recursive = true)
+    {
+        if (Directory.Exists(path) == false)
+            return false;
+        
+        var dir = new DirectoryInfo(path);
+
+        foreach (var file in dir.GetFiles())
+            file.Delete();
+
+        foreach (var subDir in dir.GetDirectories())
+            subDir.Delete(true);
+        
+        if (log) Log.Info($"Directory Content Success Delete: {path}");
 
         return true;
     }
@@ -214,8 +256,7 @@ public class ActionsWindowEditorTool : EditorWindow
         if (File.Exists(filePath) == false)
             return false;
         File.Delete(filePath);
-        if (log)
-            Log.Info($"File Success Delete: {filePath}");
+        if (log) Log.Info($"File Success Delete: {filePath}");
 
         return true;
     }
