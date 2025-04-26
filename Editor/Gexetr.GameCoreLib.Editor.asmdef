@@ -1,8 +1,8 @@
 {
-    "name": "GameCoreLib.Editor",
+    "name": "Gexetr.GameCoreLib.Editor",
     "rootNamespace": "GameEditor",
     "references": [
-        "GameCoreLib",
+        "Gexetr.GameCoreLib",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [

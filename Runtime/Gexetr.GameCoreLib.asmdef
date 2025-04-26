@@ -1,5 +1,5 @@
 {
-    "name": "GameCoreLib",
+    "name": "Gexetr.GameCoreLib",
     "rootNamespace": "Game",
     "references": [
         "Unity.TextMeshPro",

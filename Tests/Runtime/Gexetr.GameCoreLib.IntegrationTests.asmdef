@@ -1,18 +1,19 @@
 {
-    "name": "GameCoreLib.UnitTests",
+    "name": "Gexetr.GameCoreLib.IntegrationTests",
     "rootNamespace": "Game",
     "references": [
-        "UnityEditor.TestRunner",
-        "GameCoreLib"
+        "UnityEngine.TestRunner",
+        "Unity.ResourceManager",
+        "Unity.Addressables",
+        "Gexetr.GameCoreLib"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
+        "Newtonsoft.Json.dll",
         "Moq.dll"
     ],
     "autoReferenced": true,

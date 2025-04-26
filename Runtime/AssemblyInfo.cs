@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("GameCoreLib.UnitTests")]
-[assembly: InternalsVisibleTo("GameCoreLib.IntegrationTests")]
-[assembly: InternalsVisibleTo("GameCoreLib.Editor")]
-[assembly: AssemblyTitle("GameCoreLib")]
+[assembly: InternalsVisibleTo("Gexetr.GameCoreLib.UnitTests")]
+[assembly: InternalsVisibleTo("Gexetr.GameCoreLib.IntegrationTests")]
+[assembly: InternalsVisibleTo("Gexetr.GameCoreLib.Editor")]
+[assembly: AssemblyTitle("Gexetr.GameCoreLib")]
 [assembly: CLSCompliant(false)]      
 [assembly: AssemblyVersion("1.0.0")]
