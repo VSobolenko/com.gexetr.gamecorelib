@@ -44,7 +44,7 @@ public class LocalizableTMP : LocalizableBehaviour
     {
         if (manager == null || targetText == null)
         {
-            Log.Error($"Translation is skipped for object \"{gameObject.name}\"");
+            Log.Errored($"Translation is skipped for object \"{gameObject.name}\"");
             return;
         }
 
@@ -62,7 +62,7 @@ public class LocalizableTMP : LocalizableBehaviour
         var settings = LocalizationInstaller.settings;
         if (settings == null)
         {
-            Log.Error($"Can't find settings for manager");
+            Log.Errored($"Can't find settings for manager");
 
             return;
         }

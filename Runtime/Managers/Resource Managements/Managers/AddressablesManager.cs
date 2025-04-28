@@ -43,7 +43,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
 
         if (IsHandleCompleteSuccess(ref handle) == false)
         {
-            Log.Error($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}; Key={key}");
+            Log.Errored($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}; Key={key}");
 
             return default;
         }
@@ -77,7 +77,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
 
         if (IsHandleCompleteSuccess(ref handle) == false)
         {
-            Log.Error($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
+            Log.Errored($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
 
             return default;
         }
@@ -108,7 +108,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
             if (handler.IsValid())
                 Addressables.Release(handler);
             else
-                Log.Error($"handler in not valid: {key}");
+                Log.Errored($"handler in not valid: {key}");
         }
 
         _loadedHandlers.Clear();
@@ -126,7 +126,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
 
         if (IsHandleCompleteSuccess(ref handle) == false)
         {
-            Log.Error($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
+            Log.Errored($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
 
             return default;
         }
@@ -141,7 +141,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
 
         if (IsHandleCompleteSuccess(ref handle) == false)
         {
-            Log.Error($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
+            Log.Errored($"Asset loading error: Status={handle.Status}; IsDone={handle.IsDone}");
 
             return default;
         }

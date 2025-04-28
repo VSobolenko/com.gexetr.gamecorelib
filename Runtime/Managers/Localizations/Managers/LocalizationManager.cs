@@ -79,7 +79,7 @@ internal class LocalizationManager : ILocalizationManager
         }
         catch (Exception e)
         {
-            Log.Error($"Exception in load localization from file: {e.Message}");
+            Log.Errored($"Exception in load localization from file: {e.Message}");
         }
     }
 

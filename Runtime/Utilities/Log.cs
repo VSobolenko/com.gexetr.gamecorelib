@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Game
 {
 [System.Diagnostics.DebuggerNonUserCode]
-public static class Log
+public partial class Log
 {
     public static ILogger logger = Debug.unityLogger;
     public static bool enable = true;
@@ -14,13 +14,15 @@ public static class Log
     
     private static string InfoType => "info";
     private static string WarningType => "warning";
-    private static string ErrorType => "error";
+    private static string ErroredType => "error";
     private static string ExceptionType => "exception";
     private static string DebugType => "debug";
     private static string CriticalType => "critical";
     private static string AnalyticsType => "analytics";
     private static string MethodType => "method";
     private static string FieldsType => "fields";
+
+    private Log() { }
     
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatic()
@@ -32,73 +34,91 @@ public static class Log
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Write(string text, Object context = null)
+    public static void Write(string text, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
-        InternalLog(text, context);
+        InternalLog(text, context, logType);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Info(string text, Object context = null)
+    public static void Warning(string text, Object context = null, LogType logType = LogType.Warning)
     {
 #if !DISABLE_LOG
-        Marked(InfoType, text, Color.Green, context);
-#endif
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void Warning(string text, Object context = null)
-    {
-#if !DISABLE_LOG
-        Marked(WarningType, text, Color.Orange, context);
-#endif
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void Error(string text, Object context = null)
-    {
-#if !DISABLE_LOG
-        Marked(ErrorType, text, Color.Red, context);
-#endif
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void Exception(string text, Object context = null)
-    {
-#if !DISABLE_LOG
-        Marked(ExceptionType, text, Color.Pink, context);
-#endif
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void InternalError(Object context = null)
-    {
-#if !DISABLE_LOG
-        Marked(CriticalType, "Internal error", Color.DeepSkyBlue, context);
-#endif
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void Method(int shift = 1, Object context = null)
-    {
-#if !DISABLE_LOG
-        var stackTrace = new System.Diagnostics.StackTrace();
-        var frame = stackTrace.GetFrame(shift);
-        var methodName = frame.GetMethod().Name;
-        Marked(MethodType, methodName, Color.Beige, context);
+        InternalLog(text, context, logType);
 #endif
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void AnalyticsParams(object action, Object context = null)
+    public static void Error(string text, Object context = null, LogType logType = LogType.Error)
+    {
+#if !DISABLE_LOG
+        InternalLog(text, context, logType);
+#endif
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Info(string text, Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        Marked(InfoType, text, Color.Green, context, logType);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Warner(string text, Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        Marked(WarningType, text, Color.Orange, context, logType);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Errored(string text, Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        Marked(ErroredType, text, Color.Red, context, logType);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Exception(string text, Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        Marked(ExceptionType, text, Color.Pink, context, logType);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void InternalError(Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        Marked(CriticalType, "Internal error", Color.DeepSkyBlue, context, logType);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void Method(int shift = 1, Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        var stackTrace = new System.Diagnostics.StackTrace();
+        var frame = stackTrace.GetFrame(shift);
+        var methodName = frame.GetMethod().Name;
+        Marked(MethodType, methodName, Color.Beige, context, logType);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
+    public static void AnalyticsParams(object action, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
         if (enableAnalyticsEvents == false)
@@ -106,60 +126,60 @@ public static class Log
         InternalLog($"{ColoredLogType(AnalyticsType, Color.Yellow)} " +
                     $"Event={action.GetType().Name};" +
                     $"Value={string.Join(";", action.GetType().GetFields().ToDictionary(x => x.Name, x => x.GetValue(action)))}",
-                    context);
+            context, logType);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Analytics(object text, Object context = null)
+    public static void Analytics(object text, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
         if (enableAnalyticsEvents == false)
             return;
-        Marked(AnalyticsType, text, Color.Yellow, context);
+        Marked(AnalyticsType, text, Color.Yellow, context, logType);
 
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Fields(object readableObject, object prefix = null, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance, Object context = null)
+    public static void Fields(object readableObject, object prefix = null, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
         var readable = readableObject.GetType();
         var fields = readable.GetFields(flags);
         var text = string.Join("; ", fields.Select(f => $"{f.Name}={f.GetValue(readableObject)}"));
-        Marked(FieldsType, prefix + text, Color.Turquoise, context);
+        Marked(FieldsType, prefix + text, Color.Turquoise, context, logType);
 #endif
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void MarkedType(System.Type marker, object text, Color color = Color.White, Object context = null)
+    public static void MarkedType(System.Type marker, object text, Color color = Color.White, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
-        Marked(marker.Name, text, color, context);
+        Marked(marker.Name, text, color, context, logType);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Marked(string marker, object text, Color color = Color.Cyan, Object context = null)
+    public static void Marked(string marker, object text, Color color = Color.Cyan, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
-        InternalLog($"{ColoredLogType(marker, color)} " + text, context);
+        InternalLog($"{ColoredLogType(marker, color)} " + text, context, logType);
 #endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    private static void InternalLog(string text, Object context)
+    private static void InternalLog(string text, Object context, LogType logType)
     {
 #if !DISABLE_LOG
         if (logger.logEnabled == false || enable == false)
             return;
-        logger.Log(LogType.Log, (object)text, context);
+        logger.Log(logType, (object)text, context);
 #endif
     }
 

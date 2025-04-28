@@ -17,7 +17,7 @@ internal class SeparateKeyManagerProfiler : IPoolProfiler
         _poolType = poolType;
         _pool = pool as Dictionary<string, Stack<IPoolable>>;
         if (_pool == null)
-            Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
+            Log.Errored($"Can't unboxing pool dictionary for {GetType().Name} profiler");
     }
 
     public void DrawStatus(VisualElement root)

@@ -86,7 +86,7 @@ internal class WindowsFactory : IWindowFactory
             if (Application.isEditor)
                 throw new ArgumentNullException(mediatorType.Name, errorMessage);
             
-            Log.Error(errorMessage);
+            Log.Errored(errorMessage);
 
             return false;
         }
@@ -105,7 +105,7 @@ internal class WindowsFactory : IWindowFactory
             var errorMessage = $"Can't find \"{windowType}\" component in {prefab.gameObject}.";
             if (Application.isEditor)
                 throw new ArgumentNullException(windowType.Name, errorMessage);
-            Log.Error(errorMessage);
+            Log.Errored(errorMessage);
 
             return false;
         }

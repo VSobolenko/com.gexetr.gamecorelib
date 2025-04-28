@@ -23,7 +23,7 @@ internal class TypeManagerProfiler : IPoolProfiler
         _pool = pool as Dictionary<Type, IObjectPool<IPoolable>>;
         if (_pool == null)
         {
-            Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
+            Log.Errored($"Can't unboxing pool dictionary for {GetType().Name} profiler");
 
             return;
         }
@@ -109,7 +109,7 @@ internal class TypeManagerProfiler : IPoolProfiler
     {
         if (_pool == null)
         {
-            Log.Error("Null pool");
+            Log.Errored("Null pool");
 
             return;
         }

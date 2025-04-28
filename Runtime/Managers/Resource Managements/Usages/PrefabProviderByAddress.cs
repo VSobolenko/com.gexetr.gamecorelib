@@ -23,7 +23,7 @@ public abstract class PrefabProviderByAddress<T> where T : class
         
         if (prefab == null)
         {
-            Log.Error($"Addressable key prefab {key} missing");
+            Log.Errored($"Addressable key prefab {key} missing");
             return null;
         }
 
@@ -31,7 +31,7 @@ public abstract class PrefabProviderByAddress<T> where T : class
         
         if (levelSelectionItem == null)
         {
-            Log.Error($"Component [{typeof(T)}] missing from {prefab.name} gameObject");
+            Log.Errored($"Component [{typeof(T)}] missing from {prefab.name} gameObject");
             return null;
         }
 
@@ -48,7 +48,7 @@ public abstract class PrefabProviderByAddress<T> where T : class
         
         if (prefab == null)
         {
-            Log.Error($"Addressable key prefab {key} missing");
+            Log.Errored($"Addressable key prefab {key} missing");
             return null;
         }
 
@@ -56,7 +56,7 @@ public abstract class PrefabProviderByAddress<T> where T : class
         
         if (levelSelectionItem == null)
         {
-            Log.Error($"Component [{typeof(T)}] missing from {prefab.name} gameObject");
+            Log.Errored($"Component [{typeof(T)}] missing from {prefab.name} gameObject");
             return null;
         }
 
@@ -84,7 +84,7 @@ public abstract class ScriptableObjectProviderByAddress<T> where T : ScriptableO
         
         if (prefab == null)
         {
-            Log.Error($"Addressable key prefab {key} missing");
+            Log.Errored($"Addressable key prefab {key} missing");
             return null;
         }
 
@@ -101,7 +101,7 @@ public abstract class ScriptableObjectProviderByAddress<T> where T : ScriptableO
         
         if (prefab == null)
         {
-            Log.Error($"Addressable key prefab {key} missing");
+            Log.Errored($"Addressable key prefab {key} missing");
             return null;
         }
 

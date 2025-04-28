@@ -31,7 +31,7 @@ public class InGameDebugConsoleProvider : MonoBehaviour
             Log.Warning($"Turn on {nameof(InGameDebugConsoleProvider)}");
 
         if (Application.isEditor == false && _enableInEditor)
-            Log.Error($"Will be loaded {PrefabPath}.prefab; If this is a Dev_Build, you can skip it");
+            Log.Errored($"Will be loaded {PrefabPath}.prefab; If this is a Dev_Build, you can skip it");
 
         if (_enableInEditor == false)
             return;

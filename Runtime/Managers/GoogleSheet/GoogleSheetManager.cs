@@ -79,7 +79,7 @@ public class GoogleSheetManager
         }
         catch (Exception e)
         {
-            Log.Error($"Can't get csv {e.Message}");
+            Log.Errored($"Can't get csv {e.Message}");
 
             return false;
         }
