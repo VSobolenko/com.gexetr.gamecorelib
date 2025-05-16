@@ -22,13 +22,16 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
 
     public LiteStateMachine AddState<TState>(TState state) where TState : IState
     {
-        _states.Add(typeof(TState), state);
+        if (_states.ContainsKey(state.GetType()))
+            throw new ArgumentException(nameof(state), $"FSM contains {state.GetType().Name} state");
+
+        _states.Add(state.GetType(), state);
         return this;
     }
 
     public LiteStateMachine RemoveState<TState>(TState state) where TState : IState
     {
-        _states.Remove(typeof(TState));
+        _states.Remove(state.GetType());
         return this;
     }
 
@@ -67,7 +70,13 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
         OnStateChange?.Invoke(state);
     }
 
-    private TState GetState<TState>() where TState : class, IState => _states[typeof(TState)] as TState;
+    private TState GetState<TState>() where TState : class, IState
+    {
+        if (_states.TryGetValue(typeof(TState), out var state))
+            return state as TState;
+
+        throw new ArgumentNullException(nameof(TState), $"Unknown state type: {typeof(TState).Name}");
+    }
 
     public IState this[Type type] => _states[type];
     
