@@ -34,8 +34,9 @@ public static partial class GuiInstaller
     public static IWindowFactory WindowFactory(IMediatorInstantiator mediatorBuilder,
         IResourceManager resourceManager,
         IFactoryGameObjects factory,
-        string uiRootPath) =>
+        string uiRootPath,
+        string uiTabSwitcherPath) =>
         new WindowsFactory(mediatorBuilder, resourceManager, factory)
-            .WithParameter(uiRootPath);
+            .WithParameter(uiRootPath, uiTabSwitcherPath);
 }
 }

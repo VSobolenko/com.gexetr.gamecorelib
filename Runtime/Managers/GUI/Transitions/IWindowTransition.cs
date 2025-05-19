@@ -6,8 +6,8 @@ namespace Game.GUI.Windows.Transitions
 {
 public interface IWindowTransition
 {
-    Task Open(WindowData windowData);
-    Task Close(WindowData windowData);
+    Task Open(WindowData<IMediator> windowData);
+    Task Close(WindowData<IMediator> windowData);
 }
 
 internal static class WindowTransitionStatic

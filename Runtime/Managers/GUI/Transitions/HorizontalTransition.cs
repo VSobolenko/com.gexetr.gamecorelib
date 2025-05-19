@@ -19,7 +19,7 @@ internal class HorizontalTransition : IWindowTransition
         _height = Screen.height;
     }
 
-    public Task Open(WindowData windowData)
+    public Task Open(WindowData<IMediator> windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
 
@@ -35,7 +35,7 @@ internal class HorizontalTransition : IWindowTransition
         return completionSource.Task;
     }
 
-    public Task Close(WindowData windowData)
+    public Task Close(WindowData<IMediator> windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
 

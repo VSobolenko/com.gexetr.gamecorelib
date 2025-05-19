@@ -16,7 +16,7 @@ internal class FadeTransition : IWindowTransition
         _settings = settings;
     }
 
-    public Task Open(WindowData windowData)
+    public Task Open(WindowData<IMediator> windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
         var canvasGroup = windowData.CanvasGroup;
@@ -29,7 +29,7 @@ internal class FadeTransition : IWindowTransition
         return completionSource.Task;
     }
 
-    public Task Close(WindowData windowData)
+    public Task Close(WindowData<IMediator> windowData)
     {
         var completionSource = new TaskCompletionSource<bool>();
         var canvasGroup = windowData.CanvasGroup;

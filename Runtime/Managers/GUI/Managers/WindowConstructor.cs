@@ -6,12 +6,12 @@ using Game.GUI.Windows.Factories;
 using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
-{
-internal class WindowConstructor : IDisposable, IEnumerable<WindowData>
+{ 
+internal class WindowConstructor<T> : IDisposable, IEnumerable<WindowData<T>> where T : class, IMediator
 {
     public int Count => _windows.Count;
 
-    private readonly List<WindowData> _windows = new(8);
+    private readonly List<WindowData<T>> _windows = new(8);
     private readonly IWindowFactory _windowFactory;
     private readonly Transform _root;
 
@@ -29,8 +29,8 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowData>
         _windows.Clear();
     }
 
-    public WindowData OpenWindowSilently<TMediator>(Action<TMediator> initWindow = null)
-        where TMediator : class, IMediator
+    public WindowData<T> OpenWindowSilently<TMediator>(Action<TMediator> initWindow = null)
+        where TMediator : class, T
     {
         if (_windowFactory.TryCreateWindow<TMediator>(_root, out var mediator, out var window) == false)
             throw new ArgumentNullException(typeof(TMediator).Name, $"Can't create mediator {typeof(TMediator)}");
@@ -41,7 +41,7 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowData>
         mediator.OnFocus();
         initWindow?.Invoke(mediator);
 
-        var windowData = new WindowData
+        var windowData = new WindowData<T>
         {
             Mediator = mediator,
             RectTransform = window.overrideTransition != null ? window.overrideTransition : (RectTransform) window.transform,
@@ -110,9 +110,9 @@ internal class WindowConstructor : IDisposable, IEnumerable<WindowData>
             _windows[index].Mediator.SetActive(false);
     }
 
-    public WindowData this[int i] => _windows[i];
+    public WindowData<T> this[int i] => _windows[i];
 
-    IEnumerator<WindowData> IEnumerable<WindowData>.GetEnumerator() => _windows.GetEnumerator();
+    IEnumerator<WindowData<T>> IEnumerable<WindowData<T>>.GetEnumerator() => _windows.GetEnumerator();
 
     public IEnumerator GetEnumerator() => _windows.GetEnumerator();
 }

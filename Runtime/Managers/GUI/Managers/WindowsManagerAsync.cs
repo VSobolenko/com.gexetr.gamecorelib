@@ -63,7 +63,7 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
                 continue;
 
             var closingWindows = WindowConstructor[i];
-            WindowData openingWindow = null;
+            WindowData<IMediator> openingWindow = null;
             if (i == WindowConstructor.Count - 1 && i != 0)
                 openingWindow = WindowConstructor[i - 1];
             
@@ -97,7 +97,7 @@ internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
         return false;
     }
 
-    private async Task<bool> CloseWindowAsync(WindowData closingWindow, WindowData openingWindow,
+    private async Task<bool> CloseWindowAsync(WindowData<IMediator> closingWindow, WindowData<IMediator> openingWindow,
                                               int closingWindowIndex, IWindowTransition transition)
     {
         var closeTask = transition.Close(closingWindow);

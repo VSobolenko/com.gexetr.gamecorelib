@@ -20,7 +20,7 @@ internal class ConfigurableTransition : IWindowTransition
         _closeNormalize = closeNormalize;
     }
 
-    public Task Open(WindowData windowData)
+    public Task Open(WindowData<IMediator> windowData)
     {
         if (_openNormalize)
             NormalizeWindow(windowData);
@@ -28,7 +28,7 @@ internal class ConfigurableTransition : IWindowTransition
         return _open?.Open(windowData);
     }
 
-    public Task Close(WindowData windowData)
+    public Task Close(WindowData<IMediator> windowData)
     {
         if (_closeNormalize)
             NormalizeWindow(windowData);
@@ -36,7 +36,7 @@ internal class ConfigurableTransition : IWindowTransition
         return _close?.Close(windowData);
     }
 
-    private void NormalizeWindow(WindowData windowData)
+    private void NormalizeWindow(WindowData<IMediator> windowData)
     {
         windowData.Mediator.SetPosition(WindowTransitionStatic.startPoint);
         windowData.Motor.localScale = Vector3.one;

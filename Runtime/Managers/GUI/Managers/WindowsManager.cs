@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-internal class WindowsManager : IWindowsManager
+    internal class WindowsManager : IWindowsManager
 {
-    protected readonly WindowConstructor WindowConstructor;
+    protected readonly WindowConstructor<IMediator> WindowConstructor;
 
     public WindowsManager(IWindowFactory windowFactory, Transform rootUi)
     {
         if (windowFactory.TryCreateWindowsRoot(rootUi, out var root) == false)
             Log.Warning($"In {GetType().Name} empty root");
 
-        WindowConstructor = new WindowConstructor(windowFactory, root);
+        WindowConstructor = new WindowConstructor<IMediator>(windowFactory, root);
     }
 
     public void Dispose()
@@ -24,10 +24,10 @@ internal class WindowsManager : IWindowsManager
 
     #region Container
 
-    public bool TryGetActiveWindows<TMediator>(out TMediator[] mediator) where TMediator : class, IMediator
+    public bool TryGetWindows<TMediator>(out TMediator[] mediator) where TMediator : class, IMediator
     {
         var mediators = new List<TMediator>();
-        foreach (WindowData window in WindowConstructor)
+        foreach (WindowData<TMediator> window in WindowConstructor)
         {
             if (window.Mediator is TMediator == false)
                 continue;
@@ -39,10 +39,10 @@ internal class WindowsManager : IWindowsManager
         return mediator.Length > 0;
     }
 
-    public bool TryGetActiveWindow<TMediator>(out TMediator mediator) where TMediator : class, IMediator
+    public bool TryGetFirstWindow<TMediator>(out TMediator mediator) where TMediator : class, IMediator
     {
         mediator = null;
-        foreach (WindowData window in WindowConstructor)
+        foreach (WindowData<TMediator> window in WindowConstructor)
         {
             if (window.Mediator is TMediator == false)
                 continue;
@@ -58,7 +58,7 @@ internal class WindowsManager : IWindowsManager
 
     #region Static transition
 
-    public TMediator OpenWindowOnTop<TMediator>(Action<TMediator> initWindow = null)
+    public TMediator OpenWindow<TMediator>(Action<TMediator> initWindow = null, OpenMode mode = OpenMode.Overlay, int priority = 0)
         where TMediator : class, IMediator
     {
         WindowConstructor.HideWindow(WindowConstructor.Count - 1, false);
