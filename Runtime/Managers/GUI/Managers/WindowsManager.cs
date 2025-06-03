@@ -27,7 +27,7 @@ namespace Game.GUI.Windows.Managers
     public bool TryGetWindows<TMediator>(out TMediator[] mediator) where TMediator : class, IMediator
     {
         var mediators = new List<TMediator>();
-        foreach (WindowData<TMediator> window in WindowConstructor)
+        foreach (WindowData<IMediator> window in WindowConstructor)
         {
             if (window.Mediator is TMediator == false)
                 continue;
@@ -42,7 +42,7 @@ namespace Game.GUI.Windows.Managers
     public bool TryGetFirstWindow<TMediator>(out TMediator mediator) where TMediator : class, IMediator
     {
         mediator = null;
-        foreach (WindowData<TMediator> window in WindowConstructor)
+        foreach (WindowData<IMediator> window in WindowConstructor)
         {
             if (window.Mediator is TMediator == false)
                 continue;
@@ -103,7 +103,7 @@ namespace Game.GUI.Windows.Managers
 
             return true;
         }
-        Log.Warning($"No {typeof(TMediator)} window found to close");
+        Log.Warning($"No {typeof(TMediator).Name} window found to close");
         return false;
     }
 

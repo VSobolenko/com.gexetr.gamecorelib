@@ -174,6 +174,15 @@ public partial class Log
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
+    public static void Colored(object text, Color color = Color.Violet, Object context = null, LogType logType = LogType.Log)
+    {
+#if !DISABLE_LOG
+        InternalLog($"{ColoredLogType(text.ToString(), color)} ", context, logType);
+#endif
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [HideInCallstack]
     private static void InternalLog(string text, Object context, LogType logType)
     {
 #if !DISABLE_LOG
