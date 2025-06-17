@@ -21,6 +21,22 @@ public static class ListExtensions
         return list;
     }
 
+    public static T[] Shuffle<T>(this T[] array)
+    {
+        var random = new Random();
+        var count = array.Length;
+        while (count > 1)
+        {
+            count--;
+            var k = random.Next(count + 1);
+            var value = array[k];
+            array[k] = array[count];
+            array[count] = value;
+        }
+
+        return array;
+    }
+    
     public static IList<T> Shuffle<T>(this IList<T> list, Random randomInstance)
     {
         var count = list.Count;

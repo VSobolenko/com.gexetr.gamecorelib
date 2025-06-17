@@ -73,7 +73,7 @@
 - Android Logcat
 - URP / HDRP
 - [CI / CD](https://serverspace.by/)
-- [Naughty Attributes](https://github.com/dbrizov/NaughtyAttributes?tab=readme-ov-file#Installation) `https://github.com/dbrizov/NaughtyAttributes.git?path=Assets/NaughtyAttributes`
+- [Tri Inspector](https://github.com/codewriter-packages/Tri-Inspector?tab=readme-ov-file#how-to-install) / [Naughty Attributes](https://github.com/dbrizov/NaughtyAttributes?tab=readme-ov-file#Installation) `https://github.com/dbrizov/NaughtyAttributes.git?path=Assets/NaughtyAttributes`
 - [Unity SerializeReferenceExtensions](https://github.com/mackysoft/Unity-SerializeReferenceExtensions)
 - [UniTask](https://github.com/Cysharp/UniTask?tab=readme-ov-file#upm-package)
 - [R3-General](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) `https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity`, [NuGet](https://github.com/GlitchEnzo/NuGetForUnity.git) (R3, ObservableCollections, ObservableCollections.R3)

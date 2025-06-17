@@ -11,7 +11,7 @@ A structured and extensible window management system.
 
 ### Window
 ```csharp
-    internal enum $Window$WindowAction : byte
+        internal enum $Window$WindowAction : byte
     {
         Unknown = 0,
         $END$
@@ -25,13 +25,13 @@ A structured and extensible window management system.
 
     internal sealed class $Window$WindowViewUI : Game.GUI.Windows.WindowUI
     {
-        public $Window$WindowButtonUI[] windowButtons;
+        [UnityEngine.Space, UnityEngine.SerializeField] private GameSelectionWindowButtonUI[] _windowButtons;
 
 #if UNITY_EDITOR
         [UnityEngine.ContextMenu("Collect window buttons")]
         private void CollectWindowButtons()
         {
-            windowButtons = GetComponentsInChildren<$Window$WindowButtonUI>(true);
+            _windowButtons = GetComponentsInChildren<$Window$WindowButtonUI>(true);
 
             UnityEditor.EditorUtility.SetDirty(this);
         }
@@ -61,7 +61,7 @@ A structured and extensible window management system.
 
     internal sealed class $Window$WindowViewUI : Game.GUI.Windows.WindowUI
     {
-        public $Window$WindowButtonUI[] windowButtons;
+        [UnityEngine.Space] public $Window$WindowButtonUI[] windowButtons;
 
 #if UNITY_EDITOR
         [UnityEngine.ContextMenu("Collect window buttons")]
