@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Game.FSMCore.States
+﻿namespace Game.FSMCore.States
 {
-public interface IState : IDisposable
+public interface IState
 {
     void UpdateState();
+    void Finish();
 }
 
 public interface IQuiteState : IState

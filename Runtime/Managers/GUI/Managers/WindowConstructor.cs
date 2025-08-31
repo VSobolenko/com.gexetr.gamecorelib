@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 { 
-internal class WindowConstructor<T> : IDisposable, IEnumerable<WindowData<T>> where T : class, IMediator
+internal sealed class WindowConstructor<T> : IDisposable, IEnumerable<WindowData<T>> where T : class, IMediator
 {
     public int Count => _windows.Count;
 

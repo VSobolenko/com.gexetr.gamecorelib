@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Localizations.Components
 {
 [CreateAssetMenu(fileName = nameof(LocalizationSettings), menuName = GameData.EditorName + "/Localization Settings")]
-internal class LocalizationSettings : ScriptableObject
+internal sealed class LocalizationSettings : ScriptableObject
 {
     [field: SerializeField] public LanguageType DefaultLocalization { get; private set; }
     [field: SerializeField] public TextAsset LocalizationDoc { get; private set; }

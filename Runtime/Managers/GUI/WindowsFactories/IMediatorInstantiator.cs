@@ -4,7 +4,7 @@ namespace Game.GUI.Windows.Factories
 {
 public interface IMediatorInstantiator
 {
-    TMediator Instantiate<TMediator>(WindowUI windowUI) where TMediator : class, IMediator;
-    IMediator Instantiate(Type mediatorType, WindowUI windowUI);
+    TMediator Instantiate<TMediator>(WindowUI windowUI, params object[] extraArgs) where TMediator : class, IMediator;
+    IMediator Instantiate(Type mediatorType, WindowUI windowUI, params object[] extraArgs);
 }
 }

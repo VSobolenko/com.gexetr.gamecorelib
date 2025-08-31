@@ -31,7 +31,7 @@ public abstract class Many2OneTransition<TDataTransfer> : DeadTransition<TDataTr
         for (var i = 0; i < _sourceStates.Count; i++)
         {
             var data = _sourceStates[i].ReturnStateProcessedResult();
-            _sourceStates[i].Dispose();
+            _sourceStates[i].Finish();
             if (i == 0)
                 transitionData = data;
         }

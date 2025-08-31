@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Game.IO.Managers
 {
-internal class BinarySaveWithJsonSystem : ISaveFile, ISaveFileAsync
+internal sealed class BinarySaveWithJsonSystem : ISaveFile, ISaveFileAsync
 {
     private const string FileFormat = ".bat";
     private readonly ISaveFile _json;

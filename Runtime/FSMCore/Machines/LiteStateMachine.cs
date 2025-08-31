@@ -10,7 +10,7 @@ public interface IStateMachineOperator
     void StopMachine();
 }
 
-public class LiteStateMachine : IStateMachine, IStateMachineOperator
+public sealed class LiteStateMachine : IStateMachine, IStateMachineOperator
 {
     public IState ActiveState { get; private set; }
     public IState PreviousState { get; private set; }
@@ -39,7 +39,7 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
 
     public void StopMachine()
     {
-        ActiveState.Dispose();
+        ActiveState.Finish();
         ActiveState = null;
     }
 
@@ -64,7 +64,7 @@ public class LiteStateMachine : IStateMachine, IStateMachineOperator
     private void SwitchState(IState state)
     {
         PreviousState = ActiveState;
-        ActiveState?.Dispose();
+        ActiveState?.Finish();
         ActiveState = state;
         TryLogDebug(state);
         OnStateChange?.Invoke(state);

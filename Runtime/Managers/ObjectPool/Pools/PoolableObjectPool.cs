@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Pools
 {
-public class PoolableObjectPool<T> : ObjectPool<T>, IPoolableObjectPool<T> where T : class, IPoolable
+public sealed class PoolableObjectPool<T> : ObjectPool<T>, IPoolableObjectPool<T> where T : class, IPoolable
 {
     private readonly Transform _root;
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Pools
 {
-internal class ObjectPoolProfiler : MonoBehaviour
+internal sealed class ObjectPoolProfiler : MonoBehaviour
 {
     public object PoolContainer { get; private set; }
     public object PoolManager { get; private set; }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.Managers.GoogleSheet
 {
-public class GoogleSheetManager
+public sealed class GoogleSheetManager
 {
     private readonly string _url;
 

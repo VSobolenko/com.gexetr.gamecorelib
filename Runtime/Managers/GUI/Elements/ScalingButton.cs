@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 namespace Game.GUI
 {
 [DisallowMultipleComponent]
-public class ScalingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public sealed class ScalingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private float normalScale = 1f;
     [SerializeField] private float downScale = 0.96f;

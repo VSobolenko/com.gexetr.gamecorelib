@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Game.AssetContent.Managers
 {
-internal class AddressablesManager : System.IDisposable, IResourceManager
+internal sealed class AddressablesManager : System.IDisposable, IResourceManager
 {
     private readonly Dictionary<string, AsyncOperationHandle> _loadedHandlers;
 
@@ -33,7 +33,7 @@ internal class AddressablesManager : System.IDisposable, IResourceManager
         }
 
         if (Application.isEditor && IsKeyExist(key) == false)
-            throw new ArgumentNullException(key, $"Asset key not found: \"{key}\"");
+            throw new ArgumentNullException(key, $"Asset key not found: {key}");
 
         if (IsKeyExist(key) == false)
             return null;

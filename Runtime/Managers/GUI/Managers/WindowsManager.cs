@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-    internal class WindowsManager : IWindowsManager
+internal class WindowsManager : IWindowsManager
 {
     protected readonly WindowConstructor<IMediator> WindowConstructor;
 

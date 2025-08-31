@@ -14,7 +14,7 @@ internal class PoolableObjectPoolTests
         // Arrange
         IObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, GetTestElement);
         const int prepareCount = 2;
-        pool.With(prepareCount, x => x.Release(GetTestElement()));
+        pool.ForEach(prepareCount, x => x.Release(GetTestElement()));
 
         // Act
         var element1 = pool.Get();
@@ -31,7 +31,7 @@ internal class PoolableObjectPoolTests
         // Arrange
         IObjectPool<PoolableTestObject> pool = new PoolableObjectPool<PoolableTestObject>(5, null, GetTestElement);
         const int prepareCount = 3;
-        pool.With(prepareCount, x => x.Release(GetTestElement()));
+        pool.ForEach(prepareCount, x => x.Release(GetTestElement()));
 
         // Act
         pool.Get();

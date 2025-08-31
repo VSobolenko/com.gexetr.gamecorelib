@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Game.AssetContent
 {
-public interface IResourceManager
+    public interface IResourceManager
 {
     T LoadAsset<T>(string key) where T : Object;
 

@@ -2,7 +2,7 @@
 
 namespace Game.PreferencesSaveType
 {
-public class BoolSavableValue : BaseSavableValue<bool>
+public sealed class BoolSavableValue : BaseSavableValue<bool>
 {
     public BoolSavableValue(string playerPrefsKey, bool defaultValue = default) 
         : base(playerPrefsKey, defaultValue)

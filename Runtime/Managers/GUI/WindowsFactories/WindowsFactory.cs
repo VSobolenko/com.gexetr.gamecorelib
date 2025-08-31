@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Factories
 {
-internal class WindowsFactory : IWindowFactory
+internal sealed class WindowsFactory : IWindowFactory
 {
     private readonly IMediatorInstantiator _container;
     private readonly IResourceManager _resourceManager;

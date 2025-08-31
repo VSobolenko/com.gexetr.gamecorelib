@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.Localizations.Managers
 {
-internal class LocalizationManager : ILocalizationManager
+internal sealed class LocalizationManager : ILocalizationManager
 {
     private readonly LocalizationSettings _settings;
     private readonly Dictionary<string, List<string>> _localization = new(15);

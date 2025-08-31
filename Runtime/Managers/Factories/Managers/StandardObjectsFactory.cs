@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Factories.Managers
 {
-internal class StandardObjectsFactory : IFactoryGameObjects
+internal sealed class StandardObjectsFactory : IFactoryGameObjects
 {
     private const string NewGameObjectName = "Empty GameObject";
 

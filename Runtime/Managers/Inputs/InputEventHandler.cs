@@ -12,19 +12,19 @@ public class InputEventHandler : MonoBehaviour, IPointerDownHandler, IDragHandle
 
     private PointerEventData _eventData;
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         _eventData = eventData;
         PointerDown?.Invoke(eventData);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         _eventData = eventData;
         PointerDrag?.Invoke(eventData);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         _eventData = null;
         PointerUp?.Invoke(eventData);

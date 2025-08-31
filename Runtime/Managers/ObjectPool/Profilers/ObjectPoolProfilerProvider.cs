@@ -2,7 +2,7 @@
 
 namespace Game.Pools
 {
-internal class ObjectPoolProfilerProvider
+internal sealed class ObjectPoolProfilerProvider
 {
     private readonly Transform _root;
     private ObjectPoolProfiler _profiler;

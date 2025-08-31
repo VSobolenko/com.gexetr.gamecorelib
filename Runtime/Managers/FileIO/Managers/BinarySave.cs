@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Game.IO.Managers
 {
-internal class BinarySave : ISaveFile, ISaveFileAsync
+internal sealed class BinarySave : ISaveFile, ISaveFileAsync
 {
     private const string FileFormat = ".txt";
     

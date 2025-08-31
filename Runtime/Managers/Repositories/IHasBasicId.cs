@@ -1,7 +1,7 @@
 ﻿namespace Game.Repositories
 {
-public interface IHasBasicId
+public interface IHasBasicId<T>
 {
-    int Id { get; set; }
+    T Id { get; set; }
 }
 }

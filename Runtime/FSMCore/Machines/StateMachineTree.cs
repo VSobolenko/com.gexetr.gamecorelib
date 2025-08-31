@@ -6,7 +6,7 @@ using Game.FSMCore.Transitions;
 
 namespace Game.FSMCore.Machines
 {
-public class StateMachineTree
+public sealed class StateMachineTree
 {
     private List<TransitionData> _transitions = new(5);
     private readonly List<IState> _states = new();

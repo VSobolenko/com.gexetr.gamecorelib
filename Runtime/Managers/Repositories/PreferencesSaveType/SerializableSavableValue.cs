@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.PreferencesSaveType
 {
-public class SerializableSavableValue<T> : BaseSavableValue<T>
+public sealed class SerializableSavableValue<T> : BaseSavableValue<T>
 {
     public SerializableSavableValue(string playerPrefsKey, T defaultValue = default) 
         : base(playerPrefsKey, defaultValue)

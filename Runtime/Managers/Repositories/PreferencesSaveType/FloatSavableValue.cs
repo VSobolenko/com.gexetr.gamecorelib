@@ -2,7 +2,7 @@
 
 namespace Game.PreferencesSaveType
 {
-public class FloatSavableValue : BaseSavableValue<float>
+public sealed class FloatSavableValue : BaseSavableValue<float>
 {
     public FloatSavableValue(string playerPrefsKey, float defaultValue = default) 
         : base(playerPrefsKey, defaultValue)

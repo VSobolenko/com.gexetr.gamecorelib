@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-    public class MediatorToTabBinder<TMediator, TTab> : Dictionary<TMediator, TTab>
+    public sealed class MediatorToTabBinder<TMediator, TTab> : Dictionary<TMediator, TTab>
         where TMediator : Type
         where TTab : struct, Enum
     {
         
     }
 
-    public class WindowConstructorTab<T, TType> : IDisposable, IEnumerable<WindowData<T>>
+    public sealed class WindowConstructorTab<T, TType> : IDisposable, IEnumerable<WindowData<T>>
         where T : class, IMediator 
         where TType : struct, Enum
     {

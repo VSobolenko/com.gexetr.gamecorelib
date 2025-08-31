@@ -9,7 +9,7 @@ namespace Game.Pools.Managers
 /// Same as "ObjectPoolKeyManager"
 /// Added division in the hierarchy for easy testing
 /// </summary>
-internal class ObjectPoolKeyEditorSeparateManager : ObjectPoolKeyManager
+internal sealed class ObjectPoolKeyEditorSeparateManager : ObjectPoolKeyManager
 {
     private readonly Dictionary<string, Transform> _pool;
 

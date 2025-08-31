@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Game
 {
 [System.Diagnostics.DebuggerNonUserCode]
-public partial class Log
+public class Log
 {
     public static ILogger logger = Debug.unityLogger;
     public static bool enable = true;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Managers
 {
-internal class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
+internal sealed class WindowsManagerAsync : WindowsManager, IWindowsManagerAsync
 {
     private readonly IWindowTransition _defaultOpenTransition;
     private readonly IWindowTransition _defaultCloseTransition;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
 {
-internal class ConfigurableTransition : IWindowTransition
+internal sealed class ConfigurableTransition : IWindowTransition
 {
     private readonly IWindowTransition _open;
     private readonly IWindowTransition _close;

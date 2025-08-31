@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Game.GUI.Windows
 {
 [Serializable]
-public class WindowSettings
+public sealed class WindowSettings
 {
     [SerializeField] private float _moveDuration = .5f;
     [SerializeField] private float _fadeDuration = .5f;
@@ -24,7 +24,7 @@ public class WindowSettings
 }
 
 [CreateAssetMenu(fileName = nameof(WindowSettings), menuName = GameData.EditorName + "/Window Settings", order = 3)]
-internal class WindowSettingsSo : ScriptableObject
+internal sealed class WindowSettingsSo : ScriptableObject
 {
     [Header("Default Transition")]
     public WindowSettings _defaultSettings;

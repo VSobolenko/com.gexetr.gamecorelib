@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Game.Inputs.Managers
 {
-internal class InputManager : IInputManager
+internal sealed class InputManager : IInputManager
 {
     public event Action<Vector2, bool> OnStartInput;
     public event Action<Vector2, bool> OnStayInput;

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Game.IO.Managers
 {
-internal class JsonNewtonsoftSave: ISaveFile, ISaveFileAsync
+internal sealed class JsonNewtonsoftSave: ISaveFile, ISaveFileAsync
 {
     private const string FileFormat = ".json";
 

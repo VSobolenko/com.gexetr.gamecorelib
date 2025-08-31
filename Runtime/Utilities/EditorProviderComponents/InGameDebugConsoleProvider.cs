@@ -7,7 +7,7 @@ namespace Game.Components
 /// Make sure that resources asset not include to release build
 /// Move file outside from resources folder
 /// </summary>
-public class InGameDebugConsoleProvider : MonoBehaviour
+public sealed class InGameDebugConsoleProvider : MonoBehaviour
 {
     [SerializeField] private bool _enableSelfDestruct = true;
     [SerializeField] private bool _enableInEditor;

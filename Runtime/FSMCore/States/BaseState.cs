@@ -6,7 +6,7 @@ public abstract class BaseState : IState
 {
     public virtual void UpdateState() { }
 
-    public virtual void Dispose() { }
+    public virtual void Finish() { }
 
     internal static int stateCounter;
 

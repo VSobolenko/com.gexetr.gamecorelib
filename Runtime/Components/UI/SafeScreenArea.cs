@@ -16,7 +16,7 @@ public enum SafeAreaEdge
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(RectTransform))]
-public class SafeScreenArea : MonoBehaviour
+public sealed class SafeScreenArea : MonoBehaviour
 {
     [SerializeField] private RectTransform rectTransformComponent;
     [SerializeField] private SafeAreaEdge initialEdge = SafeAreaEdge.All;

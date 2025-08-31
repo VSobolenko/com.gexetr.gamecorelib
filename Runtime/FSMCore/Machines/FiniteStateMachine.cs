@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.FSMCore.Machines
 {
-public class FiniteStateMachine : IStateMachine, IStateMachineOperator
+public sealed class FiniteStateMachine : IStateMachine, IStateMachineOperator
 {
     public IState ActiveState { get; private set; }
     public IState PreviousState { get; private set; }
@@ -22,7 +22,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
 
     public void StopMachine()
     {
-        ActiveState?.Dispose();
+        ActiveState?.Finish();
         SwitchState(null);
         Tree.DisposeMachine();
         StopDebug();
@@ -34,7 +34,7 @@ public class FiniteStateMachine : IStateMachine, IStateMachineOperator
         if (Tree.GetStates().Contains(state) == false)
             throw new ArgumentException("Unknown state");
 
-        ActiveState?.Dispose();
+        ActiveState?.Finish();
         SwitchState(state);
         Activate(state, data);
     }

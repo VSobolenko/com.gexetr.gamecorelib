@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
 {
-internal class BouncedTransition : IWindowTransition
+internal sealed class BouncedTransition : IWindowTransition
 {
     private readonly Vector3 _openStartedScale = new(0.3f, 0.3f, 0.3f);
     private readonly Vector3 _closeEndScale = new(0.3f, 0.3f, 0.3f);

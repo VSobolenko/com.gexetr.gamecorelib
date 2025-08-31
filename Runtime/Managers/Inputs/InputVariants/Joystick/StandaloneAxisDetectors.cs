@@ -2,7 +2,7 @@
 
 namespace Game.Inputs
 {
-public class StandaloneHorizontalAxisDetector : IAxisDetector
+public sealed class StandaloneHorizontalAxisDetector : IAxisDetector
 {
     public float Axis => throw new NotImplementedException();
     public float AxisNormalized => GetHorizontalAxis();
@@ -11,7 +11,7 @@ public class StandaloneHorizontalAxisDetector : IAxisDetector
     public float GetHorizontalAxis() => UnityEngine.Input.GetAxis("Horizontal");
 }
 
-public class StandaloneVerticalAxisDetector : IAxisDetector
+public sealed class StandaloneVerticalAxisDetector : IAxisDetector
 {
     public float Axis => throw new NotImplementedException();
     public float AxisNormalized => GetVerticalAxis();

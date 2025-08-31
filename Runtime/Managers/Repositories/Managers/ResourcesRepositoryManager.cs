@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Repositories.Managers
 {
-internal class ResourcesRepositoryManager<T> : BaseRepositoryManager<T>, IRepository<T> where T : Object, IHasBasicId
+internal sealed class ResourcesRepositoryManager<T> : BaseRepositoryManager<T>, IRepository<T> where T : Object, IHasBasicId<int>
 {
     private readonly string _path;
 

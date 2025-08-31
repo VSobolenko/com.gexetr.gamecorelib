@@ -7,7 +7,7 @@ namespace Game.Components
 /// Width or height stays constant when changing screen resolution
 /// </summary>
 [RequireComponent(typeof(Camera)), ExecuteInEditMode]
-public class CameraOrthographicScale : MonoBehaviour
+public sealed class CameraOrthographicScale : MonoBehaviour
 {
     [SerializeField, HideInInspector] private Camera cameraComponent;
 

@@ -2,7 +2,7 @@
 
 namespace Game.Factories
 {
-public static class FactoryInstaller
+public static class FactoryGameObjectsInstaller
 {
     public static IFactoryGameObjects Standart() => new StandardObjectsFactory();
 }

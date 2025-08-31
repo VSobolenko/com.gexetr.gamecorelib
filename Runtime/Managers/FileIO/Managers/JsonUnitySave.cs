@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.IO.Managers
 {
-internal class JsonUnitySave : ISaveFile, ISaveFileAsync
+internal sealed class JsonUnitySave : ISaveFile, ISaveFileAsync
 {
     private const string FileFormat = ".json";
 

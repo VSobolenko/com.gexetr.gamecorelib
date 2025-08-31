@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Inputs
 {
 [Serializable]
-public class InputSettings
+public sealed class InputSettings
 {
     [SerializeField] private Vector2 inputResolution = new Vector2(1280, 720);
     [Header("Swipe"), SerializeField] private float swipeMinimumDistance = .2f;
@@ -19,7 +19,7 @@ public class InputSettings
 }
 
 [CreateAssetMenu(fileName = nameof(InputSettings), menuName = GameData.EditorName + "/Input Settings", order = 2)]
-internal class InputSettingsSo : ScriptableObject
+internal sealed class InputSettingsSo : ScriptableObject
 {
     public InputSettings inputSettings;
 }

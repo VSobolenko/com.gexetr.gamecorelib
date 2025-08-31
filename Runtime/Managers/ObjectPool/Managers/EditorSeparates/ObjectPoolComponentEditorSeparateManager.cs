@@ -9,7 +9,7 @@ namespace Game.Pools.Managers
 /// Same as "ObjectPoolComponentManager"
 /// Added division in the hierarchy for easy testing
 /// </summary>
-internal class ObjectPoolComponentSeparateManager : ObjectPoolComponentManager
+internal sealed class ObjectPoolComponentSeparateManager : ObjectPoolComponentManager
 {
     private readonly Dictionary<GameObject, Transform> _pool;
 

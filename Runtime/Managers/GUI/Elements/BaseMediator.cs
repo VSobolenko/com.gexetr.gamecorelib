@@ -36,10 +36,54 @@ public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
     public virtual void OnUnfocused() { }
     public virtual void OnDestroy() { }
 
-    public virtual void SetActive(bool value) => window.gameObject.SetActive(value);
-    public virtual void SetPosition(Vector3 value) => window.transform.localPosition = value;
-    public virtual void SetInteraction(bool value) => window.canvasGroup.blocksRaycasts = value;
-    public virtual bool IsActive() => window.gameObject.activeInHierarchy;
-    public virtual void Destroy() => Object.Destroy(window.gameObject);
+    public virtual void SetActive(bool value)
+    {
+        if (IsUnSafeExecution())
+            return;
+        
+        window.gameObject.SetActive(value);
+    }
+
+    public virtual void SetPosition(Vector3 value)
+    {
+        if (IsUnSafeExecution())
+            return;
+        
+        window.transform.localPosition = value;
+    }
+
+    public virtual void SetInteraction(bool value)
+    {
+        if (IsUnSafeExecution())
+            return;
+        
+        window.canvasGroup.blocksRaycasts = value;
+    }
+
+    public virtual bool IsActive()
+    {
+        if (IsUnSafeExecution())
+            return default;
+        
+        return window.gameObject.activeInHierarchy;
+    }
+
+    public virtual void Destroy()
+    {
+        if (IsUnSafeExecution())
+            return;
+
+        Object.Destroy(window.gameObject);
+    }
+
+    // Exception error when Unity itself deletes GameObject before us when exiting Play Mode
+    private bool IsUnSafeExecution()
+    {
+        var windowIsMissing = window == null;
+        if (windowIsMissing)
+            Log.Warner($"It is not possible to execute with an empty {GetType().Name}. Ignore this when exiting Play mode.");
+
+        return windowIsMissing;
+    }
 }
 }

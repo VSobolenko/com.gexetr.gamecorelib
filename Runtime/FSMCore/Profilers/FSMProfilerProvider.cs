@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.FSMCore.Profilers
 {
-public class FSMProfilerProvider : MonoBehaviour
+public sealed class FSMProfilerProvider : MonoBehaviour
 {
     public FiniteStateMachine stateMachine;
 }

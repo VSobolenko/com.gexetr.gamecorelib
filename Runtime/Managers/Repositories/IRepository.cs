@@ -2,7 +2,7 @@
 
 namespace Game.Repositories
 {
-public interface IRepository<T> where T : class, IHasBasicId
+public interface IRepository<T> where T : class, IHasBasicId<int>
 {
     /// <summary>
     /// Create new entity with new unique ID

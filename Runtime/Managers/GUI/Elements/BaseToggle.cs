@@ -22,7 +22,7 @@ public class BaseToggle<T> : MonoBehaviour where T : struct, Enum
 }
 
 [Serializable,]
-internal class ToggleConfiguration<T> where T : struct, Enum
+internal sealed class ToggleConfiguration<T> where T : struct, Enum
 {
     [SerializeField] private Toggle _toggle;
     [SerializeField] private T _action;

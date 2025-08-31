@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
 {
-public class EmptyTransition : IWindowTransition
+public sealed class EmptyTransition : IWindowTransition
 {
     public Task Open(WindowData<IMediator> windowData)
     {

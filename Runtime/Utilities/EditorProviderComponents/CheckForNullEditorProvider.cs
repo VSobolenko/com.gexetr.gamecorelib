@@ -6,7 +6,7 @@ namespace Game.Components.Utilities
 /// <summary>
 /// Class which provide inspector functionality
 /// </summary>
-public class CheckForNullEditorProvider : MonoBehaviour
+public sealed class CheckForNullEditorProvider : MonoBehaviour
 {
     [Header("If empty check all"), SerializeField]
     internal string[] _accessible = { "Assembly-CSharp", "GameCoreLib" };

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Game.Repositories.Managers
 {
-internal class FileRepositoryManager<T> : BaseRepositoryManager<T>, IRepository<T> where T : class, IHasBasicId
+internal sealed class FileRepositoryManager<T> : BaseRepositoryManager<T>, IRepository<T> where T : class, IHasBasicId<int>
 {
     private readonly string _path;
     private readonly ISaveFile _saveFile;

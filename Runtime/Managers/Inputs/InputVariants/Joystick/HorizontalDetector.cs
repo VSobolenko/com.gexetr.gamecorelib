@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Game.Inputs
 {
-public class HorizontalDetector : IAxisDetector, IDisposable
+public sealed class HorizontalDetector : IAxisDetector, IDisposable
 {
     private readonly InputEventHandler _eventHandler;
     private readonly Func<Vector2> _getLimit;

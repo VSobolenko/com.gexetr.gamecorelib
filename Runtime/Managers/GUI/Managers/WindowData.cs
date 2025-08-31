@@ -2,7 +2,7 @@
 
 namespace Game.GUI.Windows.Managers
 {
-public class WindowData<T>
+public sealed class WindowData<T>
 {
     public T Mediator;
     public RectTransform RectTransform;

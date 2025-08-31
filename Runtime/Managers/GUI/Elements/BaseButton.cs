@@ -39,7 +39,7 @@ public class BaseButton<T> : MonoBehaviour where T : struct, Enum
 /// To serialize generic parameters, it is necessary to use a nested-additional class!
 /// </summary>
 [Serializable,]
-public class ButtonConfiguration<T> where T : struct, Enum
+public sealed class ButtonConfiguration<T> where T : struct, Enum
 {
     [SerializeField] private Button button;
     [SerializeField] private T action;

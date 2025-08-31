@@ -52,7 +52,7 @@ public static class VectorExtensions
     public static Vector3 AddX(this Vector3 v, float xDelta)
     {
         var tmp = v;
-        tmp.x = tmp.x + xDelta;
+        tmp.x += xDelta;
         v = tmp;
 
         return v;
@@ -61,16 +61,25 @@ public static class VectorExtensions
     public static Vector3 AddY(this Vector3 v, float yDelta)
     {
         var tmp = v;
-        tmp.y = tmp.y + yDelta;
+        tmp.y += yDelta;
         v = tmp;
 
         return v;
     }
 
+    public static Vector3 AddZ(this Vector3 v, float zDelta)
+    {
+        var tmp = v;
+        tmp.z += zDelta;
+        v = tmp;
+
+        return v;
+    }
+    
     public static Vector2 AddX(this Vector2 v, float xDelta)
     {
         var tmp = v;
-        tmp.x = tmp.x + xDelta;
+        tmp.x += xDelta;
         v = tmp;
 
         return v;
@@ -79,7 +88,7 @@ public static class VectorExtensions
     public static Vector2 AddY(this Vector2 v, float yDelta)
     {
         var tmp = v;
-        tmp.y = tmp.y + yDelta;
+        tmp.y += yDelta;
         v = tmp;
 
         return v;

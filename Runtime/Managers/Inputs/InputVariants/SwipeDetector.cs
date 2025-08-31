@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Inputs
 {
-public class SwipeDetector : IDisposable
+public sealed class SwipeDetector : IDisposable
 {
     private readonly IInputManager _inputManager;
     private readonly InputSettings _settings;

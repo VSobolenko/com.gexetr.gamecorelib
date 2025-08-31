@@ -7,10 +7,10 @@ namespace Game.Repositories
 {
 public static class RepositoryInstaller
 {
-    public static IRepository<T> File<T>(string path, ISaveFile fileSaver) where T : class, IHasBasicId =>
+    public static IRepository<T> File<T>(string path, ISaveFile fileSaver) where T : class, IHasBasicId<int> =>
         new FileRepositoryManager<T>(path, fileSaver);
 
-    public static IRepository<T> StaticResources<T>(string path, ISaveFile fileSaver) where T : class, IHasBasicId =>
+    public static IRepository<T> StaticResources<T>(string path, ISaveFile fileSaver) where T : class, IHasBasicId<int> =>
         new StaticResourcesRepositoryManager<T>(path, fileSaver);
     
     public static BoolSavableValue Bool(string key, bool defaultValue) => new BoolSavableValue(key, defaultValue);

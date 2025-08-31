@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
 {
-internal class VerticalInvertedTransition : VerticalTransition
+internal sealed class VerticalInvertedTransition : VerticalTransition
 {
     public VerticalInvertedTransition(WindowSettings settings) : base(settings)
     {

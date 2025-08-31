@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.GUI.Windows.Transitions
 {
-internal class FadeTransition : IWindowTransition
+internal sealed class FadeTransition : IWindowTransition
 {
     private readonly WindowSettings _settings;
 

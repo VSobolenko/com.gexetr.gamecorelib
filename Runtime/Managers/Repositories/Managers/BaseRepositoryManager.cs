@@ -1,6 +1,6 @@
 ﻿namespace Game.Repositories.Managers
 {
-internal class BaseRepositoryManager<T> where T : IHasBasicId
+internal class BaseRepositoryManager<T> where T : IHasBasicId<int>
 {
     // ToDo: add cache fo all repository
     protected virtual string GetEntityUniqueName(T entity) => typeof(T).ToString() + entity.Id;

@@ -2,6 +2,7 @@
 using Game.AssetContent;
 using Game.AssetContent.Managers;
 using Game.GUI.Windows;
+using Game.GUI.Windows.Factories;
 using UnityEngine;
 
 namespace Game.GUI
@@ -16,7 +17,9 @@ public static partial class GuiInstaller
     {
         _settings = null;
     }
-    
+
+    public static IMediatorInstantiator DefaultMediatorInstantiator() => new DefaultMediatorInstantiator();
+
     public static WindowSettings LoadDefaultSettingsFromResources()
     {
         var resourceManager = new ResourceManager();

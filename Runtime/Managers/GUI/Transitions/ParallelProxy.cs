@@ -5,7 +5,7 @@ using Game.GUI.Windows.Managers;
 
 namespace Game.GUI.Windows.Transitions
 {
-public class ParallelProxy : IWindowTransition
+public sealed class ParallelProxy : IWindowTransition
 {
     private readonly List<IWindowTransition> _transitions;
 
