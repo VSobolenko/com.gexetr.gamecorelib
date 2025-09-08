@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace GameEditor.BuildTools
 {
-internal class Builder
+internal sealed class Builder
 {
     private const string BuildPath = "Builds";
 

@@ -1,6 +1,6 @@
 {
   "name": "com.gexetr.gamecorelib",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "displayName": "Game Core Lib",
   "unity": "2020.3",
   "description": "Common usable Mangers and Utilities for Unity.",

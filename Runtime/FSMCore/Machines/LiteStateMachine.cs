@@ -20,12 +20,13 @@ public sealed class LiteStateMachine : IStateMachine, IStateMachineOperator
 
     private readonly Dictionary<Type, IState> _states = new();
 
-    public LiteStateMachine AddState<TState>(TState state) where TState : IState
+    public LiteStateMachine AddState<TState>(TState state) where TState : class, IState
     {
-        if (_states.ContainsKey(state.GetType()))
-            throw new ArgumentException(nameof(state), $"FSM contains {state.GetType().Name} state");
+        IState boxedState = state; 
+        if (_states.ContainsKey(boxedState.GetType()))
+            throw new ArgumentException(nameof(boxedState), $"FSM contains {boxedState.GetType().Name} state");
 
-        _states.Add(state.GetType(), state);
+        _states.Add(boxedState.GetType(), boxedState);
         return this;
     }
 
@@ -43,9 +44,9 @@ public sealed class LiteStateMachine : IStateMachine, IStateMachineOperator
         ActiveState = null;
     }
 
-    public LiteStateMachine TransitTo<TState, TIn>(TIn data) where TState : class, IActivatedState<TIn>
+    public LiteStateMachine TransitTo<TState, TIn>(TIn data) where TState : class, IActivatedState<TIn> where TIn : class
     {
-        var state = GetState<TState>();
+        IActivatedState<TIn> state = GetState<TState>();
         SwitchState(state);
         state.ActivateState(this, data);
 
@@ -54,7 +55,7 @@ public sealed class LiteStateMachine : IStateMachine, IStateMachineOperator
 
     public LiteStateMachine TransitTo<TState>() where TState : class, IQuiteState
     {
-        var state = GetState<TState>();
+        IQuiteState state = GetState<TState>();
         SwitchState(state);
         state.ActivateState(this);
         
@@ -104,8 +105,11 @@ public sealed class LiteStateMachine : IStateMachine, IStateMachineOperator
             return;
         
         BaseState.stateCounter++;
+        
         var stateName = state == null ? "Null_Or_Empty" : state.GetType().Name;
-        Log.Info($"[{BaseState.stateCounter}] Active state: {stateName}");
+        var boxedCounter = BaseState.stateCounter.ToString();
+        
+        Log.Info($"[{boxedCounter}] Active state: {stateName}");
     }
 }
 }

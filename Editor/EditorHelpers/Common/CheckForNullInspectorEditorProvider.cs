@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 namespace GameEditor.Common
 {
 [CustomEditor(typeof(CheckForNullEditorProvider))]
-internal class CheckForNullInspectorEditorProvider : Editor
+internal sealed class CheckForNullInspectorEditorProvider : Editor
 {
     private CheckForNullEditorProvider Self => (CheckForNullEditorProvider)target;
 

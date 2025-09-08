@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameEditor.SceneTools
 {
-internal class SceneCheckForNullEditorTool : Editor
+internal sealed class SceneCheckForNullEditorTool : Editor
 {
     private static readonly string[] Accessible = { "Assembly-CSharp", "GameCoreLib" };
 

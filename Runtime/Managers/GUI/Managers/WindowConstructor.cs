@@ -68,20 +68,21 @@ internal sealed class WindowConstructor<T> : IDisposable, IEnumerable<WindowData
         if (_windows.ElementAtOrDefault(index) == null)
             return;
 
-        _windows[index].Mediator.OnUnfocused();
-        _windows[index].Mediator.OnDestroy();
-        _windows[index].Mediator.Destroy();
+        var mediator = _windows[index].Mediator;
+        mediator.OnUnfocused();
+        mediator.OnDestroy();
+        mediator.Destroy();
 
         _windows.RemoveAt(index);
 
         if (_windows.ElementAtOrDefault(index - 1) == null)
             return;
 
-        //Имеется общее
-        _windows[index - 1].Mediator.SetActive(true);
-        _windows[index - 1].Mediator.SetInteraction(true);
-        _windows[index - 1].Mediator.OnFocus();
-        _windows[index - 1].Mediator.SetPosition(Vector3.zero);
+        var mediatorActivated = _windows[index - 1].Mediator;
+        mediatorActivated.SetActive(true);
+        mediatorActivated.SetInteraction(true);
+        mediatorActivated.OnFocus();
+        mediatorActivated.SetPosition(Vector3.zero);
         RestoreVisibilityMode();
     }
 

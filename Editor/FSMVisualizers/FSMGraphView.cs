@@ -10,7 +10,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GameEditor.FSMVisualizers
 {
-internal class FSMGraphView : GraphView
+internal sealed class FSMGraphView : GraphView
 {
     public readonly List<FSMNode> states = new();
     private readonly Vector2 _defaultNodeSize = new(150, 200);

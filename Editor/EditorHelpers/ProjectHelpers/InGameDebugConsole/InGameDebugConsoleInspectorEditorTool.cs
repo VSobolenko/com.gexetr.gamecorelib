@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameEditor.ProjectTools
 {
 [CustomEditor(typeof(InGameDebugConsoleProvider))]
-internal class InGameDebugConsoleInspectorEditorTool : Editor
+internal sealed class InGameDebugConsoleInspectorEditorTool : Editor
 {
     public override void OnInspectorGUI()
     {

@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace GameEditor.Pools
 {
-internal class KeyManagerProfiler : IPoolProfiler
+internal sealed class KeyManagerProfiler : IPoolProfiler
 {
     private readonly Type _poolType;
     private static int _maxPoolCapacity;

@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace GameEditor.Pools
 {
-internal class SeparateTypeManagerProfiler : IPoolProfiler
+internal sealed class SeparateTypeManagerProfiler : IPoolProfiler
 {
     private readonly Type _poolType;
     private readonly Dictionary<Type, ObjectPool<IPoolable>> _pool;

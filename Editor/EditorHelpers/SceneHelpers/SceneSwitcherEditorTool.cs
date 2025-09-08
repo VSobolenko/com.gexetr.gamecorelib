@@ -11,15 +11,14 @@ using Object = UnityEngine.Object;
 
 namespace GameEditor.SceneTools
 {
-internal class SceneSwitcher : EditorWindow
+internal sealed class SceneSwitcher : EditorWindow
 {
     private const string HeaderName = "Scene Loader";
 
     [MenuItem(GameData.EditorName + EditorSubfolder.Scene + "/" + HeaderName)]
     private static void OpenWindow() => ShowWindow<SceneSwitcher>();
 
-    protected static T ShowWindow<T>(string title = HeaderName, Action<T> startupConfigure = null)
-        where T : EditorWindow
+    private static T ShowWindow<T>(string title = HeaderName, Action<T> startupConfigure = null) where T : EditorWindow
     {
         var window = GetWindow<T>();
         window.titleContent = new GUIContent(title);
