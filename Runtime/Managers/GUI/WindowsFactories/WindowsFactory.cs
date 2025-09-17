@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.AssetContent;
 using Game.Factories;
-using Game.GUI.Windows.Managers;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Factories
+namespace Game.GUI.WindowsFactories
 {
 internal sealed class WindowsFactory : IWindowFactory
 {
@@ -89,10 +90,11 @@ internal sealed class WindowsFactory : IWindowFactory
         if (prefab == null)
             throw new ArgumentNullException(prefabKey, $"Can't load Prefab by path: {prefabKey}");
 
-        if (prefab.GetComponent(windowType) == null)
-            throw new ArgumentNullException(windowType.Name, $"Can't find \"{windowType}\" component in {prefab.gameObject}.");
-
         window = _factory.InstantiatePrefab(prefab, root).GetComponent<WindowUI>();
+        
+        if (window == null)
+            throw new ArgumentNullException(windowType.Name, $"Can't find \"{windowType}\" component in {prefab.gameObject}.");
+        
         SetTransformValuesFromPrefab(window, prefab);
         mediator = _container.Instantiate<TMediator>(window);
 
@@ -113,38 +115,54 @@ internal sealed class WindowsFactory : IWindowFactory
         if (prefab == null)
             throw new ArgumentNullException(prefabKey, $"Can't load UI prefab by path: {prefabKey}");
 
-        if (prefab.GetComponent(windowType) == null)
-            throw new ArgumentNullException(windowType.Name, $"Can't find \"{windowType}\" component in {prefab.gameObject}");
-
         window = _factory.InstantiatePrefab(prefab, root).GetComponent<WindowUI>();
+        
+        if (window == null)
+            throw new ArgumentNullException(windowType.Name, $"Can't find \"{windowType}\" component in {prefab.gameObject}");
+        
         SetTransformValuesFromPrefab(window, prefab);
         mediator = _container.Instantiate(mediatorType, window);
 
         return mediator != null;
     }
 
-    public bool TryCreateTabSwitcher<T>(Transform root, out ITabSwitcher<T> switcher) where T : struct, Enum
+    public bool TryCreateTabSwitcher<TSwitcher, TEnum>(Transform root, out TSwitcher switcher) 
+        where TSwitcher : ITabSwitcher<TEnum> 
+        where TEnum : struct, Enum
     {
-        switcher = null;
+        switcher = default;
 
         var prefab = _resourceManager.LoadAsset<GameObject>(_uiTabSwitcher);
 
         if (prefab == null)
             throw new ArgumentNullException(_uiTabSwitcher, $"Can't load UI prefab by path: {_uiTabSwitcher}");
-
-        if (prefab.GetComponent<ITabSwitcher<T>>() == null)
-            throw new ArgumentNullException(prefab.name, $"Can't find \"{typeof(ITabSwitcher<T>).Name}\" component in {prefab.gameObject}");
         
-        switcher = _factory.InstantiatePrefab(prefab, root).GetComponent<ITabSwitcher<T>>();
+        var instance = _factory.InstantiatePrefab(prefab, root);
+        
+        switcher = instance.GetComponent<TSwitcher>();
 
-        return switcher != null;
+        if (switcher == null)
+            throw new ArgumentNullException(prefab.name, $"Can't find {GetGenericFriendlyName<TEnum>(typeof(ITabSwitcher<TEnum>))} component in {prefab.gameObject}");
+
+        SetTransformValuesFromPrefab(instance.transform, prefab);
+        return true;
     }
 
-    private static void SetTransformValuesFromPrefab(Component window, GameObject prefab)
+    private static void SetTransformValuesFromPrefab(Component component, GameObject prefab)
     {
-        var transform = window.transform;
+        var transform = component.transform;
         transform.SetLocalPositionAndRotation(prefab.transform.localPosition, prefab.transform.localRotation);
         transform.localScale = prefab.transform.localScale;
+    }
+    
+    private string GetGenericFriendlyName<T>(Type type)
+    {
+        if (!type.IsGenericType)
+            return type.Name;
+
+        var genericArgs = string.Join(", ", type.GetGenericArguments().Select(GetGenericFriendlyName<T>));
+        var typeName = type.Name[..type.Name.IndexOf('`')];
+        return $"{typeName}<{genericArgs}>";
     }
 }
 }

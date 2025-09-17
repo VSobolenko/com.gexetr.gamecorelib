@@ -18,14 +18,14 @@ public interface IObjectPool<T>: IObjectPoolRecyclable<T> where T : class
 
 public interface IComponentObjectPool<T> : IObjectPool<T> where T : Component
 {
-    T Get(Vector3 position, Quaternion rotation);
+    T Get(Vector3 position, Quaternion rotation, bool inWorldSpace = true);
     T Get(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true);
     T Get(Transform parent, bool inWorldSpace = true);
 }
 
 public interface IPoolableObjectPool<T> : IObjectPool<T> where T : class, IPoolable
 {
-    T Get(Vector3 position, Quaternion rotation);
+    T Get(Vector3 position, Quaternion rotation, bool inWorldSpace = true);
     T Get(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true);
     T Get(Transform parent, bool inWorldSpace = true);
 }

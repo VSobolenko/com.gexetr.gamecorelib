@@ -2,10 +2,12 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
-using Game.GUI.Windows.Managers;
+using Game.GUI.Components;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Transitions
+namespace Game.GUI.Transitions
 {
 internal sealed class FadeTransition : IWindowTransition
 {

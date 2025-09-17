@@ -17,8 +17,8 @@ public sealed class ComponentObjectPool<T> : ObjectPool<T>, IComponentObjectPool
     public override T Get() => 
         InternalGet(Vector3.zero, Quaternion.identity, null, true);
 
-    public T Get(Vector3 position, Quaternion rotation) => 
-        InternalGet(position, rotation, null, true);
+    public T Get(Vector3 position, Quaternion rotation, bool inWorldSpace = true) => 
+        InternalGet(position, rotation, null, inWorldSpace);
 
     public T Get(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) =>
         InternalGet(position, rotation, parent, inWorldSpace);

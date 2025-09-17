@@ -197,7 +197,7 @@ public class Log
     private static string ColoredLogType(string type, Color color)
     {
         return !Application.isEditor || Application.isBatchMode
-            ? string.Concat($"[{DynamicData.GameData.Identifier}]", type)
+            ? string.Concat($"[{GameData.Identifier}]", type)
             : string.Format($"<color=#{(int)color:X6}>[{{0}}]</color>", type);
     }
 

@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using DG.Tweening;
-using Game.GUI.Windows.Managers;
 using Game.Extensions;
+using Game.GUI.Components;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Transitions
+namespace Game.GUI.Transitions
 {
 internal class VerticalTransition : IWindowTransition
 {
@@ -27,10 +29,7 @@ internal class VerticalTransition : IWindowTransition
         var startPosY = GetStartedPointY(windowData.RectTransform);
 
         transform.SetLocalY(startPosY);
-        MoveWindow(transform, 0, _settings.OpenType, () =>
-        {
-            completionSource.SetResult(true);
-        });
+        MoveWindow(transform, 0, _settings.OpenType, () => { completionSource.SetResult(true); });
 
         return completionSource.Task;
     }
@@ -41,11 +40,8 @@ internal class VerticalTransition : IWindowTransition
 
         var transform = windowData.Motor;
         var targetPositionY = GetEndPointY(windowData.RectTransform);
-        
-        MoveWindow(transform, targetPositionY, _settings.CloseType, () =>
-        {
-            completionSource.SetResult(true);
-        });
+
+        MoveWindow(transform, targetPositionY, _settings.CloseType, () => { completionSource.SetResult(true); });
 
         return completionSource.Task;
     }
@@ -56,16 +52,18 @@ internal class VerticalTransition : IWindowTransition
                  .SetEase(ease)
                  .OnComplete(completeAction);
     }
-    
+
     protected virtual float GetStartedPointY(RectTransform transform)
     {
         var startingPoint = WindowTransitionStatic.startPoint;
+
         return startingPoint.y + transform.rect.height;
     }
-    
+
     protected virtual float GetEndPointY(RectTransform transform)
     {
         var startingPoint = WindowTransitionStatic.startPoint;
+
         return startingPoint.y - transform.rect.height;
     }
 }

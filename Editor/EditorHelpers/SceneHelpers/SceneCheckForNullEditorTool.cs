@@ -1,5 +1,5 @@
-﻿using Game.Components.Utilities;
-using Game.DynamicData;
+﻿using Game;
+using Game.Components.Utilities;
 using GameEditor.Common;
 using UnityEditor;
 using UnityEngine;

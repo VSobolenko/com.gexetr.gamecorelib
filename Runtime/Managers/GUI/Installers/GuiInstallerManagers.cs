@@ -1,9 +1,9 @@
 ﻿using Game.AssetContent;
 using Game.Factories;
+using Game.GUI.Managers;
+using Game.GUI.Transitions;
 using Game.GUI.Windows;
-using Game.GUI.Windows.Factories;
-using Game.GUI.Windows.Managers;
-using Game.GUI.Windows.Transitions;
+using Game.GUI.WindowsFactories;
 using UnityEngine;
 
 namespace Game.GUI

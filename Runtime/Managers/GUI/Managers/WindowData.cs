@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Game.GUI.Windows;
+using UnityEngine;
 
-namespace Game.GUI.Windows.Managers
+namespace Game.GUI.Managers
 {
 public sealed class WindowData<T>
 {

@@ -1,5 +1,4 @@
-﻿using Game.GUI.Windows.Components;
-using UnityEngine;
+﻿using Game.GUI.Components;
 
 namespace Game.GUI.Windows
 {

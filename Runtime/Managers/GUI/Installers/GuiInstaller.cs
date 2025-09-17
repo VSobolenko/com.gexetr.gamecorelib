@@ -1,8 +1,7 @@
 ﻿using System;
-using Game.AssetContent;
 using Game.AssetContent.Managers;
-using Game.GUI.Windows;
-using Game.GUI.Windows.Factories;
+using Game.GUI.Components;
+using Game.GUI.WindowsFactories;
 using UnityEngine;
 
 namespace Game.GUI
@@ -28,8 +27,8 @@ public static partial class GuiInstaller
         if (so == null)
             throw new ArgumentNullException(ResourcesSettingsPath, $"Can't load SO settings. Path to so: {ResourcesSettingsPath}");
 
-        _settings = so._defaultSettings;
-        return so._defaultSettings;
+        _settings = so.defaultSettings;
+        return so.defaultSettings;
     }
 
     public static void SetSettings(WindowSettings windowSettings) => _settings = windowSettings;

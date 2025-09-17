@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Game.DynamicData;
+using Game;
 using Game.FSMCore.Machines;
 using Game.FSMCore.Profilers;
 using UnityEditor;

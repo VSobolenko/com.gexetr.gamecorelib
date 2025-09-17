@@ -1,5 +1,4 @@
 ﻿using Game;
-using Game.DynamicData;
 using UnityEditor;
 
 namespace GameEditor.BuildTools

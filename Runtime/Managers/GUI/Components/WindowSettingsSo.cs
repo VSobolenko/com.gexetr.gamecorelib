@@ -1,9 +1,8 @@
 ﻿using System;
 using DG.Tweening;
-using Game.DynamicData;
 using UnityEngine;
 
-namespace Game.GUI.Windows
+namespace Game.GUI.Components
 {
 [Serializable]
 public sealed class WindowSettings
@@ -13,8 +12,8 @@ public sealed class WindowSettings
     [SerializeField, Range(0.1f, 10), Min(0.1f)] private float _synchronicity = 1; // use not for all transition
     [SerializeField] private Ease _openType = Ease.Linear;
     [SerializeField] private Ease _closeType = Ease.Linear;
-    [SerializeField] internal TransitionSettings _bouncedOpen;
-    [SerializeField] internal TransitionSettings _bouncedClose;
+    [SerializeField] internal TransitionSettings bouncedOpen;
+    [SerializeField] internal TransitionSettings bouncedClose;
 
     public float MoveDuration => _moveDuration;
     public float FadeDuration => _fadeDuration;
@@ -27,13 +26,13 @@ public sealed class WindowSettings
 internal sealed class WindowSettingsSo : ScriptableObject
 {
     [Header("Default Transition")]
-    public WindowSettings _defaultSettings;
+    public WindowSettings defaultSettings;
 }
 
 [Serializable]
 internal struct TransitionSettings
 {
-    public float _duration;
-    public Ease _ease;
+    public float duration;
+    public Ease ease;
 }
 }

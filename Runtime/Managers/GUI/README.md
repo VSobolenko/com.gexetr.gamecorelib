@@ -11,13 +11,13 @@ A structured and extensible window management system.
 
 ### Window
 ```csharp
-        internal enum $Window$WindowAction : byte
+    internal enum $Window$WindowAction : byte
     {
         Unknown = 0,
         $END$
     }
 
-    internal sealed class $Window$WindowButtonUI : Game.GUI.Windows.Components.BaseButton<$Window$WindowAction>
+    internal sealed class $Window$WindowButtonUI : Game.GUI.Components.BaseButton<$Window$WindowAction>
     {
         [ContextMenu("Editor simulate click")] protected override void SimulateClick() => base.SimulateClick();
         [ContextMenu("Editor force validate")] protected override void ForceValidate() => base.ForceValidate();
@@ -38,7 +38,7 @@ A structured and extensible window management system.
 #endif
     }
 
-    internal sealed class $Window$WindowMediatorUI : BaseMediator<$Window$WindowViewUI>
+    internal sealed class $Window$WindowMediatorUI : Game.GUI.Windows.BaseMediator<$Window$WindowViewUI>
     {
         public $Window$WindowMediatorUI($Window$WindowViewUI window) : base(window) { }
     }
@@ -53,7 +53,7 @@ A structured and extensible window management system.
         $END$
     }
 
-    internal sealed class $Window$WindowButtonUI : Game.GUI.Windows.Components.BaseButton<$Window$WindowAction>
+    internal sealed class $Window$WindowButtonUI : Game.GUI.Components.BaseButton<$Window$WindowAction>
     {
         [ContextMenu("Editor simulate click")] protected override void SimulateClick() => base.SimulateClick();
         [ContextMenu("Editor force validate")] protected override void ForceValidate() => base.ForceValidate();
@@ -74,7 +74,7 @@ A structured and extensible window management system.
 #endif
     }
 
-    internal sealed class $Window$WindowMediatorUI : BaseReactiveMediator<$Window$WindowViewUI, $Window$WindowAction>
+    internal sealed class $Window$WindowMediatorUI : Game.GUI.Windows.BaseReactiveMediator<$Window$WindowViewUI, $Window$WindowAction>
     {
         public $Window$WindowMediatorUI($Window$WindowViewUI window)
             // ReSharper disable once CoVariantArrayConversion

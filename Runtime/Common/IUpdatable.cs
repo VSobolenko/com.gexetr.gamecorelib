@@ -1,4 +1,4 @@
-﻿namespace Game.DynamicData
+﻿namespace Game
 {
 public interface IUpdatable
 {

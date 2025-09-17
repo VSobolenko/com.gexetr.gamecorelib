@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Game.GUI.Windows.Transitions;
+using Game.GUI.Transitions;
 
 namespace Game.GUI.Windows
 {

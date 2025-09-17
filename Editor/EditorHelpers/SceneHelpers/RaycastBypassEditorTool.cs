@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game;
 using Game.Components.Utilities;
-using Game.DynamicData;
 using GameEditor.Internal;
 using TMPro;
 using UnityEditor;

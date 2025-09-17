@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Game.GUI.Windows.Managers;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 
-namespace Game.GUI.Windows.Transitions
+namespace Game.GUI.Transitions
 {
 public sealed class ParallelProxy : IWindowTransition
 {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game;
-using Game.DynamicData;
 using GameEditor.Internal;
 using UnityEditor;
 using UnityEngine;

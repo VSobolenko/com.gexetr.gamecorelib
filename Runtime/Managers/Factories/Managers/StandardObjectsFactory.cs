@@ -45,13 +45,13 @@ internal sealed class StandardObjectsFactory : IFactoryGameObjects
         InternalInstantiateBase(name, position, rotation, parent, components);
 
     // Creates a new object from a prefab
-    public GameObject InstantiatePrefab(GameObject prefab) => Object.Instantiate(prefab) as GameObject;
+    public GameObject InstantiatePrefab(GameObject prefab) => Object.Instantiate(prefab);
 
     public GameObject InstantiatePrefab(GameObject prefab, Transform parent) => 
-        Object.Instantiate(prefab, parent) as GameObject;
+        Object.Instantiate(prefab, parent);
 
     public GameObject InstantiatePrefab(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) =>
-        Object.Instantiate(prefab, position, rotation, parent) as GameObject;
+        Object.Instantiate(prefab, position, rotation, parent);
 
     // Creates a new object from a prefab that already has a component T
     public T Instantiate<T>(T prefab) where T : Component => Object.Instantiate(prefab);

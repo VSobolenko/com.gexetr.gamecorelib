@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.GUI.Windows.Factories;
+using Game.GUI.Windows;
+using Game.GUI.WindowsFactories;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Managers
+namespace Game.GUI.Managers
 {
 internal class WindowsManager : IWindowsManager
 {
-    protected readonly WindowConstructor<IMediator> WindowConstructor;
+    protected readonly WindowConstructor<IMediator> constructor;
 
     public WindowsManager(IWindowFactory windowFactory, Transform rootUi)
     {
         if (windowFactory.TryCreateWindowsRoot(rootUi, out var root) == false)
             Log.Warning($"In {GetType().Name} empty root");
 
-        WindowConstructor = new WindowConstructor<IMediator>(windowFactory, root);
+        constructor = new WindowConstructor<IMediator>(windowFactory, root);
     }
 
     public void Dispose()
     {
-        WindowConstructor.Dispose();
+        constructor.Dispose();
     }
 
     #region Container
@@ -27,7 +28,7 @@ internal class WindowsManager : IWindowsManager
     public bool TryGetWindows<TMediator>(out TMediator[] mediator) where TMediator : class, IMediator
     {
         var mediators = new List<TMediator>();
-        foreach (WindowData<IMediator> window in WindowConstructor)
+        foreach (WindowData<IMediator> window in constructor)
         {
             if (window.Mediator is TMediator == false)
                 continue;
@@ -42,7 +43,7 @@ internal class WindowsManager : IWindowsManager
     public bool TryGetFirstWindow<TMediator>(out TMediator mediator) where TMediator : class, IMediator
     {
         mediator = null;
-        foreach (WindowData<IMediator> window in WindowConstructor)
+        foreach (WindowData<IMediator> window in constructor)
         {
             if (window.Mediator is TMediator == false)
                 continue;
@@ -61,27 +62,27 @@ internal class WindowsManager : IWindowsManager
     public TMediator OpenWindow<TMediator>(Action<TMediator> initWindow = null, OpenMode mode = OpenMode.Overlay, int priority = 0)
         where TMediator : class, IMediator
     {
-        WindowConstructor.HideWindow(WindowConstructor.Count - 1, false);
+        constructor.HideWindow(constructor.Count - 1, false);
 
-        return WindowConstructor.OpenWindowSilently(initWindow).Mediator as TMediator;
+        return constructor.OpenWindowSilently(initWindow).Mediator as TMediator;
     }
 
     public TMediator OpenWindowOver<TMediator>(Action<TMediator> initWindow = null)
         where TMediator : class, IMediator
     {
-        WindowConstructor.HideWindow(WindowConstructor.Count - 1, true);
+        constructor.HideWindow(constructor.Count - 1, true);
 
-        return WindowConstructor.OpenWindowSilently(initWindow).Mediator as TMediator;
+        return constructor.OpenWindowSilently(initWindow).Mediator as TMediator;
     }
 
     public bool CloseWindow<TMediator>() where TMediator : class, IMediator
     {
-        for (var i = 0; i < WindowConstructor.Count; i++)
+        for (var i = 0; i < constructor.Count; i++)
         {
-            if (WindowConstructor[i].Mediator.GetType() != typeof(TMediator))
+            if (constructor[i].Mediator.GetType() != typeof(TMediator))
                 continue;
 
-            WindowConstructor.CloseWindow(i);
+            constructor.CloseWindow(i);
 
             return true;
         }
@@ -94,12 +95,12 @@ internal class WindowsManager : IWindowsManager
         if (mediator == null)
             throw new ArgumentNullException($"Close {typeof(TMediator)} null mediator");
 
-        for (var i = 0; i < WindowConstructor.Count; i++)
+        for (var i = 0; i < constructor.Count; i++)
         {
-            if (WindowConstructor[i].Mediator != mediator)
+            if (constructor[i].Mediator != mediator)
                 continue;
 
-            WindowConstructor.CloseWindow(i);
+            constructor.CloseWindow(i);
 
             return true;
         }
@@ -109,10 +110,10 @@ internal class WindowsManager : IWindowsManager
 
     public void CloseWindows()
     {
-        var countWindows = WindowConstructor.Count;
+        var countWindows = constructor.Count;
         for (var i = countWindows - 1; i >= 0; i--)
         {
-            WindowConstructor.CloseWindow(i);
+            constructor.CloseWindow(i);
         }
     }
 

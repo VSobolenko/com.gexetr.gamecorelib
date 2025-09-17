@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using DG.Tweening;
-using Game.GUI.Windows.Managers;
 using Game.Extensions;
+using Game.GUI.Components;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Transitions
+namespace Game.GUI.Transitions
 {
 internal class HorizontalTransition : IWindowTransition
 {

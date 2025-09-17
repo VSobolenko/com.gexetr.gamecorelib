@@ -57,7 +57,7 @@ public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
         if (IsUnSafeExecution())
             return;
         
-        window.canvasGroup.blocksRaycasts = value;
+        window.config.canvasGroup.blocksRaycasts = value;
     }
 
     public virtual bool IsActive()

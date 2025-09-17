@@ -19,7 +19,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T With<T>(this T self, Action<T> apply, Func<bool> when)
     {
         if (when())
@@ -27,7 +27,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T With<T>(this T self, Action<T> apply, Func<T, bool> when)
     {
         if (when(self))
@@ -35,7 +35,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T With<T>(this T self, Action set)
     {
         set.Invoke();
@@ -50,7 +50,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T With<T>(this T self, Action apply, Func<bool> when)
     {
         if (when())
@@ -58,7 +58,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T With<T>(this T self, Action apply, Func<T, bool> when)
     {
         if (when(self))
@@ -66,7 +66,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T ForEach<T>(this T self, int iterations, Action<T> set)
     {
         for (var i = 0; i < iterations; i++)
@@ -74,7 +74,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T ForEach<T>(this T self, int iterations, Action<T> apply, bool when)
     {
         for (var i = 0; i < iterations; i++)
@@ -83,7 +83,7 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
+
     public static T ForEach<T>(this T self, int iterations, Action<int, T> set)
     {
         for (var i = 0; i < iterations; i++)
@@ -91,8 +91,8 @@ public static class FunctionalExtensions
 
         return self;
     }
-    
-    public static T ForEach<T>(this T self, int iterations, Action<int,T> apply, bool when)
+
+    public static T ForEach<T>(this T self, int iterations, Action<int, T> apply, bool when)
     {
         for (var i = 0; i < iterations; i++)
             if (when)
@@ -105,17 +105,17 @@ public static class FunctionalExtensions
     {
         foreach (T obj in source)
             action(obj);
-        
+
         return source;
     }
 
     public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
     {
         int num = 0;
-        
+
         foreach (T obj in source)
             action(obj, num++);
-        
+
         return source;
     }
 }

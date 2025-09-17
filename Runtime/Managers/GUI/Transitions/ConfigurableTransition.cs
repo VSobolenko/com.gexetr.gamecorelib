@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Game.GUI.Windows.Managers;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Transitions
+namespace Game.GUI.Transitions
 {
 internal sealed class ConfigurableTransition : IWindowTransition
 {

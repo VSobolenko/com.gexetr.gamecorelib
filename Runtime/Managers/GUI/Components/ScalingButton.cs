@@ -3,7 +3,7 @@ using Game.Extensions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Game.GUI
+namespace Game.GUI.Components
 {
 [DisallowMultipleComponent]
 public sealed class ScalingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler

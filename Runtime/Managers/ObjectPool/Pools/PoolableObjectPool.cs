@@ -14,9 +14,9 @@ public sealed class PoolableObjectPool<T> : ObjectPool<T>, IPoolableObjectPool<T
 
     public override void Release(T instance) => InternalRelease(instance);
 
-    public override T Get() => InternalGet(Vector3.zero, Quaternion.identity, null);
+    public override T Get() => InternalGet(Vector3.zero, Quaternion.identity, null, true);
 
-    public T Get(Vector3 position, Quaternion rotation) => InternalGet(position, rotation, null);
+    public T Get(Vector3 position, Quaternion rotation, bool inWorldSpace = true) => InternalGet(position, rotation, null, inWorldSpace);
 
     public T Get(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true) =>
         InternalGet(position, rotation, parent, inWorldSpace);
@@ -24,7 +24,7 @@ public sealed class PoolableObjectPool<T> : ObjectPool<T>, IPoolableObjectPool<T
     public T Get(Transform parent, bool inWorldSpace = true) =>
         InternalGet(Vector3.zero, Quaternion.identity, parent, inWorldSpace);
 
-    private T InternalGet(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace = true)
+    private T InternalGet(Vector3 position, Quaternion rotation, Transform parent, bool inWorldSpace)
     {
         var instance = Pool.Count != 0 ? Pool.Dequeue() : CreateInstance();
 

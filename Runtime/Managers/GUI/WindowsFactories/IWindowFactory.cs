@@ -1,17 +1,21 @@
 ﻿using System;
-using Game.GUI.Windows.Managers;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Factories
+namespace Game.GUI.WindowsFactories
 {
 public interface IWindowFactory
 {
-    public bool TryCreateWindowsRoot(Transform root, out Transform uiRoot);
+    bool TryCreateWindowsRoot(Transform root, out Transform uiRoot);
 
-    public bool TryCreateWindow<TMediator>(Transform root, out TMediator mediator, out WindowUI window)
+    bool TryCreateWindow<TMediator>(Transform root, out TMediator mediator, out WindowUI window)
         where TMediator : class, IMediator;
 
-    public bool TryCreateWindow(Type mediatorType, Transform root, out IMediator mediator, out WindowUI window);
-    public bool TryCreateTabSwitcher<T>(Transform root, out ITabSwitcher<T> switcher) where T : struct, Enum;
+    bool TryCreateWindow(Type mediatorType, Transform root, out IMediator mediator, out WindowUI window);
+
+    bool TryCreateTabSwitcher<TSwitcher, TEnum>(Transform root, out TSwitcher switcher)
+        where TSwitcher : ITabSwitcher<TEnum> 
+        where TEnum : struct, Enum;
 }
 }

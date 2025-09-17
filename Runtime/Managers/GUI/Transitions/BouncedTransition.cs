@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using DG.Tweening;
-using Game.GUI.Windows.Managers;
+using Game.GUI.Components;
+using Game.GUI.Managers;
+using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Transitions
+namespace Game.GUI.Transitions
 {
 internal sealed class BouncedTransition : IWindowTransition
 {
@@ -28,9 +30,9 @@ internal sealed class BouncedTransition : IWindowTransition
         windowData.Mediator.SetActive(false);
         transform.localScale = _openStartedScale;
 
-        BounceWindow(transform, Vector3.one, _settings._bouncedOpen._duration / 2f,
-                     _settings._bouncedOpen._duration / 2f / _settings.Synchronicity,
-                     _settings._bouncedOpen._ease,
+        BounceWindow(transform, Vector3.one, _settings.bouncedOpen.duration / 2f,
+                     _settings.bouncedOpen.duration / 2f / _settings.Synchronicity,
+                     _settings.bouncedOpen.ease,
                      () => { windowData.Mediator.SetActive(true); }, () => { completionSource.SetResult(true); });
 
         return completionSource.Task;
@@ -41,7 +43,7 @@ internal sealed class BouncedTransition : IWindowTransition
         var completionSource = new TaskCompletionSource<bool>();
         var transform = windowData.Motor;
 
-        BounceWindow(transform, _closeEndScale, _settings._bouncedClose._duration / 2f, 0, _settings._bouncedClose._ease,
+        BounceWindow(transform, _closeEndScale, _settings.bouncedClose.duration / 2f, 0, _settings.bouncedClose.ease,
                      null,
                      () =>
                      {

@@ -23,12 +23,16 @@ internal class ResourceManagerFactory : IResourceFactoryManager
         return instance;
     }
 
+    public GameObject CreateGameObject(string key, Vector3 position, Quaternion quaternion, Transform parent)
+    {
+        var prefab = LoadPrefab(key);
+        var instance = _factoryGameObjects.InstantiatePrefab(prefab, position, quaternion, parent);
+        return instance;
+    }
+
     private T LoadPrefabMonoBeh<T>(string key) where T : Component
     {
-        var prefab = _resourceManager.LoadAsset<GameObject>(key);
-
-        if (prefab == null)
-            throw new ArgumentNullException(nameof(prefab), $"Addressable key prefab {key} missing");
+        var prefab = LoadPrefab(key);
 
         var monoBeh = prefab.GetComponent<T>();
 
@@ -36,6 +40,16 @@ internal class ResourceManagerFactory : IResourceFactoryManager
             throw new ArgumentNullException(nameof(prefab), $"Component [{typeof(T)}] missing from {prefab.name} gameObject");
 
         return monoBeh;
+    }
+
+    private GameObject LoadPrefab(string key)
+    {
+        var prefab = _resourceManager.LoadAsset<GameObject>(key);
+
+        if (prefab == null)
+            throw new ArgumentNullException(nameof(prefab), $"Addressable key prefab {key} missing");
+
+        return prefab;
     }
 }
 }

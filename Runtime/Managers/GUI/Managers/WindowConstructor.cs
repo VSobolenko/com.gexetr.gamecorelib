@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game.GUI.Windows.Factories;
+using Game.GUI.Windows;
+using Game.GUI.WindowsFactories;
 using UnityEngine;
 
-namespace Game.GUI.Windows.Managers
+namespace Game.GUI.Managers
 { 
 internal sealed class WindowConstructor<T> : IDisposable, IEnumerable<WindowData<T>> where T : class, IMediator
 {
@@ -44,11 +45,11 @@ internal sealed class WindowConstructor<T> : IDisposable, IEnumerable<WindowData
         var windowData = new WindowData<T>
         {
             Mediator = mediator,
-            RectTransform = window.overrideTransition != null ? window.overrideTransition : (RectTransform) window.transform,
-            CanvasGroup = window.canvasGroup,
+            RectTransform = window.config.overrideTransition != null ? window.config.overrideTransition : (RectTransform) window.transform,
+            CanvasGroup = window.config.canvasGroup,
             Mode = OpenMode.Silently,
         };
-        windowData.Motor = window.overrideTransition != null ? window.overrideTransition : windowData.RectTransform;
+        windowData.Motor = window.config.overrideTransition != null ? window.config.overrideTransition : windowData.RectTransform;
         
         var lastWindowData = _windows.Count > 0 ? _windows[^1] : windowData;
         _windows.Add(windowData);

@@ -1,4 +1,4 @@
-﻿using Game.GUI.Windows.Transitions;
+﻿using Game.GUI.Transitions;
 using UnityEngine;
 
 namespace Game.GUI
