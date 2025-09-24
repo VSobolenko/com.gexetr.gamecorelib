@@ -68,7 +68,7 @@ internal sealed class RaycastBypassEditorTool : Editor
     {
         var raycastComponents = InternalTools.IsPrefabStage(out var prefabRoot)
             ? prefabRoot.GetComponentsInChildren<T>(true)
-            : FindObjectsOfType<T>(true);
+            : FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         SetRaycastTargetComponents(raycastComponents, isRaycastTargets);
     }
 

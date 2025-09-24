@@ -14,12 +14,12 @@ namespace Game.Singletons
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<T>();
+                    _instance = FindFirstObjectByType<T>(FindObjectsInactive.Include);
                     if (_instance == null)
                     {
                         var obj = new GameObject
                         {
-                            name = typeof(T).Name
+                            name = typeof(T).Name,
                         };
                         _instance = obj.AddComponent<T>();
                         _instance.OnMonoSingletonCreated();

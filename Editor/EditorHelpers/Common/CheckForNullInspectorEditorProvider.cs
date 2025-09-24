@@ -78,7 +78,7 @@ internal sealed class CheckForNullInspectorEditorProvider : Editor
     {
         var allScripts = InternalTools.IsPrefabStage(out var root)
             ? root.GetComponentsInChildren<MonoBehaviour>()
-            : FindObjectsOfType<MonoBehaviour>(true);
+            : FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         if (accessibleAssembly.Length > 0)
             allScripts = allScripts.Where(x =>
