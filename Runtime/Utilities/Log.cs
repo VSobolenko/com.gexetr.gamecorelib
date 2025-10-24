@@ -52,15 +52,6 @@ public class Log
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Error(string text, Object context = null, LogType logType = LogType.Error)
-    {
-#if !DISABLE_LOG
-        InternalLog(text, context, logType);
-#endif
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
     public static void Info(string text, Object context = null, LogType logType = LogType.Log)
     {
 #if !DISABLE_LOG
@@ -70,16 +61,7 @@ public class Log
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [HideInCallstack]
-    public static void Warner(string text, Object context = null, LogType logType = LogType.Log)
-    {
-#if !DISABLE_LOG
-        Marked(WarningType, text, Color.Orange, context, logType);
-#endif
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [HideInCallstack]
-    public static void Errored(string text, Object context = null, LogType logType = LogType.Log)
+    public static void Error(string text, Object context = null, LogType logType = LogType.Error)
     {
 #if !DISABLE_LOG
         Marked(ErroredType, text, Color.Red, context, logType);

@@ -81,7 +81,7 @@ public abstract class BaseMediator<TWindow> : IMediator where TWindow : WindowUI
     {
         var windowIsMissing = window == null;
         if (windowIsMissing)
-            Log.Warner($"It is not possible to execute with an empty {GetType().Name}. Ignore this when exiting Play mode.");
+            Log.Warning($"It is not possible to execute with an empty {GetType().Name}. Ignore this when exiting Play mode.");
 
         return windowIsMissing;
     }

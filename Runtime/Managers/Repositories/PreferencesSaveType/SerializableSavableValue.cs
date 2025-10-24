@@ -15,7 +15,7 @@ public sealed class SerializableSavableValue<T> : BaseSavableValue<T>
     //ToDo: refactor(using(...)) ant testing this elements
     protected override T LoadValue(ref string path)
     {
-        Log.Errored("NE DODELANO");
+        Log.Error("NE DODELANO");
         var stringToDeserialize = PlayerPrefs.GetString(path, "");
 
         var bytes = Convert.FromBase64String(stringToDeserialize);
@@ -28,7 +28,7 @@ public sealed class SerializableSavableValue<T> : BaseSavableValue<T>
     //ToDo: refactor(using(...)) ant testing this elements
     protected override void SaveValue(ref string path)
     {
-        Log.Errored("NE DODELANO");
+        Log.Error("NE DODELANO");
         var memoryStream = new MemoryStream();
         var bf = new BinaryFormatter();
         bf.Serialize(memoryStream, cachedValue);

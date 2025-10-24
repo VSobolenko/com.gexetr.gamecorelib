@@ -59,7 +59,7 @@ internal sealed class WindowConstructorTab<T, TSwitcher, TTabEnum> : IDisposable
         windowDataTab.anchoredPosition = position;
 
         if (bottomOffset > Screen.height / 2f)
-            Log.Warner($"Switcher height({bottomOffset} takes up more than half the screen)");
+            Log.Warning($"Switcher height({bottomOffset} takes up more than half the screen)");
     }
 
     public bool Has<TMediator>() where TMediator : class, IMediator =>

@@ -66,7 +66,7 @@ internal sealed class InputManager : IInputManager
         }
         else
         {
-            Log.Errored("Failed to RaycastGui because your scene doesn't have an event system! To add one, go to: GameObject/UI/EventSystem");
+            Log.Error("Failed to RaycastGui because your scene doesn't have an event system! To add one, go to: GameObject/UI/EventSystem");
         }
 
         return tempRaycastResults.Count > 0;

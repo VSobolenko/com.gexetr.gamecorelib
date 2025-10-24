@@ -22,7 +22,7 @@ internal sealed class KeyManagerProfiler : IPoolProfiler
         _pool = pool as Dictionary<string, IPoolableObjectPool<IPoolable>>;
         if (_pool == null)
         {
-            Log.Errored($"Can't unboxing pool dictionary for {GetType().Name} profiler");
+            Log.Error($"Can't unboxing pool dictionary for {GetType().Name} profiler");
 
             return;
         }
@@ -110,7 +110,7 @@ internal sealed class KeyManagerProfiler : IPoolProfiler
     {
         if (_pool == null)
         {
-            Log.Errored("Null pool");
+            Log.Error("Null pool");
 
             return;
         }

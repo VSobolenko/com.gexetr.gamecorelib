@@ -113,7 +113,7 @@ public sealed class ProjectStructureCreator
     {
         if (string.IsNullOrEmpty(Name))
         {
-            Log.Errored("Folder name cannot be empty.");
+            Log.Error("Folder name cannot be empty.");
 
             return;
         }
@@ -155,7 +155,7 @@ public sealed class ProjectStructureCreator
 
             if (File.Exists(filePath))
             {
-                Log.Warner($"Asmdef already exists: {filePath}");
+                Log.Warning($"Asmdef already exists: {filePath}");
 
                 continue;
             }
@@ -177,7 +177,7 @@ public sealed class ProjectStructureCreator
 
         if (File.Exists(assemblyInfoPath))
         {
-            Log.Warner($"{fileName} already exists: {assemblyInfoPath}");
+            Log.Warning($"{fileName} already exists: {assemblyInfoPath}");
 
             return;
         }

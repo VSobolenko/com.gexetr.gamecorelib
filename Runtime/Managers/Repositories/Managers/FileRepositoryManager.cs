@@ -109,7 +109,7 @@ internal sealed class FileRepositoryManager<T> : BaseRepositoryManager<T>, IRepo
     {
         if (IsFileExists(id))
         {
-            Log.Errored($"File {typeof(T).ToString() + id} with id={id} already exist. File creation skipped!");
+            Log.Error($"File {typeof(T).ToString() + id} with id={id} already exist. File creation skipped!");
             return;
         }
 
@@ -130,7 +130,7 @@ internal sealed class FileRepositoryManager<T> : BaseRepositoryManager<T>, IRepo
         var fileName = Path.GetFileNameWithoutExtension(file?.Name);
         if (string.IsNullOrEmpty(fileName))
         {
-            Log.Errored("Cannot find free file ID");
+            Log.Error("Cannot find free file ID");
 
             return int.MaxValue;
         }
@@ -182,7 +182,7 @@ internal sealed class FileRepositoryManager<T> : BaseRepositoryManager<T>, IRepo
             }
             catch (Exception e)
             {
-                Log.Errored($"Cannot delete file in directory: {_path}. Exception: {e.Message}");
+                Log.Error($"Cannot delete file in directory: {_path}. Exception: {e.Message}");
                 
                 throw new ArgumentException($"Directory cannot contains file: {file.Name} in {_path}");
             }

@@ -82,14 +82,14 @@ internal sealed class ObjectPoolProfilerEditorTools : Editor
     {
         if (poolProfiler == null || poolProfiler.PoolManager == null || poolProfiler.PoolContainer == null)
         {
-            Log.Errored("Trying assign null pool entity");
+            Log.Error("Trying assign null pool entity");
             return;
         }
         
         var managerType = poolProfiler.PoolManager.GetType();
         if (_poolProfilerTypes.TryGetValue(managerType, out var profilerType) == false)
         {
-            Log.Errored($"For {managerType.Name} type profiler not found");
+            Log.Error($"For {managerType.Name} type profiler not found");
             return;
         }
         

@@ -9,24 +9,20 @@ using UnityEngine;
 
 namespace GameEditor.ProjectTools
 {
-/// <example>
-/// <para>to quickly create a data clearing window, just inherit from this class and add the following code.</para>
-/// <code>
-/// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowWindow<YOUR_WINDOW_CLASS>();
-///
-/// <para>with setup.</para>
-/// [MenuItem(DefaultHeader, false)]
-/// private static void ShowWindow() => ShowWindow<YOUR_WINDOW_CLASS>(startupConfigure: window =>
-/// {
-///     window.confirm = true;
-///     window.showHeader = false;
-/// });
-/// 
-/// <para>to add custom Buttons and Labels.</para>
-/// public override void AddSetups() { AddButton(new ButtonData() { } ).AddLabel("..."); }
-/// </code>
-/// </example>
+// ----- to quickly create a data clearing window, just inherit from this class and add the following code.
+// [MenuItem(DefaultHeader, false)]
+// private static void ShowWindow() => ShowWindow<YOUR_WINDOW_CLASS>();
+//
+// ----- with setup.
+// [MenuItem(DefaultHeader, false)]
+// private static void ShowWindow() => ShowWindow<YOUR_WINDOW_CLASS>(startupConfigure: window =>
+// {
+//     window.confirm = true;
+//     window.showHeader = false;
+// });
+// 
+// ------ to add custom Buttons and Labels.
+// protected override void AddSetups() { AddButton(new ButtonData() { } ).AddLabel("..."); }
 public class ActionsWindowEditorTool : EditorWindow
 {
     protected const string DefaultHeader = GameData.EditorName + EditorSubfolder.Project + "/Turbo Actions";
@@ -175,7 +171,7 @@ public class ActionsWindowEditorTool : EditorWindow
                                         string cancelLabel = "Cancel") =>
         EditorUtility.DisplayDialog(title, message, okLabel, cancelLabel);
 
-    public ActionsWindowEditorTool AddClearPlayerPrefsButton()
+    public ActionsWindowEditorTool AddButtonClearPlayerPrefs()
     {
         AddButton(new ButtonData
         {
@@ -186,14 +182,14 @@ public class ActionsWindowEditorTool : EditorWindow
         return this;
     }
 
-    public ActionsWindowEditorTool AddPlayerPrefsLabel()
+    public ActionsWindowEditorTool AddLabelPlayerPrefs()
     {
         AddLabel($@"PlayerPrefs: HKCU\Software\{PlayerSettings.companyName}\{Application.productName}");
 
         return this;
     }
     
-    public ActionsWindowEditorTool AddClearAllPersistentDataButton()
+    public ActionsWindowEditorTool AddButtonClearAllPersistentData()
     {
         AddButton(new ButtonData
         {
@@ -204,14 +200,14 @@ public class ActionsWindowEditorTool : EditorWindow
         return this;
     }
     
-    public ActionsWindowEditorTool AddPersistentDataPathLabel()
+    public ActionsWindowEditorTool AddLabelPersistentDataPath()
     {
         AddLabel($@"Persistent Data Path: {Application.persistentDataPath}");
 
         return this;
     }
     
-    public ActionsWindowEditorTool AddAutoPlayButton()
+    public ActionsWindowEditorTool AddButtonAutoPlay()
     {
         AddButton(new ButtonData
         {
