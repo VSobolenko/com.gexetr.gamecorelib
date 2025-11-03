@@ -2,7 +2,7 @@
 using System.Linq;
 using Game.GUI.Windows;
 
-namespace Game.GUI.WindowsFactories
+namespace Game.GUI.Windows.Factories
 {
 internal sealed class DefaultMediatorInstantiator : IMediatorInstantiator
 {

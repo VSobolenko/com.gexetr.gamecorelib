@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.GUI.Windows;
 
-namespace Game.GUI.WindowsFactories
+namespace Game.GUI.Windows.Factories
 {
 public interface IMediatorInstantiator
 {

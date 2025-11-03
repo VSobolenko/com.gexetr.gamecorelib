@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Game.GUI.Components;
 using Game.GUI.Transitions;
 using Game.GUI.Windows;
-using Game.GUI.WindowsFactories;
+using Game.GUI.Windows.Factories;
 using UnityEngine;
 
 namespace Game.GUI.Managers

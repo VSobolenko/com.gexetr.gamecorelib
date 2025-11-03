@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.AssetContent.Managers;
 using Game.GUI.Components;
-using Game.GUI.WindowsFactories;
+using Game.GUI.Windows.Factories;
 using UnityEngine;
 
 namespace Game.GUI

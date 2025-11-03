@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game.GUI.Windows;
-using Game.GUI.WindowsFactories;
+using Game.GUI.Windows.Factories;
 using UnityEngine;
 
 namespace Game.GUI.Managers

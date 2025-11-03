@@ -7,7 +7,7 @@ using Game.GUI.Managers;
 using Game.GUI.Windows;
 using UnityEngine;
 
-namespace Game.GUI.WindowsFactories
+namespace Game.GUI.Windows.Factories
 {
 internal sealed class WindowsFactory : IWindowFactory
 {
